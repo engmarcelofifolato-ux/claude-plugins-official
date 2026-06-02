@@ -79,6 +79,70 @@
   .btn-secondary { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; color: var(--texto-claro); padding: 0.9rem 2rem; border-radius: 4px; text-decoration: none; border: 1px solid var(--cinza-borda); cursor: pointer; transition: all 0.25s; }
   .btn-secondary:hover { border-color: #4a5e2a; color: #4a5e2a; }
 
+  /* ===== SEÇÕES EXTRAS LANDING ===== */
+  .features-section { padding: 6rem 5rem; background: linear-gradient(135deg, rgba(122,140,69,0.06) 0%, rgba(140,122,64,0.04) 100%); }
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; margin-top: 3rem; }
+  .feature-card { background: var(--preto-card); padding: 2rem; border-radius: 12px; border: 1px solid var(--cinza-borda); }
+  .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .feature-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .feature-desc { font-size: 0.9rem; line-height: 1.6; color: var(--texto-muted); }
+
+  /* ===== SEÇÃO PLANOS ===== */
+  .plans-section { padding: 6rem 5rem; background: var(--preto); }
+  .plans-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+  .plan-card { background: var(--preto-card); border: 1px solid var(--cinza-borda); border-radius: 12px; padding: 2.5rem; position: relative; transition: all 0.3s; }
+  .plan-card:hover { border-color: rgba(122,140,69,0.5); transform: translateY(-8px); box-shadow: 0 20px 50px rgba(122,140,69,0.15); }
+  .plan-card.destaque { border: 2px solid #6b7c3a; box-shadow: 0 20px 50px rgba(122,140,69,0.2); }
+  .plan-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #6b7c3a; color: #fff; padding: 0.4rem 1rem; border-radius: 100px; font-family: 'Syne', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .plan-name { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .plan-price { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; margin-bottom: 0.2rem; }
+  .plan-price small { font-size: 0.5em; color: var(--texto-muted); }
+  .plan-desc { font-size: 0.85rem; color: var(--texto-muted); margin-bottom: 1.5rem; }
+  .plan-features { list-style: none; margin-bottom: 2rem; }
+  .plan-features li { font-size: 0.9rem; padding: 0.6rem 0; border-bottom: 1px solid var(--cinza-borda); color: var(--texto-claro); }
+  .plan-features li:last-child { border-bottom: none; }
+  .plan-features li:before { content: "✓ "; color: #6b7c3a; font-weight: 700; margin-right: 0.5rem; }
+  .plan-cta { display: block; width: 100%; padding: 1rem; text-align: center; border-radius: 6px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; transition: all 0.3s; }
+  .plan-cta.principal { background: #6b7c3a; color: #fff; }
+  .plan-cta.principal:hover { background: #1c2016; }
+  .plan-cta.secundaria { border: 1px solid var(--cinza-borda); color: var(--texto-claro); background: transparent; }
+  .plan-cta.secundaria:hover { border-color: #4a5e2a; color: #4a5e2a; }
+
+  /* ===== SEÇÃO CADASTRO ===== */
+  .signup-section { padding: 6rem 5rem; background: linear-gradient(135deg, rgba(74,94,42,0.08) 0%, rgba(140,122,64,0.06) 100%); }
+  .signup-container { max-width: 600px; margin: 0 auto; background: var(--preto-card); border: 1px solid var(--cinza-borda); border-radius: 12px; padding: 3rem; }
+  .signup-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; text-align: center; margin-bottom: 1rem; }
+  .signup-subtitle { text-align: center; color: var(--texto-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+  .form-group { margin-bottom: 1.5rem; }
+  .form-group label { display: block; font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; color: var(--texto-claro); }
+  .form-group input, .form-group select { width: 100%; padding: 0.9rem 1rem; border: 1px solid var(--cinza-borda); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; transition: all 0.25s; }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: #6b7c3a; box-shadow: 0 0 0 3px rgba(122,140,69,0.1); }
+  .form-group textarea { width: 100%; padding: 0.9rem 1rem; border: 1px solid var(--cinza-borda); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; resize: vertical; min-height: 100px; }
+  .signup-button { width: 100%; padding: 1.1rem; background: #6b7c3a; color: #fff; border: none; border-radius: 6px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; }
+  .signup-button:hover { background: #1c2016; }
+
+  /* ===== SEÇÃO FOOTER ===== */
+  footer { padding: 3rem 5rem; background: #1c2016; color: #fff; border-top: 1px solid rgba(122,140,69,0.2); }
+  .footer-content { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-bottom: 2rem; }
+  .footer-col h4 { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+  .footer-col a { display: block; font-size: 0.9rem; color: rgba(255,255,255,0.7); text-decoration: none; margin-bottom: 0.6rem; transition: color 0.2s; }
+  .footer-col a:hover { color: #6b7c3a; }
+  .footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid rgba(122,140,69,0.2); font-size: 0.85rem; color: rgba(255,255,255,0.6); }
+
+  /* ===== RESPONSIVO LANDING ===== */
+  @media (max-width: 1200px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .plans-container { grid-template-columns: 1fr; }
+    .footer-content { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    .features-section { padding: 3rem 1.5rem; }
+    .plans-section { padding: 3rem 1.5rem; }
+    .signup-section { padding: 3rem 1.5rem; }
+    .signup-container { padding: 2rem 1.5rem; }
+    footer { padding: 2rem 1.5rem; }
+
   .hero-visual { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; }
   .radar-container { position: relative; width: 400px; height: 400px; }
   .radar-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(122,140,69,0.2); top: 50%; left: 50%; transform: translate(-50%, -50%); }
@@ -253,7 +317,198 @@
       </div>
     </div>
   </section>
+
+  <!-- SEÇÃO: COMO FUNCIONA -->
+  <section class="features-section">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <h2 class="section-title">Como <em>Funciona</em></h2>
+        <p class="section-desc" style="max-width: 500px; margin-left: auto; margin-right: auto;">GeoRadar monitora eventos em tempo real e entrega inteligência territorial para decisões mais rápidas e precisas.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🛰️</div>
+          <div class="feature-title">Monitoramento em Tempo Real</div>
+          <div class="feature-desc">Acompanhamos eventos fundiários, ambientais e empresariais 24/7, com processamento automático de dados públicos de múltiplas fontes.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-title">Leads Qualificados</div>
+          <div class="feature-desc">Sistema inteligente de scoring que identifica oportunidades com maior potencial de conversão, economizando tempo e recursos.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <div class="feature-title">Dashboard Intuitivo</div>
+          <div class="feature-desc">Visualize, filtre e exporte dados em segundos. Análise compartimentalizada por módulo com controle total sobre sua pipeline.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO: PLANOS E PREÇOS -->
+  <section class="plans-section">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <h2 class="section-title">Planos e <em>Preços</em></h2>
+        <p class="section-desc" style="max-width: 500px; margin-left: auto; margin-right: auto;">Escolha o plano ideal para seu negócio. Comece com o básico e escale conforme sua operação cresce.</p>
+      </div>
+
+      <div class="plans-container">
+        <!-- PLANO BÁSICO -->
+        <div class="plan-card">
+          <div class="plan-name">Básico</div>
+          <div class="plan-price">R$ 499<small>/mês</small></div>
+          <p class="plan-desc">Ideal para quem está começando a explorar oportunidades em agronegócio.</p>
+          <ul class="plan-features">
+            <li>2 módulos ativos</li>
+            <li>Até 5.000 leads/mês</li>
+            <li>Dashboard completo</li>
+            <li>Filtros e busca</li>
+            <li>Exportação CSV</li>
+            <li>Email support</li>
+            <li>1 usuário</li>
+          </ul>
+          <button class="plan-cta secundaria" onclick="scrollToSignup()">Comece Agora</button>
+        </div>
+
+        <!-- PLANO PROFISSIONAL (DESTAQUE) -->
+        <div class="plan-card destaque">
+          <div class="plan-badge">Mais Popular</div>
+          <div class="plan-name">Profissional</div>
+          <div class="plan-price">R$ 1.299<small>/mês</small></div>
+          <p class="plan-desc">Para empresas em crescimento que precisam escalar operações e capturar mais oportunidades.</p>
+          <ul class="plan-features">
+            <li>4 módulos ativos</li>
+            <li>Até 50.000 leads/mês</li>
+            <li>Dashboard avançado</li>
+            <li>Filtros avançados e busca</li>
+            <li>Exportação CSV + WhatsApp</li>
+            <li>Até 5 usuários</li>
+            <li>Relatórios mensais</li>
+            <li>Priority support</li>
+          </ul>
+          <button class="plan-cta principal" onclick="scrollToSignup()">Ativar Plano</button>
+        </div>
+
+        <!-- PLANO PREMIUM -->
+        <div class="plan-card">
+          <div class="plan-name">Premium</div>
+          <div class="plan-price">R$ 2.999<small>/mês</small></div>
+          <p class="plan-desc">Acesso completo à plataforma com todas as funcionalidades e prioridade máxima.</p>
+          <ul class="plan-features">
+            <li>5 módulos (todos)</li>
+            <li>Leads ilimitados</li>
+            <li>Dashboard completo</li>
+            <li>API de integração</li>
+            <li>Webhooks em tempo real</li>
+            <li>Até 20 usuários</li>
+            <li>Relatórios customizados</li>
+            <li>Suporte 24/7 dedicado</li>
+          </ul>
+          <button class="plan-cta secundaria" onclick="scrollToSignup()">Fale Conosco</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO: CADASTRO -->
+  <section class="signup-section">
+    <div class="signup-container" id="signup">
+      <h2 class="signup-title">Comece Agora</h2>
+      <p class="signup-subtitle">Deixe seus dados e um de nossos especialistas entraremos em contato em 24 horas.</p>
+
+      <form onsubmit="enviarCadastro(event)">
+        <div class="form-group">
+          <label for="nome">Nome Completo *</label>
+          <input type="text" id="nome" name="nome" required placeholder="João Silva">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Corporativo *</label>
+          <input type="email" id="email" name="email" required placeholder="joao@empresa.com.br">
+        </div>
+
+        <div class="form-group">
+          <label for="empresa">Empresa / Propriedade *</label>
+          <input type="text" id="empresa" name="empresa" required placeholder="Sua Empresa Ltda.">
+        </div>
+
+        <div class="form-group">
+          <label for="telefone">Telefone com WhatsApp *</label>
+          <input type="tel" id="telefone" name="telefone" required placeholder="(11) 99999-9999">
+        </div>
+
+        <div class="form-group">
+          <label for="plano">Plano de Interesse *</label>
+          <select id="plano" name="plano" required>
+            <option value="">Selecione um plano...</option>
+            <option value="basico">Básico (R$ 499/mês)</option>
+            <option value="profissional">Profissional (R$ 1.299/mês)</option>
+            <option value="premium">Premium (R$ 2.999/mês)</option>
+            <option value="consultar">Consultoria customizada</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="modulos">Módulos de Interesse *</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <label style="display: flex; align-items: center; font-weight: 400; text-transform: none; font-family: 'DM Sans'; letter-spacing: 0;">
+              <input type="checkbox" name="modulo" value="fundiario"> 🗺️ Fundiário
+            </label>
+            <label style="display: flex; align-items: center; font-weight: 400; text-transform: none; font-family: 'DM Sans'; letter-spacing: 0;">
+              <input type="checkbox" name="modulo" value="credito"> 💰 Crédito Rural
+            </label>
+            <label style="display: flex; align-items: center; font-weight: 400; text-transform: none; font-family: 'DM Sans'; letter-spacing: 0;">
+              <input type="checkbox" name="modulo" value="ambiental"> 🌱 Ambiental
+            </label>
+            <label style="display: flex; align-items: center; font-weight: 400; text-transform: none; font-family: 'DM Sans'; letter-spacing: 0;">
+              <input type="checkbox" name="modulo" value="solar"> ☀️ Solar Rural
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="mensagem">Mensagem (opcional)</label>
+          <textarea id="mensagem" name="mensagem" placeholder="Conte-nos sobre seu negócio ou dúvidas..."></textarea>
+        </div>
+
+        <button type="submit" class="signup-button">Solicitar Acesso →</button>
+      </form>
+    </div>
+  </section>
 </div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-col">
+      <h4>GeoRadar Agro</h4>
+      <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 0.5rem;">Inteligência territorial para o agronegócio.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Produto</h4>
+      <a href="javascript:void(0)" onclick="goToPage('modulos')">Módulos</a>
+      <a href="javascript:void(0)" onclick="scrollToSignup()">Planos</a>
+      <a href="javascript:void(0)">Documentação</a>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <a href="javascript:void(0)">Sobre nós</a>
+      <a href="javascript:void(0)">Blog</a>
+      <a href="javascript:void(0)">Contato</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="javascript:void(0)">Privacidade</a>
+      <a href="javascript:void(0)">Termos</a>
+      <a href="javascript:void(0)">LGPD</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 GeoRadar Agro. Todos os direitos reservados. | Desenvolvido com ❤️ para o agronegócio.</p>
+  </div>
+</footer>
 
 <!-- ===== PAGE: MÓDULOS ===== -->
 <div id="modulos" class="page">
@@ -443,26 +698,81 @@
   let visualizacao = "linhas";
   let leadSelecionado = null;
 
+  // Gerador de dados realistas para teste em larga escala
+  function gerarLeadsAleatorios(moduloNome, quantidade) {
+    const nomes = ["Fazenda", "Sítio", "Propriedade", "Granja", "Plantação", "Confinamento", "Sistema de", "Unidade", "Empreendimento", "Cooperativa"];
+    const sobrenomes = ["Santa Maria", "Bom Futuro", "Esperança", "Morena", "Nova Era", "Horizonte Verde", "Índia", "Vida Nova", "São João", "Das Flores", "Do Vale", "da Mata", "Três Paus", "da Serra", "Água Limpa"];
+    const cidades = ["Ribeirão Preto", "Araçatuba", "Itapetininga", "Barretos", "Tupã", "Castro", "Sorocaba", "Descalvado", "Araraquara", "Bebedouro"];
+    const estados = ["SP", "PR", "MG", "GO", "MS", "MT"];
+
+    const eventos = {
+      fundiario: ["SIGEF certificado", "CAR retificado", "Matrícula atualizada", "SICAR ativo", "CAR vencido", "Remembramento em andamento", "Desmembramento formalizado", "Inventário iniciado", "Georreferenciamento pendente"],
+      credito: ["Receita crescente", "Histórico de pagamento", "Sem restrições", "Licenças obtidas", "CNPJ novo", "Equipamentos antigos", "Safra assegurada", "Contratos forward", "Expansão prevista"],
+      solar: ["Consumo crescente", "Tarifa em alta", "Espaço disponível", "Pivôs antigos", "Energia terceirizada", "Climatização 24/7", "Tarifa em aumento", "Espaço em telhado"],
+      ambiental: ["CAR emitido", "Renovação CAR próxima", "Retificação em andamento", "Auditoria ambiental", "Licença de operação", "Embargo levantado", "Processo ambiental"],
+      empresas: ["CNPJ ativo", "Alteração societária", "Capital social aumentado", "Novo CNAE", "Transferência de controle", "Abertura de filial", "Mudança de endereço"]
+    };
+
+    const servicos = {
+      fundiario: ["Renovação de CAR", "Atualização cartória", "Renovação SIGEF", "Atualização SICAR", "Auditoria ambiental", "Levantamento fundiário", "Regularização fundiária", "Assessoria jurídica"],
+      credito: ["Análise de crédito", "Estruturação de operações", "Assessoria bancária", "Análise de viabilidade", "Financiamento de máquinas", "Leasing agrícola", "Custeio de safra", "CPR estruturado"],
+      solar: ["Projeto solar", "Instalação completa", "Monitoramento de geração", "Solar + bombeamento", "Automação", "Baterias de backup", "Monitoramento web"],
+      ambiental: ["Assessoria ambiental", "Regularização ambiental", "Consultoria CAR", "Auditoria ambiental", "Licenciamento ambiental"],
+      empresas: ["Consultoria empresarial", "Estruturação societária", "Análise de crédito", "Assessoria fiscal", "Consultoria jurídica"]
+    };
+
+    const atividades = {
+      fundiario: ["Soja/Milho", "Pecuária", "Diversificada", "Cana-de-açúcar", "Avicultura", "Laranja", "Grãos", "Fruticultura"],
+      credito: ["Grãos/Leguminosas", "Fruticultura", "Soja/Milho", "Cana/Grãos", "Pecuária intensiva", "Agricultura irrigada"],
+      solar: ["Pecuária intensiva", "Agricultura irrigada", "Avicultura de postura", "Soja/Milho", "Café"],
+      ambiental: ["Agropecuária", "Silvicultura", "Construção", "Mineração", "Energia"],
+      empresas: ["Consultoria", "Comércio", "Serviços", "Agronegócio", "Tecnologia"]
+    };
+
+    const leads = [];
+    for (let i = 0; i < quantidade; i++) {
+      const nome = nomes[Math.floor(Math.random() * nomes.length)] + " " + sobrenomes[Math.floor(Math.random() * sobrenomes.length)];
+      const cidade = cidades[Math.floor(Math.random() * cidades.length)];
+      const estado = estados[Math.floor(Math.random() * estados.length)];
+      const score = Math.floor(Math.random() * 100);
+      const classe = score >= 80 ? "quente" : score >= 60 ? "morno" : "frio";
+      const status = ["novo", "contactado", "fechado"][Math.floor(Math.random() * 3)];
+      const atividade = atividades[moduloNome][Math.floor(Math.random() * atividades[moduloNome].length)];
+
+      const data = new Date(2025, 5, Math.floor(Math.random() * 28) + 1).toLocaleDateString('pt-BR');
+      const cnpj = Math.floor(Math.random() * 90000000 + 10000000).toString().replace(/(\d{2})(\d{3})(\d{3})(\d{4})/, "$1.$2.$3/$4-10");
+      const area = moduloNome !== "credito" ? (Math.floor(Math.random() * 3000) + 100) + " ha" : "-";
+
+      leads.push({
+        id: i + 1,
+        nome: nome,
+        local: `${cidade}, ${estado}`,
+        tipo: eventos[moduloNome][Math.floor(Math.random() * eventos[moduloNome].length)],
+        score: score,
+        classe: classe,
+        status: status,
+        data: data,
+        proprietario: nome + " " + (Math.random() > 0.5 ? "Ltda." : "S/A"),
+        cnpj: cnpj,
+        area: area,
+        atividade: atividade,
+        contato: `contato@${nome.toLowerCase().replace(/\s/g, '')}.com.br`,
+        tel: `(${Math.floor(Math.random() * 85) + 11}) 99${Math.floor(Math.random() * 90000) + 10000}-${Math.floor(Math.random() * 9000) + 1000}`,
+        eventos: [eventos[moduloNome][Math.floor(Math.random() * eventos[moduloNome].length)], eventos[moduloNome][Math.floor(Math.random() * eventos[moduloNome].length)]],
+        servicos: [servicos[moduloNome][Math.floor(Math.random() * servicos[moduloNome].length)], servicos[moduloNome][Math.floor(Math.random() * servicos[moduloNome].length)]],
+        publico: "Cartórios · Bancos · Cooperativas · Integradores"
+      });
+    }
+    return leads;
+  }
+
+  // Dados inicializados com grande volume para testes (10.000 leads por módulo)
   const leadsDataByModulo = {
-    fundiario: [
-      { id: 1, nome: "Fazenda Santa Maria", local: "Ribeirão Preto, SP", tipo: "SIGEF Certificado", score: 95, classe: "quente", status: "novo", data: "01/06/2025", proprietario: "Santa Maria Agrop. Ltda.", cnpj: "12.345.678/0001-10", area: "2.500 ha", atividade: "Soja/Milho", contato: "adm@santamaria.com.br", tel: "(16) 99801-1122", eventos: ["SIGEF certificado", "CAR retificado", "Matrícula atualizada"], servicos: ["Renovação de CAR", "Atualização cartória", "Renovação SIGEF"], publico: "Cartórios · INCRA · Georreferenciadoras" },
-      { id: 2, nome: "Propriedade Bom Futuro", local: "Araçatuba, SP", tipo: "SICAR Ativo", score: 78, classe: "morno", status: "contactado", data: "28/05/2025", proprietario: "Bom Futuro Pecuária S/A", cnpj: "98.765.432/0001-55", area: "1.850 ha", atividade: "Pecuária", contato: "contato@bomfuturo.com.br", tel: "(18) 3271-5000", eventos: ["SICAR ativo", "CAR vencido em 90 dias"], servicos: ["Renovação de CAR", "Atualização SICAR", "Auditoria ambiental"], publico: "Cartórios · Auditores ambientais" },
-      { id: 3, nome: "Sítio Esperança", local: "Itapetininga, SP", tipo: "Remembramento", score: 68, classe: "morno", status: "novo", data: "25/05/2025", proprietario: "Esperança Agrop. Familiar", cnpj: "34.567.890/0001-23", area: "540 ha", atividade: "Diversificada", contato: "esperanca@sitio.com.br", tel: "(15) 3275-2341", eventos: ["Processo de remembramento", "Documentação parcial"], servicos: ["Levantamento fundiário", "Regularização fundiária", "Assessoria jurídica"], publico: "Cartórios · Advogados" },
-      { id: 4, nome: "Fazenda Morena", local: "Barretos, SP", tipo: "Desmembramento", score: 82, classe: "quente", status: "fechado", data: "22/05/2025", proprietario: "Açúcares do Brasil S/A", cnpj: "56.789.012/0001-34", area: "3.200 ha", atividade: "Cana-de-açúcar", contato: "legal@acucardbrasil.com.br", tel: "(17) 3323-5678", eventos: ["Desmembramento formalizado", "SIGEF atualizado", "CAR renovado"], servicos: ["Transferência de posse", "Documentação legal", "Registro em cartório"], publico: "Cartórios · Usinas" },
-      { id: 5, nome: "Granja Nova Era", local: "Ribeirão Preto, SP", tipo: "Inventário", score: 55, classe: "frio", status: "novo", data: "18/05/2025", proprietario: "Nova Era Alimentos Ltda.", cnpj: "78.901.234/0001-45", area: "280 ha", atividade: "Avicultura", contato: "admin@novaera.com.br", tel: "(16) 3422-1234", eventos: ["Inventário iniciado", "Documentação incompleta"], servicos: ["Inventário completo", "Descrição de imóvel", "Documentação"], publico: "Cartórios · Tabeliões" },
-      { id: 6, nome: "Plantação Horizonte Verde", local: "Bebedouro, SP", tipo: "Georreferenciamento", score: 71, classe: "morno", status: "contactado", data: "15/05/2025", proprietario: "Horizonte Verde Citrus S/A", cnpj: "23.456.789/0001-56", area: "1.620 ha", atividade: "Laranja", contato: "geo@horizonteverde.com.br", tel: "(17) 3634-9876", eventos: ["Georreferenciamento pendente", "CAR registrado"], servicos: ["Levantamento GNSS", "Processamento de dados", "Certificação SIGEF"], publico: "Georreferenciadoras · INCRA" },
-    ],
-    credito: [
-      { id: 7, nome: "Agrop. Santa Theresa", local: "Castro, SP", tipo: "Expansão Produção", score: 91, classe: "quente", status: "novo", data: "30/05/2025", proprietario: "Santa Theresa Agrop. Ltda.", cnpj: "45.678.901/0001-67", area: "-", atividade: "Grãos/Leguminosas", contato: "financeiro@sttheresa.com.br", tel: "(42) 3224-5678", eventos: ["Receita crescente", "Histórico de pagamento", "Sem restrições"], servicos: ["Análise de crédito", "Estruturação de operações", "Assessoria bancária"], publico: "Bancos · Cooperativas · Fintechs" },
-      { id: 8, nome: "Empreendimento Novo Campo", local: "Sorocaba, SP", tipo: "CNPJ Novo", score: 64, classe: "morno", status: "contactado", data: "28/05/2025", proprietario: "Novo Campo Fruticultura S/A", cnpj: "89.012.345/0001-78", area: "-", atividade: "Fruticultura", contato: "geral@novocampo.com.br", tel: "(15) 3414-7890", eventos: ["CNPJ criado (30 dias)", "Licenças obtidas"], servicos: ["Análise de viabilidade", "Estruturação de crédito inicial"], publico: "Bancos atuantes em startups rurais" },
-      { id: 9, nome: "Fazenda Índia", local: "Descalvado, SP", tipo: "Maquinário", score: 77, classe: "morno", status: "novo", data: "26/05/2025", proprietario: "Índia Agrop. Familiar", cnpj: "12.234.567/0001-89", area: "-", atividade: "Soja/Milho", contato: "compras@fazendaindia.com.br", tel: "(19) 3821-5432", eventos: ["Equipamentos antigos", "Receita estável", "Propriedade regularizada"], servicos: ["Financiamento de máquinas", "Leasing agrícola", "Trade-in"], publico: "Concessionárias · Financeiras agrícolas" },
-      { id: 10, nome: "Cooperativa Bom Semeador", local: "Araraquara, SP", tipo: "Custeio", score: 86, classe: "quente", status: "fechado", data: "24/05/2025", proprietario: "Coop. Agrop. Bom Semeador", cnpj: "34.345.678/0001-90", area: "-", atividade: "Cana/Grãos", contato: "credito@bomesemeador.coop", tel: "(16) 3322-6543", eventos: ["Safra assegurada", "Histórico de 15 anos", "Contratos forward"], servicos: ["Custeio de safra", "CPR estruturado", "Securitização"], publico: "Bancos · Seguradoras · Fundos" },
-    ],
-    solar: [
-      { id: 25, nome: "Confinamento Brangus Gold", local: "Araçatuba, SP", tipo: "Alto Consumo", score: 93, classe: "quente", status: "novo", data: "29/05/2025", proprietario: "Confinamento Brangus Gold S/A", cnpj: "67.890.123/0001-45", area: "-", atividade: "Pecuária intensiva", contato: "energia@brangus.com.br", tel: "(18) 3271-6789", eventos: ["Consumo crescente", "Tarifa em alta", "Espaço disponível para placas"], servicos: ["Projeto solar", "Instalação completa", "Monitoramento de geração"], publico: "Integradores solares · Distribuidoras energia" },
-      { id: 26, nome: "Sistema de Pivot Água Azul", local: "Tupã, SP", tipo: "Pivot Central", score: 81, classe: "quente", status: "contactado", data: "27/05/2025", proprietario: "Água Azul Agrícola Ltda.", cnpj: "78.901.234/0001-56", area: "-", atividade: "Agricultura irrigada", contato: "tecnologia@aguaazul.com.br", tel: "(14) 3465-1234", eventos: ["Pivôs antigos", "Energia terceirizada", "Planejamento de modernização"], servicos: ["Solar + bombeamento", "Tanque de armazenamento", "Automação"], publico: "Integradores solares · Irrigacionalistas" },
-      { id: 27, nome: "Granja Aviária Vida Nova", local: "Paraíso, SP", tipo: "Confinamento", score: 76, classe: "morno", status: "novo", data: "25/05/2025", proprietario: "Granja Aviária Vida Nova Ltda.", cnpj: "89.012.345/0001-67", area: "-", atividade: "Avicultura de postura", contato: "admin@vidanova.com.br", tel: "(17) 3649-8765", eventos: ["Climatização 24/7", "Tarifa em aumento", "Espaço em telhado"], servicos: ["Solar residencial", "Baterias de backup", "Monitoramento web"], publico: "Integradores solares · Avicultores" },
-    ]
+    fundiario: gerarLeadsAleatorios("fundiario", 10000),
+    credito: gerarLeadsAleatorios("credito", 10000),
+    solar: gerarLeadsAleatorios("solar", 10000),
+    ambiental: gerarLeadsAleatorios("ambiental", 5000),
+    empresas: gerarLeadsAleatorios("empresas", 5000)
   };
 
   function goToPage(pageId) {
@@ -473,7 +783,13 @@
 
   function setModuloAtivo(modulo) {
     moduloAtivo = modulo;
-    const nomes = { fundiario: "Fundiário", credito: "Crédito Rural", solar: "Solar Rural" };
+    const nomes = {
+      fundiario: "Fundiário",
+      credito: "Crédito Rural",
+      solar: "Solar Rural",
+      ambiental: "Ambiental",
+      empresas: "Empresas"
+    };
     document.getElementById('modulo-titulo').textContent = nomes[modulo];
     carregarLeads();
   }
@@ -619,6 +935,39 @@
   function logout() {
     alert('Logout realizado!');
     goToPage('home');
+  }
+
+  function scrollToSignup() {
+    const signup = document.getElementById('signup');
+    signup.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function enviarCadastro(event) {
+    event.preventDefault();
+
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const empresa = document.getElementById('empresa').value;
+    const telefone = document.getElementById('telefone').value;
+    const plano = document.getElementById('plano').value;
+    const modulos = Array.from(document.querySelectorAll('input[name="modulo"]:checked')).map(el => el.value);
+    const mensagem = document.getElementById('mensagem').value;
+
+    if (modulos.length === 0) {
+      alert('Por favor, selecione pelo menos um módulo de interesse.');
+      return;
+    }
+
+    // Mensagem WhatsApp
+    const msg = `Olá! Meu nome é ${nome}. Sou de ${empresa} e gostaria de conhecer mais sobre o plano ${plano.charAt(0).toUpperCase() + plano.slice(1)} do GeoRadar Agro. Interessado em: ${modulos.map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ')}.`;
+    const phone = telefone.replace(/\D/g, '');
+
+    // Simulação de envio
+    alert(`Obrigado ${nome}! Sua solicitação foi registrada. Entraremos em contato em breve via ${telefone}.`);
+
+    // Limpar formulário
+    document.querySelector('form').reset();
+    goToPage('modulos');
   }
 
   // Inicializar
