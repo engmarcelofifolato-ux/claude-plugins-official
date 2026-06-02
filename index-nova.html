@@ -162,7 +162,7 @@
   .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 4vw, 3.8rem); letter-spacing: 0.03em; line-height: 1; margin-bottom: 1rem; }
   .section-desc { font-size: 1rem; font-weight: 300; line-height: 1.75; color: var(--texto-muted); max-width: 560px; }
 
-  .modulos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; }
+  .modulos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
   .modulo-card { background: var(--preto-card); border: 1px solid var(--cinza-borda); border-radius: 12px; padding: 2rem; position: relative; transition: all 0.3s; cursor: default; }
   .modulo-card:hover { border-color: rgba(122,140,69,0.3); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
   .modulo-card.bloqueado { opacity: 0.6; }
@@ -249,23 +249,27 @@
   .modal-tag { background: rgba(122,140,69,0.15); padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.8rem; color: #4a5e2a; }
 
   /* RESPONSIVE */
-  @media (max-width: 1024px) {
+  @media (max-width: 1200px) {
     nav { padding: 1rem 1.5rem; }
     .hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; }
     .hero-visual { display: none; }
-    .modulos-grid { grid-template-columns: 1fr 1fr; }
-    .modulos-page { padding: 8rem 2rem 4rem; }
-    .dashboard-page { padding: 8rem 2rem 4rem; }
+    .modulos-page { padding: 6rem 2rem 3rem; }
+    .dashboard-page { padding: 6rem 2rem 3rem; }
     .dashboard-top { flex-direction: column; align-items: stretch; }
     .filtros { flex-direction: column; }
-    .leads-grid { grid-template-columns: 1fr; }
+    .leads-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .features-section { padding: 3rem 2rem; }
+    .plans-section { padding: 3rem 2rem; }
+    .signup-section { padding: 3rem 2rem; }
   }
 
   @media (max-width: 768px) {
-    .modulos-grid { grid-template-columns: 1fr; }
+    .modulos-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
     .leads-table { font-size: 0.8rem; }
     .leads-table th, .leads-table td { padding: 0.7rem; }
     .modal-content { padding: 1.5rem; }
+    .modulo-card { padding: 1.5rem; }
+    .hero-title { font-size: 2.5rem; }
   }
 
   /* HIDDEN */
