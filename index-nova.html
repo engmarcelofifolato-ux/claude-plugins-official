@@ -157,82 +157,193 @@
   .radar-dot:nth-child(8) { top: 38%; left: 30%; }
 
   /* ===== MÓDULOS PAGE ===== */
-  .modulos-page { padding: 8rem 5rem 4rem; }
-  .modulos-header { margin-bottom: 4rem; text-align: center; }
-  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 4vw, 3.8rem); letter-spacing: 0.03em; line-height: 1; margin-bottom: 1rem; }
-  .section-desc { font-size: 1rem; font-weight: 300; line-height: 1.75; color: var(--texto-muted); max-width: 560px; margin-left: auto; margin-right: auto; }
+  .modulos-page {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    padding: 8rem 3rem 4rem;
+    min-height: 100vh;
+  }
 
-  .modulos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-top: 3rem; }
+  .modulos-sidebar {
+    background: var(--preto-card);
+    border-right: 1px solid var(--cinza-borda);
+    padding: 2rem 1.5rem;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+    border-radius: 12px;
+    border: 1px solid var(--cinza-borda);
+  }
+
+  .modulos-section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--texto-muted);
+    margin-bottom: 1.2rem;
+    margin-top: 1.8rem;
+  }
+  .modulos-section-title:first-child { margin-top: 0; }
+
+  .modulos-list {
+    list-style: none;
+  }
+
+  .modulos-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.4rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--texto-claro);
+    position: relative;
+  }
+
+  .modulos-item:hover {
+    background: rgba(122,140,69,0.1);
+    color: #6b7c3a;
+  }
+
+  .modulos-item.active {
+    background: rgba(122,140,69,0.2);
+    color: #6b7c3a;
+    font-weight: 600;
+    border-left: 3px solid #6b7c3a;
+    padding-left: calc(1rem - 3px);
+  }
+
+  .modulos-item-icon { font-size: 1.3rem; }
+
+  .modulos-item-badge {
+    margin-left: auto;
+    background: #c0392b;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .modulos-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modulos-header {
+    margin-bottom: 2rem;
+  }
+
+  .modulos-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .modulos-header p {
+    color: var(--texto-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .modulos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
   .modulo-card {
     background: linear-gradient(135deg, var(--preto-card) 0%, rgba(255,255,255,0.98) 100%);
-    border: 2px solid var(--cinza-borda);
-    border-radius: 16px;
-    padding: 2.5rem;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 12px;
+    padding: 2rem;
     position: relative;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    cursor: default;
+    transition: all 0.3s ease;
     overflow: hidden;
   }
+
   .modulo-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #6b7c3a, #8c7a40, #6b7c3a);
+    height: 3px;
+    background: linear-gradient(90deg, #6b7c3a, #8c7a40);
   }
+
   .modulo-card:hover {
     border-color: #6b7c3a;
-    transform: translateY(-12px);
-    box-shadow: 0 25px 50px rgba(122,140,69,0.25);
-  }
-  .modulo-card.bloqueado {
-    opacity: 0.7;
-    background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
-  }
-  .modulo-card.bloqueado:hover {
-    opacity: 0.85;
-    border-color: #999;
-    transform: translateY(-8px);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(122,140,69,0.15);
   }
 
-  .modulo-icon { font-size: 3.5rem; margin-bottom: 1.5rem; display: inline-block; }
-  .modulo-nome { font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #6b7c3a; margin-bottom: 0.5rem; }
-  .modulo-titulo { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.05em; margin-bottom: 1.2rem; line-height: 1; color: #1c2016; }
-  .modulo-desc { font-size: 0.95rem; line-height: 1.75; color: var(--texto-muted); margin-bottom: 2rem; }
-
-  .modulo-badge { position: absolute; top: 1.5rem; right: 1.5rem; background: linear-gradient(135deg, #6b7c3a 0%, #7a8c45 100%); color: #ffffff; font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.5rem 1rem; border-radius: 100px; box-shadow: 0 4px 12px rgba(122,140,69,0.3); }
-  .modulo-badge.bloqueado { background: linear-gradient(135deg, #999 0%, #777 100%); }
-
-  .btn-acessar {
-    display: block;
-    width: 100%;
-    text-align: center;
+  .modulo-item-nome {
     font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    color: #6b7c3a;
+    margin-bottom: 0.3rem;
     font-weight: 700;
-    font-size: 0.9rem;
-    letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 1rem;
-    border-radius: 8px;
-    text-decoration: none;
-    border: 2px solid #6b7c3a;
+    letter-spacing: 0.12em;
+  }
+
+  .modulo-item-titulo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
     color: #1c2016;
-    cursor: pointer;
-    transition: all 0.3s;
-    background: transparent;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.02em;
   }
-  .btn-acessar:hover { border-color: #4a5e2a; color: #4a5e2a; }
-  .btn-acessar.liberado {
-    background: linear-gradient(135deg, #6b7c3a 0%, #7a8c45 100%);
-    color: #ffffff;
-    border-color: #4a5e2a;
+
+  .modulo-item-desc {
+    font-size: 0.9rem;
+    color: var(--texto-muted);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
   }
-  .btn-acessar.liberado:hover {
-    background: linear-gradient(135deg, #4a5e2a 0%, #6b7c3a 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(122,140,69,0.3);
+
+  /* Info cards no sidebar */
+  .modulos-info-card {
+    background: linear-gradient(135deg, rgba(122,140,69,0.05) 0%, rgba(140,122,64,0.05) 100%);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin-top: 2rem;
+  }
+
+  .modulos-info-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--texto-muted);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+
+  .modulos-info-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: #1c2016;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .modulos-info-desc {
+    font-size: 0.8rem;
+    color: var(--texto-muted);
   }
 
   /* ===== DASHBOARD PAGE ===== */
@@ -310,10 +421,11 @@
     nav { padding: 1rem 1.5rem; }
     .hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; }
     .hero-visual { display: none; }
-    .modulos-page { padding: 6rem 2rem 3rem; }
+    .modulos-page { grid-template-columns: 1fr; padding: 6rem 2rem 3rem; gap: 1.5rem; }
+    .modulos-sidebar { position: static; border-right: none; border-bottom: 1px solid var(--cinza-borda); padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
     .dashboard-page { padding: 6rem 2rem 3rem; }
     .dashboard-top { flex-direction: column; align-items: stretch; }
-    .filtros { flex-direction: column; }
+    .filtros { grid-template-columns: 1fr; }
     .leads-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
     .features-section { padding: 3rem 2rem; }
     .plans-section { padding: 3rem 2rem; }
@@ -321,11 +433,12 @@
   }
 
   @media (max-width: 768px) {
-    .modulos-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .modulos-grid { grid-template-columns: 1fr; }
+    .modulos-sidebar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; padding: 1.5rem; }
+    .modulos-info-card { grid-column: 1 / -1; }
     .leads-table { font-size: 0.8rem; }
     .leads-table th, .leads-table td { padding: 0.7rem; }
     .modal-content { padding: 1.5rem; }
-    .modulo-card { padding: 1.5rem; }
     .hero-title { font-size: 2.5rem; }
   }
 
@@ -574,55 +687,69 @@
 <!-- ===== PAGE: MÓDULOS ===== -->
 <div id="modulos" class="page">
   <div class="modulos-page">
-    <div class="modulos-header">
-      <h2 class="section-title">Escolha seus <em>Módulos</em></h2>
-      <p class="section-desc">Cada módulo é especializado em um tipo de oportunidade. Você só vê dados relevantes para seu negócio.</p>
+    <!-- SIDEBAR -->
+    <div class="modulos-sidebar">
+      <div class="modulos-section-title">Módulos</div>
+      <ul class="modulos-list" id="modulos-menu">
+        <li class="modulos-item active" onclick="selecionarModulo('fundiario', this)" data-modulo="fundiario">
+          <span class="modulos-item-icon">🗺️</span>
+          <span>Fundiário</span>
+        </li>
+        <li class="modulos-item" onclick="selecionarModulo('credito', this)" data-modulo="credito">
+          <span class="modulos-item-icon">💰</span>
+          <span>Crédito Rural</span>
+        </li>
+        <li class="modulos-item" onclick="selecionarModulo('ambiental', this)" data-modulo="ambiental">
+          <span class="modulos-item-icon">🌱</span>
+          <span>Ambiental</span>
+          <span class="modulos-item-badge">20</span>
+        </li>
+        <li class="modulos-item" onclick="selecionarModulo('solar', this)" data-modulo="solar">
+          <span class="modulos-item-icon">☀️</span>
+          <span>Solar Rural</span>
+        </li>
+        <li class="modulos-item" onclick="selecionarModulo('empresas', this)" data-modulo="empresas">
+          <span class="modulos-item-icon">🏢</span>
+          <span>Empresas</span>
+        </li>
+      </ul>
+
+      <div class="modulos-section-title">Ferramentas</div>
+      <ul class="modulos-list">
+        <li class="modulos-item" onclick="goToPage('dashboard')">
+          <span class="modulos-item-icon">📊</span>
+          <span>Dashboard</span>
+        </li>
+        <li class="modulos-item">
+          <span class="modulos-item-icon">🔔</span>
+          <span>Alertas</span>
+        </li>
+        <li class="modulos-item">
+          <span class="modulos-item-icon">📋</span>
+          <span>Relatórios</span>
+        </li>
+        <li class="modulos-item">
+          <span class="modulos-item-icon">⚙️</span>
+          <span>Configurações</span>
+        </li>
+      </ul>
+
+      <div class="modulos-info-card">
+        <div class="modulos-info-label">Total de Leads</div>
+        <div class="modulos-info-value" id="info-total-leads">1.200</div>
+        <div class="modulos-info-desc" id="info-leads-desc">↑ 42 novos esta semana</div>
+      </div>
     </div>
 
-    <div class="modulos-grid">
-      <div class="modulo-card" id="card-fundiario">
-        <div class="modulo-badge">ATIVO</div>
-        <div class="modulo-icon">🗺️</div>
-        <div class="modulo-nome">GeoRadar</div>
-        <div class="modulo-titulo">Fundiário</div>
-        <p class="modulo-desc">Monitora SIGEF, SICAR, certificações, georreferenciamentos e inventários em tempo real.</p>
-        <button class="btn-acessar liberado" onclick="goToPage('dashboard'); setModuloAtivo('fundiario')">Acessar →</button>
+    <!-- CONTEÚDO -->
+    <div class="modulos-content">
+      <div class="modulos-header">
+        <h2 id="modulo-titulo-page">Fundiário</h2>
+        <p id="modulo-desc-page">Monitora SIGEF, SICAR, certificações, georreferenciamentos e inventários em tempo real.</p>
       </div>
 
-      <div class="modulo-card" id="card-credito">
-        <div class="modulo-badge">ATIVO</div>
-        <div class="modulo-icon">💰</div>
-        <div class="modulo-nome">GeoRadar</div>
-        <div class="modulo-titulo">Crédito Rural</div>
-        <p class="modulo-desc">Identifica expansões produtivas, novas empresas agrícolas e crescimento operacional.</p>
-        <button class="btn-acessar liberado" onclick="goToPage('dashboard'); setModuloAtivo('credito')">Acessar →</button>
-      </div>
-
-      <div class="modulo-card bloqueado" id="card-ambiental">
-        <div class="modulo-badge bloqueado">UPGRADE</div>
-        <div class="modulo-icon">🌱</div>
-        <div class="modulo-nome">GeoRadar</div>
-        <div class="modulo-titulo">Ambiental</div>
-        <p class="modulo-desc">Acompanha CAR, retificações, licenciamentos ambientais e processos de regularização.</p>
-        <button class="btn-acessar" onclick="alert('Para acessar este módulo, faça upgrade de seu plano.')">+ Adicionar →</button>
-      </div>
-
-      <div class="modulo-card" id="card-solar">
-        <div class="modulo-badge">ATIVO</div>
-        <div class="modulo-icon">☀️</div>
-        <div class="modulo-nome">GeoRadar</div>
-        <div class="modulo-titulo">Solar Rural</div>
-        <p class="modulo-desc">Detecta imóveis com alto consumo energético, irrigação intensa e potencial solar.</p>
-        <button class="btn-acessar liberado" onclick="goToPage('dashboard'); setModuloAtivo('solar')">Acessar →</button>
-      </div>
-
-      <div class="modulo-card bloqueado" id="card-empresas">
-        <div class="modulo-badge bloqueado">UPGRADE</div>
-        <div class="modulo-icon">🏢</div>
-        <div class="modulo-nome">GeoRadar</div>
-        <div class="modulo-titulo">Empresas</div>
-        <p class="modulo-desc">Monitora novos CNPJs rurais, CNAEs, capital social e alterações societárias.</p>
-        <button class="btn-acessar" onclick="alert('Para acessar este módulo, faça upgrade de seu plano.')">+ Adicionar →</button>
+      <div class="modulos-grid" id="modulos-grid-container">
+        <!-- Cards serão gerados por JavaScript -->
       </div>
     </div>
   </div>
@@ -872,6 +999,76 @@
     carregarLeads();
   }
 
+  const modulosInfo = {
+    fundiario: {
+      nome: "Fundiário",
+      desc: "Monitora SIGEF, SICAR, certificações, georreferenciamentos e inventários em tempo real.",
+      total: 10000,
+      novo: 127
+    },
+    credito: {
+      nome: "Crédito Rural",
+      desc: "Identifica expansões produtivas, novas empresas agrícolas e crescimento operacional.",
+      total: 10000,
+      novo: 89
+    },
+    ambiental: {
+      nome: "Ambiental",
+      desc: "Acompanha CAR, retificações, licenciamentos ambientais e processos de regularização.",
+      total: 5000,
+      novo: 342
+    },
+    solar: {
+      nome: "Solar Rural",
+      desc: "Detecta imóveis com alto consumo energético, irrigação intensa e potencial solar.",
+      total: 10000,
+      novo: 156
+    },
+    empresas: {
+      nome: "Empresas",
+      desc: "Monitora novos CNPJs rurais, CNAEs, capital social e alterações societárias.",
+      total: 5000,
+      novo: 203
+    }
+  };
+
+  function selecionarModulo(modulo, element) {
+    // Atualizar menu
+    document.querySelectorAll('.modulos-item').forEach(item => item.classList.remove('active'));
+    element.classList.add('active');
+
+    // Atualizar informações
+    const info = modulosInfo[modulo];
+    document.getElementById('modulo-titulo-page').textContent = info.nome;
+    document.getElementById('modulo-desc-page').textContent = info.desc;
+    document.getElementById('info-total-leads').textContent = info.total.toLocaleString('pt-BR');
+    document.getElementById('info-leads-desc').textContent = `↑ ${info.novo} novos esta semana`;
+
+    // Carregar dados
+    moduloAtivo = modulo;
+    renderizarCardsModulos();
+  }
+
+  function renderizarCardsModulos() {
+    const leads = leadsDataByModulo[moduloAtivo] || [];
+    const container = document.getElementById('modulos-grid-container');
+
+    container.innerHTML = leads.slice(0, 6).map(lead => `
+      <div class="modulo-card">
+        <div class="modulo-item-nome">Evento</div>
+        <div class="modulo-item-titulo">${lead.nome}</div>
+        <div class="modulo-item-desc">
+          <strong>Local:</strong> ${lead.local}<br>
+          <strong>Score:</strong> <span class="score-badge score-${lead.classe}">${lead.score}</span><br>
+          <strong>Status:</strong> <span class="status-badge status-${lead.status}">${lead.status}</span>
+        </div>
+        <button class="btn-acessar liberado" onclick="goToPage('dashboard'); setModuloAtivo('${moduloAtivo}')">
+          Ver mais dados →
+        </button>
+      </div>
+    `).join('');
+  }
+
   function carregarLeads() {
     const leads = leadsDataByModulo[moduloAtivo] || [];
     renderLeads(leads);
@@ -1050,6 +1247,7 @@
 
   // Inicializar
   carregarLeads();
+  renderizarCardsModulos();
 
   // Fechar modal ao clicar fora
   document.getElementById('modal').addEventListener('click', (e) => {
