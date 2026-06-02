@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GeoRadar Agro — Sistema de Inteligência Territorial Rural para monitoramento de oportunidades no agronegócio">
+  <title>GeoRadar Agro — Sistema de Inteligência Territorial Rural</title>
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #f5f4f0;
+      --surface: #ffffff;
+      --surface2: #edecea;
+      --border: #d0cdc6;
+      --border2: #e2e0db;
+      --oliva: #6b7c3a;
+      --oliva-dk: #4a5e2a;
+      --oliva-lt: #9aad55;
+      --oliva-bg: rgba(106,120,52,0.07);
+      --dourado: #a08c60;
+      --dourado-lt: #c9b06b;
+      --text: #1c2016;
+      --muted: #6b6a5e;
+      --muted2: #9b9a8e;
+      --quente: #c0392b;
+      --quente-bg: #fdf0ef;
+      --morno: #d97706;
+      --morno-bg: #fffbeb;
+      --frio: #4a6fa5;
+      --frio-bg: #eff4fb;
+      --alerta: #b8860b;
+      --alerta-bg: #fdf6e3;
+    }
+
+    html, body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    #root {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ===== TOPBAR ===== */
+    .topbar {
+      height: 60px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .topbar-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .topbar-logo:hover {
+      color: var(--oliva);
+    }
+
+    .topbar-module {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--oliva-bg);
+      border: 1px solid rgba(106,120,52,0.18);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .topbar-module-icon {
+      font-size: 1.1rem;
+    }
+
+    .topbar-module-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--oliva);
+    }
+
+    .topbar-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.8rem;
+      background: var(--alerta-bg);
+      border: 1px solid rgba(184,134,11,0.3);
+      border-radius: 5px;
+      font-size: 0.75rem;
+      color: var(--alerta);
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .topbar-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--oliva);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    /* ===== APP WRAPPER ===== */
+    .app-wrapper {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: 240px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .sidebar-section-title {
+      padding: 0 1.5rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted2);
+    }
+
+    .sidebar-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .sidebar-item {
+      padding: 0.75rem 1rem;
+      margin: 0 0.75rem;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      border-radius: 0 6px 6px 0;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
+    }
+
+    .sidebar-item:hover {
+      background: var(--oliva-bg);
+    }
+
+    .sidebar-item.active {
+      background: var(--oliva-bg);
+      border-left-color: var(--oliva);
+      color: var(--oliva);
+      font-weight: 600;
+    }
+
+    .sidebar-item-label {
+      flex: 1;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+    }
+
+    .sidebar-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      height: 24px;
+      background: var(--oliva);
+      color: #fff;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    /* ===== MAIN ===== */
+    .main {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .page-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .page-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--text);
+    }
+
+    .page-subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .page-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: var(--oliva);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--oliva-dk);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(106,120,52,0.2);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface2);
+      border-color: var(--oliva);
+      color: var(--oliva);
+    }
+
+    /* ===== KPI ROW ===== */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border-top: 4px solid var(--oliva);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      transition: all 0.3s ease;
+    }
+
+    .kpi-card:hover {
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+    }
+
+    .kpi-card.quente {
+      border-top-color: var(--quente);
+    }
+
+    .kpi-card.morno {
+      border-top-color: var(--morno);
+    }
+
+    .kpi-card.frio {
+      border-top-color: var(--frio);
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted2);
+      margin-bottom: 0.75rem;
+    }
+
+    .kpi-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--text);
+    }
+
+    /* ===== FILTERS ===== */
+    .filters {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .filters-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--oliva);
+      color: var(--oliva);
+    }
+
+    .filter-btn.active {
+      background: var(--oliva);
+      border-color: var(--oliva);
+      color: #fff;
+    }
+
+    .filter-divider {
+      width: 1px;
+      height: 24px;
+      background: var(--border);
+    }
+
+    .filter-search {
+      flex: 1;
+      max-width: 300px;
+      position: relative;
+    }
+
+    .filter-search-input {
+      width: 100%;
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s ease;
+    }
+
+    .filter-search-input:focus {
+      outline: none;
+      border-color: var(--oliva);
+      box-shadow: 0 0 0 3px rgba(106,120,52,0.1);
+    }
+
+    .filter-search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted2);
+      font-size: 0.9rem;
+    }
+
+    /* ===== LEADS GRID ===== */
+    .leads-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .leads-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--muted);
+    }
+
+    .leads-empty-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .leads-empty-text {
+      font-size: 1rem;
+      color: var(--muted2);
+    }
+
+    /* ===== LEAD CARD ===== */
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .lead-card:hover {
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+      border-color: var(--oliva-lt);
+    }
+
+    .lead-card-header {
+      padding: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .lead-card-info {
+      flex: 1;
+    }
+
+    .lead-card-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      background: var(--oliva-bg);
+      border: 1px solid rgba(106,120,52,0.18);
+      border-radius: 5px;
+      color: var(--oliva);
+      width: fit-content;
+    }
+
+    .lead-card-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .lead-card-location {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .lead-card-oportunidade {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.7rem;
+      background: rgba(106,120,52,0.1);
+      border-radius: 5px;
+      font-size: 0.75rem;
+      color: var(--oliva);
+      margin-bottom: 0.5rem;
+    }
+
+    .lead-card-oportunidade.alta {
+      background: rgba(192,57,43,0.1);
+      color: var(--quente);
+    }
+
+    .lead-card-oportunidade.media {
+      background: rgba(217,119,6,0.1);
+      color: var(--morno);
+    }
+
+    .lead-card-oportunidade.baixa {
+      background: rgba(74,111,165,0.1);
+      color: var(--frio);
+    }
+
+    .score-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 70px;
+      gap: 0.3rem;
+    }
+
+    .score-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--text);
+    }
+
+    .score-tag {
+      font-size: 0.65rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      background: var(--quente-bg);
+      color: var(--quente);
+    }
+
+    .score-tag.morno {
+      background: var(--morno-bg);
+      color: var(--morno);
+    }
+
+    .score-tag.frio {
+      background: var(--frio-bg);
+      color: var(--frio);
+    }
+
+    .lead-card-score-bar {
+      height: 6px;
+      background: linear-gradient(90deg, var(--quente), var(--morno), var(--frio));
+      border-radius: 3px;
+      margin: 1rem;
+      overflow: hidden;
+    }
+
+    .lead-card-score-fill {
+      height: 100%;
+      background: var(--oliva);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .lead-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding: 0 1.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.8rem;
+    }
+
+    .lead-card-grid-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .lead-card-grid-label {
+      color: var(--muted2);
+      font-size: 0.7rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .lead-card-grid-value {
+      color: var(--text);
+      font-weight: 500;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .lead-card-events {
+      padding: 0 1.5rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .event-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.35rem 0.75rem;
+      background: var(--oliva-bg);
+      border: 1px solid rgba(106,120,52,0.18);
+      border-radius: 5px;
+      font-size: 0.75rem;
+      color: var(--oliva);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .lead-card-servicos {
+      padding: 0 1.5rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .servico-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .servico-item-check {
+      color: var(--oliva);
+      font-weight: 700;
+    }
+
+    .lead-card-publico {
+      padding: 0.75rem 1.5rem;
+      background: var(--oliva-bg);
+      border-top: 1px solid rgba(106,120,52,0.18);
+      border-bottom: 1px solid rgba(106,120,52,0.18);
+      font-size: 0.8rem;
+      color: var(--oliva);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .lead-card-publico-icon {
+      font-size: 0.9rem;
+    }
+
+    .lead-card-footer {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      border-top: 1px solid var(--border2);
+    }
+
+    .lead-card-data {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .lead-card-actions {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .lead-card-actions .btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.7rem;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 16px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      animation: slideUp 0.3s ease;
+    }
+
+    .modal-header {
+      padding: 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .modal-header-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .modal-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--text);
+    }
+
+    .modal-location {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--muted2);
+      cursor: pointer;
+      transition: color 0.2s ease;
+      padding: 0;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .modal-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .modal-section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .modal-section-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .modal-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border2);
+    }
+
+    .modal-info-label {
+      color: var(--muted);
+    }
+
+    .modal-info-value {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .modal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .modal-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.8rem;
+      background: var(--oliva-bg);
+      border: 1px solid rgba(106,120,52,0.18);
+      border-radius: 5px;
+      font-size: 0.8rem;
+      color: var(--oliva);
+    }
+
+    .modal-score-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .score-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .score-item-label {
+      flex: 1;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .score-item-bar-container {
+      flex: 2;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .score-item-bar {
+      height: 100%;
+      background: var(--oliva);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .score-item-value {
+      min-width: 40px;
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .modal-footer {
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+
+    .modal-footer .btn {
+      flex: 1;
+      justify-content: center;
+    }
+
+    /* ===== RESPONSIVIDADE ===== */
+    @media (max-width: 1400px) {
+      .kpi-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .leads-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .lead-card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .app-wrapper {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 1rem;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 1.5rem;
+        align-items: center;
+      }
+
+      .sidebar-section-title {
+        display: none;
+      }
+
+      .sidebar-items {
+        flex-direction: row;
+        gap: 0.5rem;
+      }
+
+      .main {
+        padding: 1.5rem;
+      }
+
+      .topbar {
+        flex-direction: column;
+        height: auto;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .topbar-left,
+      .topbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .page-header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .page-title {
+        font-size: 1.8rem;
+      }
+
+      .filters {
+        flex-wrap: wrap;
+      }
+
+      .filter-search {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .kpi-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .lead-card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .modal {
+        width: 95%;
+        max-height: 90vh;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .kpi-row {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-buttons {
+        flex-wrap: wrap;
+      }
+
+      .filter-btn {
+        flex: 1;
+        min-width: 80px;
+      }
+
+      .lead-card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        padding: 0.75rem;
+      }
+
+      .topbar-logo {
+        font-size: 1rem;
+      }
+
+      .main {
+        gap: 1rem;
+      }
+
+      .leads-grid {
+        gap: 1rem;
+      }
+
+      .modal {
+        width: 98%;
+        max-height: 95vh;
+      }
+
+      .modal-header,
+      .modal-body,
+      .modal-footer {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar-item {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+      }
+
+      .sidebar-badge {
+        min-width: 20px;
+        height: 20px;
+        font-size: 0.65rem;
+      }
+
+      .page-title {
+        font-size: 1.2rem;
+      }
+
+      .page-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .filters {
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .filter-buttons {
+        gap: 0.4rem;
+      }
+
+      .filter-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.7rem;
+        flex: 1;
+        min-width: auto;
+      }
+
+      .lead-card-header {
+        padding: 1rem;
+      }
+
+      .lead-card-grid {
+        padding: 0 1rem;
+      }
+
+      .lead-card-footer {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .lead-card-actions {
+        width: 100%;
+      }
+
+      .lead-card-actions .btn {
+        flex: 1;
+      }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--oliva);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useCallback, useMemo } = React;
+
+    // ===== DATA =====
+    const MODULES_DATA = [
+      {
+        id: 'fundiario',
+        nome: 'Fundiário',
+        icon: '🗺️',
+        desc: 'SIGEF, SICAR, certificações e georreferenciamentos',
+        leads: [
+          {
+            id: 1,
+            nome: "Fazenda Santa Maria",
+            loc: "Ribeirão Preto, SP",
+            municipio: "Ribeirão Preto",
+            tipo: "SIGEF Certificado",
+            icon: "📋",
+            score: 95,
+            classe: "quente",
+            oport: "alta",
+            oportTxt: "Documentação completa",
+            area: "2.500 ha",
+            atividade: "Soja/Milho",
+            proprietario: "Santa Maria Agrop. Ltda.",
+            cnpj: "12.345.678/0001-10",
+            car: "SP-3543402-AB12F3",
+            eventos: ["SIGEF certificado", "CAR retificado", "Matrícula atualizada"],
+            servicos: ["Renovação de CAR", "Atualização cartória", "Renovação SIGEF", "Georreferenciamento"],
+            publico: "Cartórios · INCRA · Georreferenciadoras",
+            data: "01/06/2025",
+            contato: "adm@santamaria.com.br",
+            tel: "(16) 99801-1122",
+            scores: [
+              { l: "SIGEF certificado", p: 30, m: 30 },
+              { l: "CAR retificado", p: 25, m: 30 },
+              { l: "Matrícula atualizada", p: 20, m: 20 },
+              { l: "Área > 2000 ha", p: 20, m: 20 }
+            ]
+          },
+          {
+            id: 2,
+            nome: "Propriedade Bom Futuro",
+            loc: "Araçatuba, SP",
+            municipio: "Araçatuba",
+            tipo: "SICAR Ativo",
+            icon: "📊",
+            score: 78,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Necessita atualização",
+            area: "1.850 ha",
+            atividade: "Pecuária",
+            proprietario: "Bom Futuro Pecuária S/A",
+            cnpj: "98.765.432/0001-55",
+            car: "SP-2847561-CD45G6",
+            eventos: ["SICAR ativo", "CAR vencido em 90 dias"],
+            servicos: ["Renovação de CAR", "Atualização SICAR", "Auditoria ambiental"],
+            publico: "Cartórios · Auditores ambientais",
+            data: "28/05/2025",
+            contato: "contato@bomfuturo.com.br",
+            tel: "(18) 3271-5000",
+            scores: [
+              { l: "SICAR ativo", p: 25, m: 30 },
+              { l: "CAR vencido", p: 20, m: 30 },
+              { l: "Tamanho médio", p: 20, m: 20 },
+              { l: "Atividade consolidada", p: 13, m: 20 }
+            ]
+          },
+          {
+            id: 3,
+            nome: "Sítio Esperança",
+            loc: "Itapetininga, SP",
+            municipio: "Itapetininga",
+            tipo: "Remembramento",
+            icon: "🔗",
+            score: 68,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Processo em andamento",
+            area: "540 ha",
+            atividade: "Diversificada",
+            proprietario: "Esperança Agrop. Familiar",
+            cnpj: "34.567.890/0001-23",
+            car: "SP-1923847-EF67H8",
+            eventos: ["Processo de remembramento", "Documentação parcial"],
+            servicos: ["Levantamento fundiário", "Regularização fundiária", "Assessoria jurídica"],
+            publico: "Cartórios · Advogados",
+            data: "25/05/2025",
+            contato: "esperanca@sitio.com.br",
+            tel: "(15) 3275-2341",
+            scores: [
+              { l: "Remembramento ativo", p: 25, m: 30 },
+              { l: "Documentação parcial", p: 18, m: 30 },
+              { l: "Propriedade familiar", p: 15, m: 20 },
+              { l: "Potencial de expansão", p: 10, m: 20 }
+            ]
+          },
+          {
+            id: 4,
+            nome: "Fazenda Morena",
+            loc: "Barretos, SP",
+            municipio: "Barretos",
+            tipo: "Desmembramento",
+            icon: "✂️",
+            score: 82,
+            classe: "quente",
+            oport: "alta",
+            oportTxt: "Processo finalizado",
+            area: "3.200 ha",
+            atividade: "Cana-de-açúcar",
+            proprietario: "Açúcares do Brasil S/A",
+            cnpj: "56.789.012/0001-34",
+            car: "SP-4056281-IJ89K0",
+            eventos: ["Desmembramento formalizado", "SIGEF atualizado", "CAR renovado"],
+            servicos: ["Transferência de posse", "Documentação legal", "Registro em cartório"],
+            publico: "Cartórios · Usinas",
+            data: "22/05/2025",
+            contato: "legal@acucardbrasil.com.br",
+            tel: "(17) 3323-5678",
+            scores: [
+              { l: "Desmembramento formalizado", p: 30, m: 30 },
+              { l: "SIGEF atualizado", p: 25, m: 30 },
+              { l: "CAR renovado", p: 18, m: 20 },
+              { l: "Grande propriedade", p: 9, m: 20 }
+            ]
+          },
+          {
+            id: 5,
+            nome: "Granja Nova Era",
+            loc: "Ribeirão Preto, SP",
+            municipio: "Ribeirão Preto",
+            tipo: "Inventário",
+            icon: "📝",
+            score: 55,
+            classe: "frio",
+            oport: "baixa",
+            oportTxt: "Processo inicial",
+            area: "280 ha",
+            atividade: "Avicultura",
+            proprietario: "Nova Era Alimentos Ltda.",
+            cnpj: "78.901.234/0001-45",
+            car: "SP-2745362-KL12M3",
+            eventos: ["Inventário iniciado", "Documentação incompleta"],
+            servicos: ["Inventário completo", "Descrição de imóvel", "Documentação"],
+            publico: "Cartórios · Tabeliões",
+            data: "18/05/2025",
+            contato: "admin@novaera.com.br",
+            tel: "(16) 3422-1234",
+            scores: [
+              { l: "Inventário iniciado", p: 20, m: 30 },
+              { l: "Documentação incompleta", p: 15, m: 30 },
+              { l: "Propriedade pequena", p: 12, m: 20 },
+              { l: "Especialização específica", p: 8, m: 20 }
+            ]
+          },
+          {
+            id: 6,
+            nome: "Plantação Horizonte Verde",
+            loc: "Bebedouro, SP",
+            municipio: "Bebedouro",
+            tipo: "Georreferenciamento",
+            icon: "🛰️",
+            score: 71,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Agendamento disponível",
+            area: "1.620 ha",
+            atividade: "Laranja",
+            proprietario: "Horizonte Verde Citrus S/A",
+            cnpj: "23.456.789/0001-56",
+            car: "SP-3621847-NO34P5",
+            eventos: ["Georreferenciamento pendente", "CAR registrado"],
+            servicos: ["Levantamento GNSS", "Processamento de dados", "Certificação SIGEF"],
+            publico: "Georreferenciadoras · INCRA",
+            data: "15/05/2025",
+            contato: "geo@horizonteverde.com.br",
+            tel: "(17) 3634-9876",
+            scores: [
+              { l: "Georreferenciamento pendente", p: 22, m: 30 },
+              { l: "CAR registrado", p: 20, m: 30 },
+              { l: "Propriedade consolidada", p: 18, m: 20 },
+              { l: "Atividade tradicional", p: 11, m: 20 }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'credito',
+        nome: 'Crédito Rural',
+        icon: '💰',
+        desc: 'Expansão, CNPJ novo, maquinário e custeio',
+        leads: [
+          {
+            id: 7,
+            nome: "Agrop. Santa Theresa",
+            loc: "Castro, SP",
+            municipio: "Castro",
+            tipo: "Expansão Produção",
+            icon: "📈",
+            score: 91,
+            classe: "quente",
+            oport: "alta",
+            oportTxt: "Alto potencial de crédito",
+            capital: "R$ 15.5M",
+            atividade: "Grãos/Leguminosas",
+            proprietario: "Santa Theresa Agrop. Ltda.",
+            cnpj: "45.678.901/0001-67",
+            eventos: ["Receita crescente", "Histórico de pagamento", "Sem restrições"],
+            servicos: ["Análise de crédito", "Estruturação de operações", "Assessoria bancária"],
+            publico: "Bancos · Cooperativas · Fintechs",
+            data: "30/05/2025",
+            contato: "financeiro@sttheresa.com.br",
+            tel: "(42) 3224-5678",
+            scores: [
+              { l: "Receita crescente", p: 30, m: 30 },
+              { l: "Histórico de pagamento", p: 28, m: 30 },
+              { l: "Sem restrições", p: 20, m: 20 },
+              { l: "Volume relevante", p: 13, m: 20 }
+            ]
+          },
+          {
+            id: 8,
+            nome: "Empreendimento Novo Campo",
+            loc: "Sorocaba, SP",
+            municipio: "Sorocaba",
+            tipo: "CNPJ Novo",
+            icon: "🆕",
+            score: 64,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Primeira operação",
+            capital: "R$ 3.2M",
+            atividade: "Fruticultura",
+            proprietario: "Novo Campo Fruticultura S/A",
+            cnpj: "89.012.345/0001-78",
+            eventos: ["CNPJ criado (30 dias)", "Licenças obtidas"],
+            servicos: ["Análise de viabilidade", "Estruturação de crédito inicial"],
+            publico: "Bancos atuantes em startups rurais",
+            data: "28/05/2025",
+            contato: "geral@novocampo.com.br",
+            tel: "(15) 3414-7890",
+            scores: [
+              { l: "CNPJ novo", p: 15, m: 30 },
+              { l: "Licenças obtidas", p: 20, m: 30 },
+              { l: "Potencial de crescimento", p: 18, m: 20 },
+              { l: "Setor em expansão", p: 11, m: 20 }
+            ]
+          },
+          {
+            id: 9,
+            nome: "Fazenda Índia",
+            loc: "Descalvado, SP",
+            municipio: "Descalvado",
+            tipo: "Maquinário",
+            icon: "🚜",
+            score: 77,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Modernização em pauta",
+            capital: "R$ 8.7M",
+            atividade: "Soja/Milho",
+            proprietario: "Índia Agrop. Familiar",
+            cnpj: "12.234.567/0001-89",
+            eventos: ["Equipamentos antigos", "Receita estável", "Propriedade regularizada"],
+            servicos: ["Financiamento de máquinas", "Leasing agrícola", "Trade-in"],
+            publico: "Concessionárias · Financeiras agrícolas",
+            data: "26/05/2025",
+            contato: "compras@fazendaindia.com.br",
+            tel: "(19) 3821-5432",
+            scores: [
+              { l: "Equipamentos antigos", p: 22, m: 30 },
+              { l: "Receita estável", p: 24, m: 30 },
+              { l: "Propriedade regularizada", p: 18, m: 20 },
+              { l: "Capital moderado", p: 13, m: 20 }
+            ]
+          },
+          {
+            id: 10,
+            nome: "Cooperativa Bom Semeador",
+            loc: "Araraquara, SP",
+            municipio: "Araraquara",
+            tipo: "Custeio",
+            icon: "🌾",
+            score: 86,
+            classe: "quente",
+            oport: "alta",
+            oportTxt: "Safra com garantia",
+            capital: "R$ 22.8M",
+            atividade: "Cana/Grãos",
+            proprietario: "Coop. Agrop. Bom Semeador",
+            cnpj: "34.345.678/0001-90",
+            eventos: ["Safra assegurada", "Histórico de 15 anos", "Contratos forward"],
+            servicos: ["Custeio de safra", "CPR estruturado", "Securitização"],
+            publico: "Bancos · Seguradoras · Fundos",
+            data: "24/05/2025",
+            contato: "credito@bomesemeador.coop",
+            tel: "(16) 3322-6543",
+            scores: [
+              { l: "Safra assegurada", p: 30, m: 30 },
+              { l: "Histórico 15 anos", p: 28, m: 30 },
+              { l: "Contratos forward", p: 18, m: 20 },
+              { l: "Volume alto", p: 10, m: 20 }
+            ]
+          },
+          {
+            id: 11,
+            nome: "Pomar Esperança",
+            loc: "Jundiaí, SP",
+            municipio: "Jundiaí",
+            tipo: "Pomar",
+            icon: "🍎",
+            score: 72,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Renovação planejada",
+            capital: "R$ 2.4M",
+            atividade: "Fruticultura de clima temperado",
+            proprietario: "Pomar Esperança Ltda.",
+            cnpj: "56.456.789/0001-01",
+            eventos: ["Macieiras com 20 anos", "Nova variedade planejada", "Seguro contratado"],
+            servicos: ["Crédito para replantio", "Consultoria técnica", "Seguro agrícola"],
+            publico: "Bancos · Seguradoras · Consultores",
+            data: "22/05/2025",
+            contato: "admin@pomaresperanca.com.br",
+            tel: "(11) 4582-2100",
+            scores: [
+              { l: "Replantio planejado", p: 22, m: 30 },
+              { l: "Seguro contratado", p: 20, m: 30 },
+              { l: "Atividade consolidada", p: 18, m: 20 },
+              { l: "Proximidade urbana", p: 12, m: 20 }
+            ]
+          },
+          {
+            id: 12,
+            nome: "Industrial Poços",
+            loc: "Poços de Caldas, SP",
+            municipio: "Poços de Caldas",
+            tipo: "Industrial",
+            icon: "🏭",
+            score: 73,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Expansão fabril",
+            capital: "R$ 12.5M",
+            atividade: "Processamento de alimentos",
+            proprietario: "Industrial Poços Alimentos S/A",
+            cnpj: "78.567.890/0001-12",
+            eventos: ["Produção em crescimento", "Novas licenças obtidas"],
+            servicos: ["Crédito para expansão", "Refinanciamento", "Garantias"],
+            publico: "Bancos comerciais · Instituições financeiras",
+            data: "20/05/2025",
+            contato: "finance@inpocos.com.br",
+            tel: "(35) 3721-5555",
+            scores: [
+              { l: "Produção crescente", p: 23, m: 30 },
+              { l: "Licenças obtidas", p: 20, m: 30 },
+              { l: "Setor processamento", p: 18, m: 20 },
+              { l: "Capital moderado", p: 12, m: 20 }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'ambiental',
+        nome: 'Ambiental',
+        icon: '🌱',
+        desc: 'CAR retificado, licenciamento, PRA, outorga',
+        leads: [
+          {
+            id: 13,
+            nome: "Fazenda Sustentável",
+            loc: "Piracicaba, SP",
+            municipio: "Piracicaba",
+            tipo: "CAR Retificado",
+            icon: "♻️",
+            score: 87,
+            classe: "quente",
+            oport: "alta",
+            oportTxt: "Conformidade ambiental",
+            area: "1.950 ha",
+            atividade: "Cana-de-açúcar orgânica",
+            proprietario: "Sustentável Cana S/A",
+            cnpj: "90.678.901/0001-23",
+            car: "SP-4562384-QR56S7",
+            eventos: ["CAR retificado", "Certificação orgânica", "APP preservada", "PRA em andamento"],
+            servicos: ["Consultoria ambiental", "Monitoramento contínuo", "Auditoria ambiental"],
+            publico: "Órgãos ambientais · Certificadores · Consultores",
+            data: "29/05/2025",
+            contato: "ambiental@sustcana.com.br",
+            tel: "(19) 3534-8765",
+            scores: [
+              { l: "CAR retificado", p: 26, m: 30 },
+              { l: "Certificação orgânica", p: 25, m: 30 },
+              { l: "APP preservada", p: 22, m: 20 },
+              { l: "PRA em andamento", p: 14, m: 20 }
+            ]
+          },
+          {
+            id: 14,
+            nome: "Parque Ambiental Novo Futuro",
+            loc: "Sorocaba, SP",
+            municipio: "Sorocaba",
+            tipo: "Licenciamento",
+            icon: "📜",
+            score: 69,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Obra com análise ambiental",
+            area: "120 ha",
+            atividade: "Ecoturismo",
+            proprietario: "Novo Futuro Ecoturismo Ltda.",
+            cnpj: "01.789.012/0001-34",
+            eventos: ["EIA/RIMA enviado", "Audiência pública agendada", "Gestão de impactos"],
+            servicos: ["Gestão ambiental", "Consultoria regulatória", "Auditoria de conformidade"],
+            publico: "CETESB · Órgãos ambientais · Empreiteiros",
+            data: "27/05/2025",
+            contato: "licencas@novofuturo.eco",
+            tel: "(15) 3286-3000",
+            scores: [
+              { l: "EIA/RIMA enviado", p: 20, m: 30 },
+              { l: "Audiência pública", p: 19, m: 30 },
+              { l: "Gestão de impactos", p: 18, m: 20 },
+              { l: "Setor em crescimento", p: 12, m: 20 }
+            ]
+          },
+          {
+            id: 15,
+            nome: "Recuperação Matas do Tietê",
+            loc: "Salto, SP",
+            municipio: "Salto",
+            tipo: "PRA Ativo",
+            icon: "🌳",
+            score: 81,
+            classe: "quente",
+            oport: "alta",
+            oportTxt: "Reflorestamento em execução",
+            area: "850 ha",
+            atividade: "Preservação/Reflorestamento",
+            proprietario: "Reflorestadora Matas do Tietê",
+            cnpj: "23.890.123/0001-45",
+            car: "SP-3789562-TU78V9",
+            eventos: ["PRA ativo", "5000 mudas plantadas", "Monitoramento contínuo", "Parceria com órgãos"],
+            servicos: ["Execução de PRA", "Plantio de mudas", "Monitoramento ambiental"],
+            publico: "CETESB · DAEE · ONGs ambientais",
+            data: "25/05/2025",
+            contato: "pra@matasdotiet.org",
+            tel: "(11) 4166-9800",
+            scores: [
+              { l: "PRA ativo", p: 26, m: 30 },
+              { l: "5000 mudas plantadas", p: 25, m: 30 },
+              { l: "Monitoramento contínuo", p: 18, m: 20 },
+              { l: "Parceria órgãos", p: 12, m: 20 }
+            ]
+          },
+          {
+            id: 16,
+            nome: "Sistema de Irrigação Taquaruçu",
+            loc: "Taquaritinga, SP",
+            municipio: "Taquaritinga",
+            tipo: "Outorga de Água",
+            icon: "💧",
+            score: 74,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Renovação de outorga",
+            area: "580 ha",
+            atividade: "Horticultura/Fruticultura",
+            proprietario: "Taquaruçu Agrícola S/A",
+            cnpj: "45.901.234/0001-56",
+            eventos: ["Outorga vencendo (60 dias)", "Vazão comprovada", "Poço regularizado"],
+            servicos: ["Gestão de outorgas", "Auditoria hídrica", "Renovação de licenças"],
+            publico: "DAEE · Órgãos hídricos",
+            data: "23/05/2025",
+            contato: "agua@taquarucu.com.br",
+            tel: "(16) 3261-2300",
+            scores: [
+              { l: "Outorga vencendo", p: 21, m: 30 },
+              { l: "Vazão comprovada", p: 20, m: 30 },
+              { l: "Poço regularizado", p: 19, m: 20 },
+              { l: "Atividade consolidada", p: 14, m: 20 }
+            ]
+          },
+          {
+            id: 17,
+            nome: "Passivo Ambiental Carvão Verde",
+            loc: "Ribeirão Preto, SP",
+            municipio: "Ribeirão Preto",
+            tipo: "Remediação",
+            icon: "⚠️",
+            score: 58,
+            classe: "frio",
+            oport: "baixa",
+            oportTxt: "Projeto complexo em pauta",
+            area: "45 ha",
+            atividade: "Remediação de passivos",
+            proprietario: "Carvão Verde Remediação Ltda.",
+            cnpj: "67.012.345/0001-67",
+            eventos: ["Auditoria concluída", "Projeto de remediação aprovado", "Financiamento buscado"],
+            servicos: ["Remediação de solos", "Monitoramento pós-remediação", "Auditoria ambiental"],
+            publico: "CETESB · Consultores · Construtoras",
+            data: "21/05/2025",
+            contato: "projetos@carvvedremed.com.br",
+            tel: "(16) 3629-5555",
+            scores: [
+              { l: "Auditoria concluída", p: 18, m: 30 },
+              { l: "Projeto aprovado", p: 17, m: 30 },
+              { l: "Financiamento buscado", p: 12, m: 20 },
+              { l: "Complexidade alta", p: 11, m: 20 }
+            ]
+          },
+          {
+            id: 18,
+            nome: "Monitoramento Fauna Flora +",
+            loc: "Santa Bárbara d'Oeste, SP",
+            municipio: "Santa Bárbara d'Oeste",
+            tipo: "Monitoramento",
+            icon: "🔬",
+            score: 76,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Serviço contínuo",
+            area: "2.100 ha",
+            atividade: "Consultoria ambiental",
+            proprietario: "Fauna Flora + Consultoria S/A",
+            cnpj: "89.123.456/0001-78",
+            eventos: ["Plano aprovado", "Coleta de dados iniciada", "Equipe certificada"],
+            servicos: ["Monitoramento fauna", "Monitoramento flora", "Análise de dados", "Relatórios periódicos"],
+            publico: "Empreendedores · Órgãos ambientais",
+            data: "19/05/2025",
+            contato: "monitoramento@ff.com.br",
+            tel: "(19) 3455-7000",
+            scores: [
+              { l: "Plano aprovado", p: 22, m: 30 },
+              { l: "Coleta iniciada", p: 21, m: 30 },
+              { l: "Equipe certificada", p: 19, m: 20 },
+              { l: "Serviço contínuo", p: 14, m: 20 }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'empresas',
+        nome: 'Empresas',
+        icon: '🏢',
+        desc: 'Consultoria, tecnologia, logística e seguros',
+        leads: [
+          {
+            id: 19,
+            nome: "TechAgro Solutions",
+            loc: "Campinas, SP",
+            municipio: "Campinas",
+            tipo: "CNPJ Novo Tech",
+            icon: "💻",
+            score: 89,
+            classe: "quente",
+            oport: "alta",
+            oportTxt: "Startup com tração",
+            cnae: "6202 - Consultoria TI",
+            atividade: "SaaS para gestão agrícola",
+            proprietario: "TechAgro Solutions Ltda.",
+            cnpj: "01.234.567/0001-89",
+            eventos: ["Seed funding recebido", "Clientes em crescimento", "Prototipo validado"],
+            servicos: ["Integração de sistemas", "Consultoria tecnológica", "Implantação de plataforma"],
+            publico: "VCs · Incubadoras · Produtores rurais",
+            data: "28/05/2025",
+            contato: "vendas@techagro.com.br",
+            tel: "(19) 3789-1234",
+            scores: [
+              { l: "Seed funding recebido", p: 28, m: 30 },
+              { l: "Clientes em crescimento", p: 26, m: 30 },
+              { l: "Prototipo validado", p: 20, m: 20 },
+              { l: "Mercado em expansão", p: 15, m: 20 }
+            ]
+          },
+          {
+            id: 20,
+            nome: "Agro Analytics Brazil",
+            loc: "São Paulo, SP",
+            municipio: "São Paulo",
+            tipo: "Expansão de Serviços",
+            icon: "📊",
+            score: 84,
+            classe: "quente",
+            oport: "alta",
+            oportTxt: "Produtos em pipeline",
+            cnae: "6311 - Processamento dados",
+            atividade: "Big Data e inteligência artificial",
+            proprietario: "Agro Analytics Brazil S/A",
+            cnpj: "12.345.678/0001-90",
+            eventos: ["API lançada", "Parcerias com universidades", "Investidor anjo confirmado"],
+            servicos: ["Análise de dados", "Modelagem preditiva", "Dashboards customizados"],
+            publico: "Cooperativas · Fintechs · Produtores",
+            data: "26/05/2025",
+            contato: "partnerships@agroanalytics.com.br",
+            tel: "(11) 3142-8765",
+            scores: [
+              { l: "API lançada", p: 26, m: 30 },
+              { l: "Parcerias universidades", p: 24, m: 30 },
+              { l: "Investidor anjo confirmado", p: 20, m: 20 },
+              { l: "Mercado receptivo", p: 14, m: 20 }
+            ]
+          },
+          {
+            id: 21,
+            nome: "Logística Verde Agro",
+            loc: "Santos, SP",
+            municipio: "Santos",
+            tipo: "Operação Estabelecida",
+            icon: "🚚",
+            score: 79,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Expansão de frota",
+            cnae: "4923 - Transporte agrícola",
+            atividade: "Logística e distribuição",
+            proprietario: "Logística Verde Agro S/A",
+            cnpj: "23.456.789/0001-01",
+            eventos: ["Frota em crescimento", "Certificação ISO", "Contratos de longo prazo"],
+            servicos: ["Transporte de grãos", "Frigorífico", "Rastreamento via GPS"],
+            publico: "Traders · Cooperativas · Exportadores",
+            data: "24/05/2025",
+            contato: "operacoes@logverde.com.br",
+            tel: "(13) 3231-6789",
+            scores: [
+              { l: "Frota em crescimento", p: 23, m: 30 },
+              { l: "Certificação ISO", p: 21, m: 30 },
+              { l: "Contratos long-term", p: 19, m: 20 },
+              { l: "Localização estratégica", p: 16, m: 20 }
+            ]
+          },
+          {
+            id: 22,
+            nome: "Seguros Agrotech",
+            loc: "São Paulo, SP",
+            municipio: "São Paulo",
+            tipo: "Produtos Inovadores",
+            icon: "🛡️",
+            score: 82,
+            classe: "quente",
+            oport: "alta",
+            oportTxt: "Seguros parametrizados",
+            cnae: "6511 - Seguros",
+            atividade: "Seguros paramétricos para agro",
+            proprietario: "Seguros AgroTech S/A",
+            cnpj: "34.567.890/0001-12",
+            eventos: ["Produto lançado", "Aprovação da SUSEP", "Primeiras apólices assinadas"],
+            servicos: ["Seguro de seca", "Seguro de chuva excessiva", "Consultoria de risco"],
+            publico: "Produtores · Cooperativas · Financeiras",
+            data: "22/05/2025",
+            contato: "vendas@agrotech.seguros",
+            tel: "(11) 3066-5555",
+            scores: [
+              { l: "Produto lançado", p: 26, m: 30 },
+              { l: "Aprovação SUSEP", p: 25, m: 30 },
+              { l: "Apólices assinadas", p: 19, m: 20 },
+              { l: "Inovação regulada", p: 12, m: 20 }
+            ]
+          },
+          {
+            id: 23,
+            nome: "Consultoria Nutricional Agro",
+            loc: "Ribeirão Preto, SP",
+            municipio: "Ribeirão Preto",
+            tipo: "Serviço Especializado",
+            icon: "🧪",
+            score: 71,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Crescimento incremental",
+            cnae: "7490 - Consultoria especializada",
+            atividade: "Nutrição de plantas e animais",
+            proprietario: "Consultoria Nutricional Agro Ltda.",
+            cnpj: "45.678.901/0001-23",
+            eventos: ["Base de clientes estável", "Novos serviços em piloto", "Equipe expandida"],
+            servicos: ["Diagnóstico nutricional", "Recomendações customizadas", "Monitoramento foliar"],
+            publico: "Produtores · Cooperativas · Distribuidoras",
+            data: "20/05/2025",
+            contato: "consultoria@nutriagro.com.br",
+            tel: "(16) 3432-2100",
+            scores: [
+              { l: "Base clientes estável", p: 21, m: 30 },
+              { l: "Serviços em piloto", p: 18, m: 30 },
+              { l: "Equipe expandida", p: 18, m: 20 },
+              { l: "Mercado consolidado", p: 14, m: 20 }
+            ]
+          },
+          {
+            id: 24,
+            nome: "Marketplace AgriConnect",
+            loc: "Bauru, SP",
+            municipio: "Bauru",
+            tipo: "Plataforma B2B",
+            icon: "🔗",
+            score: 77,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Foco em supply chain",
+            cnae: "6311 - Plataformas digitais",
+            atividade: "Marketplace para agronegócio",
+            proprietario: "AgriConnect Brasil S/A",
+            cnpj: "56.789.012/0001-34",
+            eventos: ["500+ fornecedores", "Transações crescentes", "Investimento Série A"],
+            servicos: ["Hospedagem de sellers", "Pagamento integrado", "Logística partnered"],
+            publico: "Fornecedores · Compradores · Logísticos",
+            data: "18/05/2025",
+            contato: "suporte@agriconnect.com.br",
+            tel: "(14) 3312-7777",
+            scores: [
+              { l: "500+ fornecedores", p: 22, m: 30 },
+              { l: "Transações crescentes", p: 21, m: 30 },
+              { l: "Investimento Série A", p: 19, m: 20 },
+              { l: "Mercado competitivo", p: 15, m: 20 }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'solar',
+        nome: 'Solar Rural',
+        icon: '☀️',
+        desc: 'Alto consumo, energia renovável, independência',
+        leads: [
+          {
+            id: 25,
+            nome: "Confinamento Brangus Gold",
+            loc: "Araçatuba, SP",
+            municipio: "Araçatuba",
+            tipo: "Alto Consumo",
+            icon: "⚡",
+            score: 93,
+            classe: "quente",
+            oport: "alta",
+            oportTxt: "Consumo 24/7",
+            consumo: "850 MWh/mês",
+            atividade: "Pecuária intensiva",
+            proprietario: "Confinamento Brangus Gold S/A",
+            cnpj: "67.890.123/0001-45",
+            eventos: ["Consumo crescente", "Tarifa em alta", "Espaço disponível para placas"],
+            servicos: ["Projeto solar", "Instalação completa", "Monitoramento de geração"],
+            publico: "Integradores solares · Distribuidoras energia",
+            data: "29/05/2025",
+            contato: "energia@brangus.com.br",
+            tel: "(18) 3271-6789",
+            scores: [
+              { l: "Consumo 24/7", p: 30, m: 30 },
+              { l: "Tarifa em alta", p: 28, m: 30 },
+              { l: "Espaço disponível", p: 20, m: 20 },
+              { l: "ROI rápido", p: 15, m: 20 }
+            ]
+          },
+          {
+            id: 26,
+            nome: "Sistema de Pivot Água Azul",
+            loc: "Tupã, SP",
+            municipio: "Tupã",
+            tipo: "Pivot Central",
+            icon: "💧",
+            score: 81,
+            classe: "quente",
+            oport: "alta",
+            oportTxt: "Irrigação com energia",
+            consumo: "420 MWh/mês",
+            atividade: "Agricultura irrigada",
+            proprietario: "Água Azul Agrícola Ltda.",
+            cnpj: "78.901.234/0001-56",
+            eventos: ["Pivôs antigos", "Energia terceirizada", "Planejamento de modernização"],
+            servicos: ["Solar + bombeamento", "Tanque de armazenamento", "Automação"],
+            publico: "Integradores solares · Irrigacionalistas",
+            data: "27/05/2025",
+            contato: "tecnologia@aguaazul.com.br",
+            tel: "(14) 3465-1234",
+            scores: [
+              { l: "Pivôs em operação", p: 24, m: 30 },
+              { l: "Energia terceirizada", p: 22, m: 30 },
+              { l: "Planejamento aprovado", p: 20, m: 20 },
+              { l: "Viabilidade alta", p: 15, m: 20 }
+            ]
+          },
+          {
+            id: 27,
+            nome: "Granja Aviária Vida Nova",
+            loc: "Paraíso, SP",
+            municipio: "Paraíso",
+            tipo: "Confinamento",
+            icon: "🐔",
+            score: 76,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Climatização intensa",
+            consumo: "280 MWh/mês",
+            atividade: "Avicultura de postura",
+            proprietario: "Granja Aviária Vida Nova Ltda.",
+            cnpj: "89.012.345/0001-67",
+            eventos: ["Climatização 24/7", "Tarifa em aumento", "Espaço em telhado"],
+            servicos: ["Solar residencial", "Baterias de backup", "Monitoramento web"],
+            publico: "Integradores solares · Avicultores",
+            data: "25/05/2025",
+            contato: "admin@vidanova.com.br",
+            tel: "(17) 3649-8765",
+            scores: [
+              { l: "Climatização 24/7", p: 22, m: 30 },
+              { l: "Tarifa em aumento", p: 20, m: 30 },
+              { l: "Espaço em telhado", p: 18, m: 20 },
+              { l: "Instalação média", p: 16, m: 20 }
+            ]
+          },
+          {
+            id: 28,
+            nome: "Armazém Grãos do Brasil",
+            loc: "Fernandópolis, SP",
+            municipio: "Fernandópolis",
+            tipo: "Armazenagem",
+            icon: "🏭",
+            score: 68,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Secagem e armazenagem",
+            consumo: "620 MWh/mês",
+            atividade: "Secagem e armazenagem",
+            proprietario: "Grãos do Brasil Armazéns S/A",
+            cnpj: "01.123.456/0001-78",
+            eventos: ["Operação contínua", "Estrutura ampla", "Financiamento disponível"],
+            servicos: ["Solar industrial", "Otimização de consumo", "Créditos fiscais"],
+            publico: "Integradores solares · Cooperativas",
+            data: "23/05/2025",
+            contato: "operacoes@graodosbrasil.com.br",
+            tel: "(17) 3465-5678",
+            scores: [
+              { l: "Operação contínua", p: 21, m: 30 },
+              { l: "Estrutura ampla", p: 20, m: 30 },
+              { l: "Financiamento disponível", p: 18, m: 20 },
+              { l: "Instalação complexa", p: 9, m: 20 }
+            ]
+          },
+          {
+            id: 29,
+            nome: "Processadora de Sucos Sabor Fruta",
+            loc: "Catanduva, SP",
+            municipio: "Catanduva",
+            tipo: "Processamento",
+            icon: "🥤",
+            score: 72,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Fábrica em operação",
+            consumo: "390 MWh/mês",
+            atividade: "Processamento de frutas",
+            proprietario: "Processadora Sabor Fruta Ltda.",
+            cnpj: "12.234.567/0001-89",
+            eventos: ["Fábrica em turno 24h", "Custo energético alto", "Imóvel próprio"],
+            servicos: ["Solar para planta", "Carregamento rápido", "Monitoramento em tempo real"],
+            publico: "Integradores solares · Fábricas",
+            data: "21/05/2025",
+            contato: "energia@saborfruta.com.br",
+            tel: "(17) 3521-2000",
+            scores: [
+              { l: "Fábrica 24/7", p: 22, m: 30 },
+              { l: "Custo alto", p: 20, m: 30 },
+              { l: "Imóvel próprio", p: 18, m: 20 },
+              { l: "Risco operacional", p: 12, m: 20 }
+            ]
+          },
+          {
+            id: 30,
+            nome: "Estação de Pesquisa ESALQ",
+            loc: "Piracicaba, SP",
+            municipio: "Piracicaba",
+            tipo: "Pesquisa",
+            icon: "🔬",
+            score: 64,
+            classe: "morno",
+            oport: "media",
+            oportTxt: "Campus sustentável",
+            consumo: "240 MWh/mês",
+            atividade: "Pesquisa agrícola",
+            proprietario: "Estação de Pesquisa ESALQ-USP",
+            cnpj: "34.345.678/0001-90",
+            eventos: ["Projeto de sustentabilidade", "Financiamento público", "Demonstração para comunidade"],
+            servicos: ["Solar para pesquisa", "Armazenamento com baterias", "Monitoramento científico"],
+            publico: "Universidades · Órgãos de pesquisa · Governo",
+            data: "19/05/2025",
+            contato: "pesquisa@esalq.usp.br",
+            tel: "(19) 3417-6789",
+            scores: [
+              { l: "Projeto sustentável", p: 20, m: 30 },
+              { l: "Financiamento público", p: 19, m: 30 },
+              { l: "Demonstração comunitária", p: 16, m: 20 },
+              { l: "Consumo moderado", p: 9, m: 20 }
+            ]
+          }
+        ]
+      }
+    ];
+
+    // ===== COMPONENTS =====
+
+    function Topbar({ currentModuleData, onLogoClick }) {
+      return (
+        <div className="topbar">
+          <div className="topbar-left">
+            <div className="topbar-logo" onClick={onLogoClick} title="Voltar ao painel inicial">
+              GeoRadar Agro
+            </div>
+            <div className="topbar-module">
+              <span className="topbar-module-icon">{currentModuleData.icon}</span>
+              <span className="topbar-module-name">{currentModuleData.nome}</span>
+            </div>
+            <div className="topbar-demo">
+              <span>⚡</span>
+              <span>Demonstração Completa</span>
+            </div>
+          </div>
+          <div className="topbar-right">
+            <div className="topbar-avatar">MAF</div>
+          </div>
+        </div>
+      );
+    }
+
+    function Sidebar({ modules, currentModuleId, onSelectModule }) {
+      return (
+        <div className="sidebar">
+          <div className="sidebar-section-title">Módulos Temáticos</div>
+          <div className="sidebar-items">
+            {modules.map(mod => (
+              <div
+                key={mod.id}
+                className={`sidebar-item ${currentModuleId === mod.id ? 'active' : ''}`}
+                onClick={() => onSelectModule(mod.id)}
+              >
+                <span className="sidebar-item-label">
+                  {mod.icon} {mod.nome}
+                </span>
+                <span className="sidebar-badge">{mod.leads.length}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function PageHeader({ moduleData, filteredCount }) {
+      return (
+        <div className="page-header">
+          <div className="page-header-left">
+            <h1 className="page-title">{moduleData.nome}</h1>
+            <div className="page-subtitle">
+              <span>{moduleData.desc}</span>
+              <span>•</span>
+              <span><strong>{filteredCount}</strong> lead{filteredCount !== 1 ? 's' : ''}</span>
+            </div>
+          </div>
+          <div className="page-actions">
+            <button className="btn btn-secondary">📥 Exportar CSV</button>
+            <button className="btn btn-primary">🔔 Novo Alerta</button>
+          </div>
+        </div>
+      );
+    }
+
+    function KPIRow({ kpis }) {
+      return (
+        <div className="kpi-row">
+          <div className="kpi-card">
+            <div className="kpi-label">Total de Leads</div>
+            <div className="kpi-value">{kpis.total}</div>
+          </div>
+          <div className="kpi-card quente">
+            <div className="kpi-label">🔥 Quentes</div>
+            <div className="kpi-value">{kpis.quente}</div>
+          </div>
+          <div className="kpi-card morno">
+            <div className="kpi-label">🌡️ Mornos</div>
+            <div className="kpi-value">{kpis.morno}</div>
+          </div>
+          <div className="kpi-card frio">
+            <div className="kpi-label">❄️ Frios</div>
+            <div className="kpi-value">{kpis.frio}</div>
+          </div>
+        </div>
+      );
+    }
+
+    function Filters({ filtroAtivo, onSetFiltro, busca, onSetBusca }) {
+      return (
+        <div className="filters">
+          <span className="filters-label">Filtrar por Score:</span>
+          <div className="filter-buttons">
+            <button
+              className={`filter-btn ${filtroAtivo === 'todos' ? 'active' : ''}`}
+              onClick={() => onSetFiltro('todos')}
+            >
+              Todos
+            </button>
+            <button
+              className={`filter-btn ${filtroAtivo === 'quente' ? 'active' : ''}`}
+              onClick={() => onSetFiltro('quente')}
+            >
+              🔥 Quentes
+            </button>
+            <button
+              className={`filter-btn ${filtroAtivo === 'morno' ? 'active' : ''}`}
+              onClick={() => onSetFiltro('morno')}
+            >
+              🌡️ Mornos
+            </button>
+            <button
+              className={`filter-btn ${filtroAtivo === 'frio' ? 'active' : ''}`}
+              onClick={() => onSetFiltro('frio')}
+            >
+              ❄️ Frios
+            </button>
+            <div className="filter-divider"></div>
+            <div className="filter-search">
+              <span className="filter-search-icon">🔍</span>
+              <input
+                type="text"
+                className="filter-search-input"
+                placeholder="Buscar por nome ou município..."
+                value={busca}
+                onChange={(e) => onSetBusca(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function LeadCard({ lead, onViewDetails }) {
+      const scoreClass = lead.score >= 80 ? 'quente' : lead.score >= 60 ? 'morno' : 'frio';
+      const barWidth = (lead.score / 100) * 100;
+
+      return (
+        <div className="lead-card">
+          <div className="lead-card-header">
+            <div className="lead-card-info">
+              <div className="lead-card-type">
+                <span>{lead.icon}</span>
+                <span>{lead.tipo}</span>
+              </div>
+              <div className="lead-card-name">{lead.nome}</div>
+              <div className="lead-card-location">
+                <span>📍</span>
+                <span>{lead.loc}</span>
+              </div>
+              <div className={`lead-card-oportunidade ${lead.oport}`}>
+                <span>💡</span>
+                <span>{lead.oportTxt}</span>
+              </div>
+            </div>
+            <div className="score-badge">
+              <div className="score-number">{lead.score}</div>
+              <div className={`score-tag ${scoreClass}`}>{scoreClass}</div>
+            </div>
+          </div>
+
+          <div className="lead-card-score-bar">
+            <div className="lead-card-score-fill" style={{ width: `${barWidth}%` }}></div>
+          </div>
+
+          <div className="lead-card-grid">
+            <div className="lead-card-grid-item">
+              <div className="lead-card-grid-label">{lead.area ? 'Área' : lead.capital ? 'Capital' : 'Consumo'}</div>
+              <div className="lead-card-grid-value">{lead.area || lead.capital || lead.consumo}</div>
+            </div>
+            <div className="lead-card-grid-item">
+              <div className="lead-card-grid-label">Atividade</div>
+              <div className="lead-card-grid-value">{lead.atividade}</div>
+            </div>
+            <div className="lead-card-grid-item">
+              <div className="lead-card-grid-label">Data</div>
+              <div className="lead-card-grid-value">{lead.data}</div>
+            </div>
+          </div>
+
+          {lead.eventos.length > 0 && (
+            <div className="lead-card-events">
+              {lead.eventos.map((e, idx) => (
+                <span key={idx} className="event-tag">✦ {e}</span>
+              ))}
+            </div>
+          )}
+
+          {lead.servicos.length > 0 && (
+            <div className="lead-card-servicos">
+              {lead.servicos.slice(0, 2).map((s, idx) => (
+                <div key={idx} className="servico-item">
+                  <span className="servico-item-check">✓</span>
+                  <span>{s}</span>
+                </div>
+              ))}
+              {lead.servicos.length > 2 && (
+                <div className="servico-item" style={{ fontWeight: 600, color: 'var(--oliva)' }}>
+                  +{lead.servicos.length - 2} serviços
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="lead-card-publico">
+            <span className="lead-card-publico-icon">🎯</span>
+            <span>{lead.publico}</span>
+          </div>
+
+          <div className="lead-card-footer">
+            <div className="lead-card-data">
+              <span>📅</span>
+              <span>{lead.data}</span>
+            </div>
+            <div className="lead-card-actions">
+              <button className="btn btn-secondary" onClick={() => onViewDetails(lead)}>
+                Ver Detalhes
+              </button>
+              <button className="btn btn-primary">
+                📤 Exportar
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function Modal({ lead, onClose }) {
+      if (!lead) return null;
+
+      const scoreTotal = lead.scores.reduce((sum, s) => sum + s.p, 0);
+      const scoreMax = lead.scores.reduce((sum, s) => sum + s.m, 0);
+
+      return (
+        <div className="modal-overlay" onClick={onClose}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-header-content">
+                <h2 className="modal-title">{lead.nome}</h2>
+                <div className="modal-location">
+                  <span>📍</span>
+                  <span>{lead.loc}</span>
+                </div>
+              </div>
+              <button className="modal-close" onClick={onClose}>✕</button>
+            </div>
+
+            <div className="modal-body">
+              <div className="modal-section">
+                <h3 className="modal-section-title">Informações Principais</h3>
+                <div className="modal-section-content">
+                  <div className="modal-info-row">
+                    <span className="modal-info-label">Empresa:</span>
+                    <span className="modal-info-value">{lead.proprietario}</span>
+                  </div>
+                  <div className="modal-info-row">
+                    <span className="modal-info-label">Município:</span>
+                    <span className="modal-info-value">{lead.municipio}</span>
+                  </div>
+                  <div className="modal-info-row">
+                    <span className="modal-info-label">Estado:</span>
+                    <span className="modal-info-value">São Paulo (SP)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-section">
+                <h3 className="modal-section-title">Dados Técnicos</h3>
+                <div className="modal-section-content">
+                  <div className="modal-info-row">
+                    <span className="modal-info-label">CNPJ:</span>
+                    <span className="modal-info-value">{lead.cnpj}</span>
+                  </div>
+                  {lead.car && (
+                    <div className="modal-info-row">
+                      <span className="modal-info-label">CAR:</span>
+                      <span className="modal-info-value">{lead.car}</span>
+                    </div>
+                  )}
+                  {lead.capital && (
+                    <div className="modal-info-row">
+                      <span className="modal-info-label">Capital:</span>
+                      <span className="modal-info-value">{lead.capital}</span>
+                    </div>
+                  )}
+                  {lead.cnae && (
+                    <div className="modal-info-row">
+                      <span className="modal-info-label">CNAE:</span>
+                      <span className="modal-info-value">{lead.cnae}</span>
+                    </div>
+                  )}
+                  {lead.consumo && (
+                    <div className="modal-info-row">
+                      <span className="modal-info-label">Consumo Mensal:</span>
+                      <span className="modal-info-value">{lead.consumo}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="modal-section">
+                <h3 className="modal-section-title">Público-Alvo</h3>
+                <div className="modal-tags">
+                  {lead.publico.split(' · ').map((p, idx) => (
+                    <span key={idx} className="modal-tag">🎯 {p}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="modal-section">
+                <h3 className="modal-section-title">Serviços Oferecíveis</h3>
+                <div className="modal-tags">
+                  {lead.servicos.map((s, idx) => (
+                    <span key={idx} className="modal-tag">✓ {s}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="modal-section">
+                <h3 className="modal-section-title">Sinais Detectados</h3>
+                <div className="modal-tags">
+                  {lead.eventos.map((e, idx) => (
+                    <span key={idx} className="modal-tag">✦ {e}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="modal-section">
+                <h3 className="modal-section-title">Contato</h3>
+                <div className="modal-section-content">
+                  <div className="modal-info-row">
+                    <span className="modal-info-label">Email:</span>
+                    <span className="modal-info-value">{lead.contato}</span>
+                  </div>
+                  <div className="modal-info-row">
+                    <span className="modal-info-label">Telefone:</span>
+                    <span className="modal-info-value">{lead.tel}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-section">
+                <h3 className="modal-section-title">Composição do Score</h3>
+                <div className="modal-score-breakdown">
+                  {lead.scores.map((score, idx) => (
+                    <div key={idx} className="score-item">
+                      <div className="score-item-label">{score.l}</div>
+                      <div className="score-item-bar-container">
+                        <div
+                          className="score-item-bar"
+                          style={{ width: `${(score.p / score.m) * 100}%` }}
+                        ></div>
+                      </div>
+                      <div className="score-item-value">{score.p}/{score.m}</div>
+                    </div>
+                  ))}
+                  <div style={{ borderTop: '1px solid var(--border)', marginTop: '0.75rem', paddingTop: '0.75rem', display: 'flex', justifyContent: 'space-between', fontWeight: 600, color: 'var(--text)' }}>
+                    <span>Total do Score</span>
+                    <span>{scoreTotal}/{scoreMax}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button className="btn btn-secondary" onClick={onClose}>Fechar</button>
+              <button className="btn btn-primary">📤 Exportar Lead</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [currentModuleId, setCurrentModuleId] = useState('fundiario');
+      const [filtroAtivo, setFiltroAtivo] = useState('todos');
+      const [busca, setBusca] = useState('');
+      const [modalOpen, setModalOpen] = useState(false);
+      const [selectedLead, setSelectedLead] = useState(null);
+
+      const currentModule = MODULES_DATA.find(m => m.id === currentModuleId);
+
+      const filtered = useMemo(() => {
+        return currentModule.leads.filter(l => {
+          let matchFiltro = true;
+          if (filtroAtivo === 'quente') matchFiltro = l.score >= 80;
+          else if (filtroAtivo === 'morno') matchFiltro = l.score >= 60 && l.score < 80;
+          else if (filtroAtivo === 'frio') matchFiltro = l.score < 60;
+
+          const matchBusca = !busca ||
+            l.nome.toLowerCase().includes(busca.toLowerCase()) ||
+            l.municipio.toLowerCase().includes(busca.toLowerCase());
+
+          return matchFiltro && matchBusca;
+        });
+      }, [currentModule, filtroAtivo, busca]);
+
+      const kpis = useMemo(() => ({
+        total: currentModule.leads.length,
+        quente: currentModule.leads.filter(l => l.score >= 80).length,
+        morno: currentModule.leads.filter(l => l.score >= 60 && l.score < 80).length,
+        frio: currentModule.leads.filter(l => l.score < 60).length,
+      }), [currentModule]);
+
+      const handleSelectModule = (moduleId) => {
+        setCurrentModuleId(moduleId);
+        setFiltroAtivo('todos');
+        setBusca('');
+      };
+
+      const handleViewDetails = (lead) => {
+        setSelectedLead(lead);
+        setModalOpen(true);
+      };
+
+      const handleCloseModal = () => {
+        setModalOpen(false);
+        setSelectedLead(null);
+      };
+
+      return (
+        <>
+          <Topbar
+            currentModuleData={currentModule}
+            onLogoClick={() => handleSelectModule('fundiario')}
+          />
+          <div className="app-wrapper">
+            <Sidebar
+              modules={MODULES_DATA}
+              currentModuleId={currentModuleId}
+              onSelectModule={handleSelectModule}
+            />
+            <div className="main">
+              <PageHeader
+                moduleData={currentModule}
+                filteredCount={filtered.length}
+              />
+              <KPIRow kpis={kpis} />
+              <Filters
+                filtroAtivo={filtroAtivo}
+                onSetFiltro={setFiltroAtivo}
+                busca={busca}
+                onSetBusca={setBusca}
+              />
+              <div className="leads-grid">
+                {filtered.length > 0 ? (
+                  filtered.map(lead => (
+                    <LeadCard
+                      key={lead.id}
+                      lead={lead}
+                      onViewDetails={handleViewDetails}
+                    />
+                  ))
+                ) : (
+                  <div className="leads-empty">
+                    <div className="leads-empty-icon">🔍</div>
+                    <div className="leads-empty-text">Nenhum lead encontrado</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          {modalOpen && <Modal lead={selectedLead} onClose={handleCloseModal} />}
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
