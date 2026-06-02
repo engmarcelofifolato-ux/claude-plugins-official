@@ -122,14 +122,33 @@
   .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
   .dashboard-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.03em; }
 
-  .filtros { display: flex; gap: 1rem; margin-bottom: 2rem; }
+  .dashboard-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; gap: 2rem; }
+  .filtros { display: flex; gap: 1rem; flex: 1; }
+  .view-toggle { display: flex; gap: 0.5rem; }
+  .toggle-btn { padding: 0.6rem 1.2rem; border: 1px solid var(--cinza-borda); border-radius: 6px; background: transparent; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; transition: all 0.2s; }
+  .toggle-btn.active { background: #6b7c3a; color: #ffffff; border-color: #6b7c3a; }
+  .toggle-btn:hover { border-color: #4a5e2a; color: #4a5e2a; }
+
   .filtro-select { padding: 0.6rem 1rem; border: 1px solid var(--cinza-borda); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; cursor: pointer; }
 
+  /* VISUALIZAÇÃO LINHAS */
   .leads-table { width: 100%; border-collapse: collapse; background: var(--preto-card); border: 1px solid var(--cinza-borda); border-radius: 8px; overflow: hidden; }
   .leads-table thead { background: var(--cinza-escuro); }
   .leads-table th { padding: 1rem; text-align: left; font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--texto-muted); border-bottom: 1px solid var(--cinza-borda); }
-  .leads-table td { padding: 1rem; border-bottom: 1px solid var(--cinza-borda); font-size: 0.9rem; }
+  .leads-table td { padding: 1rem; border-bottom: 1px solid var(--cinza-borda); font-size: 0.9rem; cursor: pointer; transition: background 0.2s; }
   .leads-table tr:hover { background: rgba(122,140,69,0.04); }
+
+  /* VISUALIZAÇÃO QUADROS */
+  .leads-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+  .lead-card { background: var(--preto-card); border: 1px solid var(--cinza-borda); border-radius: 12px; padding: 1.5rem; position: relative; transition: all 0.3s; cursor: pointer; }
+  .lead-card:hover { border-color: rgba(122,140,69,0.3); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
+
+  .lead-card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem; }
+  .lead-card-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--texto-claro); }
+  .lead-card-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; }
+  .lead-card-local { font-size: 0.85rem; color: var(--texto-muted); margin-bottom: 1rem; }
+  .lead-card-info { font-size: 0.8rem; color: var(--texto-muted); line-height: 1.6; margin-bottom: 1rem; }
+  .lead-card-info strong { color: var(--texto-claro); display: block; margin-top: 0.5rem; }
 
   .status-badge { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
   .status-novo { background: rgba(106,120,52,0.2); color: #4a5e2a; }
@@ -141,9 +160,29 @@
   .score-morno { background: rgba(217,119,6,0.2); color: #d97706; }
   .score-frio { background: rgba(74,111,165,0.2); color: #4a6fa5; }
 
-  .acoes { display: flex; gap: 0.5rem; }
-  .btn-pequeno { padding: 0.4rem 0.8rem; font-size: 0.75rem; border: 1px solid var(--cinza-borda); border-radius: 4px; cursor: pointer; background: transparent; color: var(--texto-claro); transition: all 0.2s; }
+  .btn-pequeno { padding: 0.4rem 0.8rem; font-size: 0.75rem; border: 1px solid var(--cinza-borda); border-radius: 4px; cursor: pointer; background: transparent; color: var(--texto-claro); transition: all 0.2s; font-family: 'Syne', sans-serif; font-weight: 600; }
   .btn-pequeno:hover { border-color: #4a5e2a; color: #4a5e2a; }
+
+  .acoes { display: flex; gap: 0.5rem; margin-top: 1rem; }
+
+  /* MODAL */
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .modal.active { display: flex; }
+  
+  .modal-content { background: var(--preto-card); border-radius: 12px; padding: 2rem; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--texto-muted); }
+  .modal-close:hover { color: var(--texto-claro); }
+
+  .modal-header { margin-bottom: 1.5rem; border-bottom: 1px solid var(--cinza-borda); padding-bottom: 1rem; }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; margin-bottom: 0.5rem; }
+  .modal-subtitle { font-size: 0.9rem; color: var(--texto-muted); }
+
+  .modal-section { margin-bottom: 1.5rem; }
+  .modal-section-title { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #4a5e2a; margin-bottom: 0.8rem; }
+  .modal-section-content { font-size: 0.9rem; line-height: 1.6; color: var(--texto-claro); }
+
+  .modal-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .modal-tag { background: rgba(122,140,69,0.15); padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.8rem; color: #4a5e2a; }
 
   /* RESPONSIVE */
   @media (max-width: 1024px) {
@@ -153,14 +192,20 @@
     .modulos-grid { grid-template-columns: 1fr 1fr; }
     .modulos-page { padding: 8rem 2rem 4rem; }
     .dashboard-page { padding: 8rem 2rem 4rem; }
+    .dashboard-top { flex-direction: column; align-items: stretch; }
+    .filtros { flex-direction: column; }
+    .leads-grid { grid-template-columns: 1fr; }
   }
 
   @media (max-width: 768px) {
     .modulos-grid { grid-template-columns: 1fr; }
-    .filtros { flex-direction: column; }
     .leads-table { font-size: 0.8rem; }
     .leads-table th, .leads-table td { padding: 0.7rem; }
+    .modal-content { padding: 1.5rem; }
   }
+
+  /* HIDDEN */
+  .hidden { display: none; }
 </style>
 </head>
 <body>
@@ -219,7 +264,6 @@
     </div>
 
     <div class="modulos-grid">
-      <!-- Fundiário -->
       <div class="modulo-card" id="card-fundiario">
         <div class="modulo-badge">ATIVO</div>
         <div class="modulo-icon">🗺️</div>
@@ -229,7 +273,6 @@
         <button class="btn-acessar liberado" onclick="goToPage('dashboard'); setModuloAtivo('fundiario')">Acessar →</button>
       </div>
 
-      <!-- Crédito Rural -->
       <div class="modulo-card" id="card-credito">
         <div class="modulo-badge">ATIVO</div>
         <div class="modulo-icon">💰</div>
@@ -239,7 +282,6 @@
         <button class="btn-acessar liberado" onclick="goToPage('dashboard'); setModuloAtivo('credito')">Acessar →</button>
       </div>
 
-      <!-- Ambiental -->
       <div class="modulo-card bloqueado" id="card-ambiental">
         <div class="modulo-badge bloqueado">UPGRADE</div>
         <div class="modulo-icon">🌱</div>
@@ -249,7 +291,6 @@
         <button class="btn-acessar" onclick="alert('Para acessar este módulo, faça upgrade de seu plano.')">+ Adicionar →</button>
       </div>
 
-      <!-- Solar Rural -->
       <div class="modulo-card" id="card-solar">
         <div class="modulo-badge">ATIVO</div>
         <div class="modulo-icon">☀️</div>
@@ -259,7 +300,6 @@
         <button class="btn-acessar liberado" onclick="goToPage('dashboard'); setModuloAtivo('solar')">Acessar →</button>
       </div>
 
-      <!-- Empresas -->
       <div class="modulo-card bloqueado" id="card-empresas">
         <div class="modulo-badge bloqueado">UPGRADE</div>
         <div class="modulo-icon">🏢</div>
@@ -280,42 +320,119 @@
       <button class="btn-secondary" onclick="goToPage('modulos')">← Voltar aos Módulos</button>
     </div>
 
-    <div class="filtros">
-      <select class="filtro-select" id="filtro-status" onchange="filtrarTabela()">
-        <option value="">Todos os Status</option>
-        <option value="novo">Novo</option>
-        <option value="contactado">Contactado</option>
-        <option value="fechado">Fechado</option>
-      </select>
-      <select class="filtro-select" id="filtro-score" onchange="filtrarTabela()">
-        <option value="">Todos os Scores</option>
-        <option value="quente">Quente (80-100)</option>
-        <option value="morno">Morno (60-79)</option>
-        <option value="frio">Frio (0-59)</option>
-      </select>
-      <input type="text" class="filtro-select" id="filtro-busca" placeholder="Buscar por nome..." onkeyup="filtrarTabela()">
+    <div class="dashboard-top">
+      <div class="filtros">
+        <select class="filtro-select" id="filtro-status" onchange="filtrarTabela()">
+          <option value="">Todos os Status</option>
+          <option value="novo">Novo</option>
+          <option value="contactado">Contactado</option>
+          <option value="fechado">Fechado</option>
+        </select>
+        <select class="filtro-select" id="filtro-score" onchange="filtrarTabela()">
+          <option value="">Todos os Scores</option>
+          <option value="quente">Quente (80-100)</option>
+          <option value="morno">Morno (60-79)</option>
+          <option value="frio">Frio (0-59)</option>
+        </select>
+        <input type="text" class="filtro-select" id="filtro-busca" placeholder="Buscar por nome..." onkeyup="filtrarTabela()">
+      </div>
+      <div class="view-toggle">
+        <button class="toggle-btn active" onclick="mudarVisualizacao('linhas')" id="btn-linhas">📋 Linhas</button>
+        <button class="toggle-btn" onclick="mudarVisualizacao('quadros')" id="btn-quadros">🔲 Quadros</button>
+      </div>
     </div>
 
-    <table class="leads-table">
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Localização</th>
-          <th>Score</th>
-          <th>Status</th>
-          <th>Data</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="leads-tbody">
-        <!-- Preenchido por JavaScript -->
-      </tbody>
-    </table>
+    <!-- Visualização LINHAS -->
+    <div id="view-linhas" class="view-container">
+      <table class="leads-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Localização</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="leads-tbody">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Visualização QUADROS -->
+    <div id="view-quadros" class="view-container hidden">
+      <div class="leads-grid" id="leads-grid">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DE DETALHES ===== -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="fecharModal()">✕</button>
+    
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-nome">Nome do Lead</h2>
+      <p class="modal-subtitle" id="modal-tipo">Tipo</p>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Score & Status</div>
+      <div class="modal-section-content">
+        <span class="score-badge" id="modal-score">Score</span>
+        <span class="status-badge" id="modal-status">Status</span>
+        <div style="margin-top: 0.8rem; font-size: 0.85rem;">
+          <strong>Localização:</strong> <span id="modal-local">-</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Informações Comerciais</div>
+      <div class="modal-section-content">
+        <p><strong>Proprietário:</strong> <span id="modal-proprietario">-</span></p>
+        <p><strong>CNPJ/CPF:</strong> <span id="modal-cnpj">-</span></p>
+        <p><strong>Área:</strong> <span id="modal-area">-</span></p>
+        <p><strong>Atividade:</strong> <span id="modal-atividade">-</span></p>
+        <p><strong>Contato:</strong> <span id="modal-contato">-</span></p>
+        <p><strong>Telefone:</strong> <span id="modal-tel">-</span></p>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Eventos Associados</div>
+      <div class="modal-section-content">
+        <div class="modal-tags" id="modal-eventos">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Serviços Recomendados</div>
+      <div class="modal-section-content">
+        <div class="modal-tags" id="modal-servicos">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Público-alvo</div>
+      <div class="modal-section-content">
+        <span id="modal-publico">-</span>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+      <button class="btn-primary" onclick="atualizarStatus('contactado')">Marcar como Contactado</button>
+      <button class="btn-secondary" onclick="atualizarStatus('fechado')">Marcar como Fechado</button>
+      <button class="btn-secondary" onclick="fecharModal()">Fechar</button>
+    </div>
   </div>
 </div>
 
 <script>
-  // Dados simulados de usuário (depois virá do backend)
   let usuarioAtual = {
     nome: "João Silva",
     email: "joao@empresa.com.br",
@@ -323,31 +440,31 @@
   };
 
   let moduloAtivo = "fundiario";
+  let visualizacao = "linhas";
+  let leadSelecionado = null;
 
-  // Dados dos leads por módulo
-  const ladsDataByModulo = {
+  const leadsDataByModulo = {
     fundiario: [
-      { id: 1, nome: "Fazenda Santa Maria", local: "Ribeirão Preto, SP", score: 95, classe: "quente", status: "novo", data: "01/06/2025" },
-      { id: 2, nome: "Propriedade Bom Futuro", local: "Araçatuba, SP", score: 78, classe: "morno", status: "contactado", data: "28/05/2025" },
-      { id: 3, nome: "Sítio Esperança", local: "Itapetininga, SP", score: 68, classe: "morno", status: "novo", data: "25/05/2025" },
-      { id: 4, nome: "Fazenda Morena", local: "Barretos, SP", score: 82, classe: "quente", status: "fechado", data: "22/05/2025" },
-      { id: 5, nome: "Granja Nova Era", local: "Ribeirão Preto, SP", score: 55, classe: "frio", status: "novo", data: "18/05/2025" },
-      { id: 6, nome: "Plantação Horizonte Verde", local: "Bebedouro, SP", score: 71, classe: "morno", status: "contactado", data: "15/05/2025" },
+      { id: 1, nome: "Fazenda Santa Maria", local: "Ribeirão Preto, SP", tipo: "SIGEF Certificado", score: 95, classe: "quente", status: "novo", data: "01/06/2025", proprietario: "Santa Maria Agrop. Ltda.", cnpj: "12.345.678/0001-10", area: "2.500 ha", atividade: "Soja/Milho", contato: "adm@santamaria.com.br", tel: "(16) 99801-1122", eventos: ["SIGEF certificado", "CAR retificado", "Matrícula atualizada"], servicos: ["Renovação de CAR", "Atualização cartória", "Renovação SIGEF"], publico: "Cartórios · INCRA · Georreferenciadoras" },
+      { id: 2, nome: "Propriedade Bom Futuro", local: "Araçatuba, SP", tipo: "SICAR Ativo", score: 78, classe: "morno", status: "contactado", data: "28/05/2025", proprietario: "Bom Futuro Pecuária S/A", cnpj: "98.765.432/0001-55", area: "1.850 ha", atividade: "Pecuária", contato: "contato@bomfuturo.com.br", tel: "(18) 3271-5000", eventos: ["SICAR ativo", "CAR vencido em 90 dias"], servicos: ["Renovação de CAR", "Atualização SICAR", "Auditoria ambiental"], publico: "Cartórios · Auditores ambientais" },
+      { id: 3, nome: "Sítio Esperança", local: "Itapetininga, SP", tipo: "Remembramento", score: 68, classe: "morno", status: "novo", data: "25/05/2025", proprietario: "Esperança Agrop. Familiar", cnpj: "34.567.890/0001-23", area: "540 ha", atividade: "Diversificada", contato: "esperanca@sitio.com.br", tel: "(15) 3275-2341", eventos: ["Processo de remembramento", "Documentação parcial"], servicos: ["Levantamento fundiário", "Regularização fundiária", "Assessoria jurídica"], publico: "Cartórios · Advogados" },
+      { id: 4, nome: "Fazenda Morena", local: "Barretos, SP", tipo: "Desmembramento", score: 82, classe: "quente", status: "fechado", data: "22/05/2025", proprietario: "Açúcares do Brasil S/A", cnpj: "56.789.012/0001-34", area: "3.200 ha", atividade: "Cana-de-açúcar", contato: "legal@acucardbrasil.com.br", tel: "(17) 3323-5678", eventos: ["Desmembramento formalizado", "SIGEF atualizado", "CAR renovado"], servicos: ["Transferência de posse", "Documentação legal", "Registro em cartório"], publico: "Cartórios · Usinas" },
+      { id: 5, nome: "Granja Nova Era", local: "Ribeirão Preto, SP", tipo: "Inventário", score: 55, classe: "frio", status: "novo", data: "18/05/2025", proprietario: "Nova Era Alimentos Ltda.", cnpj: "78.901.234/0001-45", area: "280 ha", atividade: "Avicultura", contato: "admin@novaera.com.br", tel: "(16) 3422-1234", eventos: ["Inventário iniciado", "Documentação incompleta"], servicos: ["Inventário completo", "Descrição de imóvel", "Documentação"], publico: "Cartórios · Tabeliões" },
+      { id: 6, nome: "Plantação Horizonte Verde", local: "Bebedouro, SP", tipo: "Georreferenciamento", score: 71, classe: "morno", status: "contactado", data: "15/05/2025", proprietario: "Horizonte Verde Citrus S/A", cnpj: "23.456.789/0001-56", area: "1.620 ha", atividade: "Laranja", contato: "geo@horizonteverde.com.br", tel: "(17) 3634-9876", eventos: ["Georreferenciamento pendente", "CAR registrado"], servicos: ["Levantamento GNSS", "Processamento de dados", "Certificação SIGEF"], publico: "Georreferenciadoras · INCRA" },
     ],
     credito: [
-      { id: 7, nome: "Agrop. Santa Theresa", local: "Castro, SP", score: 91, classe: "quente", status: "novo", data: "30/05/2025" },
-      { id: 8, nome: "Empreendimento Novo Campo", local: "Sorocaba, SP", score: 64, classe: "morno", status: "contactado", data: "28/05/2025" },
-      { id: 9, nome: "Fazenda Índia", local: "Descalvado, SP", score: 77, classe: "morno", status: "novo", data: "26/05/2025" },
-      { id: 10, nome: "Cooperativa Bom Semeador", local: "Araraquara, SP", score: 86, classe: "quente", status: "fechado", data: "24/05/2025" },
+      { id: 7, nome: "Agrop. Santa Theresa", local: "Castro, SP", tipo: "Expansão Produção", score: 91, classe: "quente", status: "novo", data: "30/05/2025", proprietario: "Santa Theresa Agrop. Ltda.", cnpj: "45.678.901/0001-67", area: "-", atividade: "Grãos/Leguminosas", contato: "financeiro@sttheresa.com.br", tel: "(42) 3224-5678", eventos: ["Receita crescente", "Histórico de pagamento", "Sem restrições"], servicos: ["Análise de crédito", "Estruturação de operações", "Assessoria bancária"], publico: "Bancos · Cooperativas · Fintechs" },
+      { id: 8, nome: "Empreendimento Novo Campo", local: "Sorocaba, SP", tipo: "CNPJ Novo", score: 64, classe: "morno", status: "contactado", data: "28/05/2025", proprietario: "Novo Campo Fruticultura S/A", cnpj: "89.012.345/0001-78", area: "-", atividade: "Fruticultura", contato: "geral@novocampo.com.br", tel: "(15) 3414-7890", eventos: ["CNPJ criado (30 dias)", "Licenças obtidas"], servicos: ["Análise de viabilidade", "Estruturação de crédito inicial"], publico: "Bancos atuantes em startups rurais" },
+      { id: 9, nome: "Fazenda Índia", local: "Descalvado, SP", tipo: "Maquinário", score: 77, classe: "morno", status: "novo", data: "26/05/2025", proprietario: "Índia Agrop. Familiar", cnpj: "12.234.567/0001-89", area: "-", atividade: "Soja/Milho", contato: "compras@fazendaindia.com.br", tel: "(19) 3821-5432", eventos: ["Equipamentos antigos", "Receita estável", "Propriedade regularizada"], servicos: ["Financiamento de máquinas", "Leasing agrícola", "Trade-in"], publico: "Concessionárias · Financeiras agrícolas" },
+      { id: 10, nome: "Cooperativa Bom Semeador", local: "Araraquara, SP", tipo: "Custeio", score: 86, classe: "quente", status: "fechado", data: "24/05/2025", proprietario: "Coop. Agrop. Bom Semeador", cnpj: "34.345.678/0001-90", area: "-", atividade: "Cana/Grãos", contato: "credito@bomesemeador.coop", tel: "(16) 3322-6543", eventos: ["Safra assegurada", "Histórico de 15 anos", "Contratos forward"], servicos: ["Custeio de safra", "CPR estruturado", "Securitização"], publico: "Bancos · Seguradoras · Fundos" },
     ],
     solar: [
-      { id: 25, nome: "Confinamento Brangus Gold", local: "Araçatuba, SP", score: 93, classe: "quente", status: "novo", data: "29/05/2025" },
-      { id: 26, nome: "Sistema de Pivot Água Azul", local: "Tupã, SP", score: 81, classe: "quente", status: "contactado", data: "27/05/2025" },
-      { id: 27, nome: "Granja Aviária Vida Nova", local: "Paraíso, SP", score: 76, classe: "morno", status: "novo", data: "25/05/2025" },
+      { id: 25, nome: "Confinamento Brangus Gold", local: "Araçatuba, SP", tipo: "Alto Consumo", score: 93, classe: "quente", status: "novo", data: "29/05/2025", proprietario: "Confinamento Brangus Gold S/A", cnpj: "67.890.123/0001-45", area: "-", atividade: "Pecuária intensiva", contato: "energia@brangus.com.br", tel: "(18) 3271-6789", eventos: ["Consumo crescente", "Tarifa em alta", "Espaço disponível para placas"], servicos: ["Projeto solar", "Instalação completa", "Monitoramento de geração"], publico: "Integradores solares · Distribuidoras energia" },
+      { id: 26, nome: "Sistema de Pivot Água Azul", local: "Tupã, SP", tipo: "Pivot Central", score: 81, classe: "quente", status: "contactado", data: "27/05/2025", proprietario: "Água Azul Agrícola Ltda.", cnpj: "78.901.234/0001-56", area: "-", atividade: "Agricultura irrigada", contato: "tecnologia@aguaazul.com.br", tel: "(14) 3465-1234", eventos: ["Pivôs antigos", "Energia terceirizada", "Planejamento de modernização"], servicos: ["Solar + bombeamento", "Tanque de armazenamento", "Automação"], publico: "Integradores solares · Irrigacionalistas" },
+      { id: 27, nome: "Granja Aviária Vida Nova", local: "Paraíso, SP", tipo: "Confinamento", score: 76, classe: "morno", status: "novo", data: "25/05/2025", proprietario: "Granja Aviária Vida Nova Ltda.", cnpj: "89.012.345/0001-67", area: "-", atividade: "Avicultura de postura", contato: "admin@vidanova.com.br", tel: "(17) 3649-8765", eventos: ["Climatização 24/7", "Tarifa em aumento", "Espaço em telhado"], servicos: ["Solar residencial", "Baterias de backup", "Monitoramento web"], publico: "Integradores solares · Avicultores" },
     ]
   };
 
-  // Funções de navegação
   function goToPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
@@ -362,21 +479,93 @@
   }
 
   function carregarLeads() {
-    const leads = ladsDataByModulo[moduloAtivo] || [];
+    const leads = leadsDataByModulo[moduloAtivo] || [];
+    
+    // Carregar visão LINHAS
     const tbody = document.getElementById('leads-tbody');
     tbody.innerHTML = leads.map(lead => `
-      <tr>
+      <tr onclick="abrirModal(${lead.id})">
         <td><strong>${lead.nome}</strong></td>
         <td>${lead.local}</td>
         <td><span class="score-badge score-${lead.classe}">${lead.score}</span></td>
         <td><span class="status-badge status-${lead.status}">${lead.status}</span></td>
         <td>${lead.data}</td>
-        <td class="acoes">
-          <button class="btn-pequeno" onclick="marcarStatus(${lead.id}, 'contactado')">Contactar</button>
-          <button class="btn-pequeno" onclick="marcarStatus(${lead.id}, 'fechado')">Fechado</button>
-        </td>
+        <td><button class="btn-pequeno" onclick="event.stopPropagation(); abrirModal(${lead.id})">Ver detalhes →</button></td>
       </tr>
     `).join('');
+
+    // Carregar visão QUADROS
+    const grid = document.getElementById('leads-grid');
+    grid.innerHTML = leads.map(lead => `
+      <div class="lead-card" onclick="abrirModal(${lead.id})">
+        <div class="lead-card-header">
+          <div class="lead-card-title">${lead.nome}</div>
+          <div class="lead-card-score score-badge score-${lead.classe}">${lead.score}</div>
+        </div>
+        <div class="lead-card-local">📍 ${lead.local}</div>
+        <div class="lead-card-info">
+          <strong>Tipo:</strong> ${lead.tipo}<br>
+          <strong>Proprietário:</strong> ${lead.proprietario}<br>
+          <strong>Status:</strong> <span class="status-badge status-${lead.status}">${lead.status}</span>
+        </div>
+        <button class="btn-pequeno" onclick="event.stopPropagation(); abrirModal(${lead.id})">Mais informações →</button>
+      </div>
+    `).join('');
+  }
+
+  function abrirModal(leadId) {
+    const leads = leadsDataByModulo[moduloAtivo];
+    const lead = leads.find(l => l.id === leadId);
+    
+    if (!lead) return;
+
+    leadSelecionado = lead;
+
+    document.getElementById('modal-nome').textContent = lead.nome;
+    document.getElementById('modal-tipo').textContent = lead.tipo;
+    document.getElementById('modal-local').textContent = lead.local;
+    document.getElementById('modal-proprietario').textContent = lead.proprietario;
+    document.getElementById('modal-cnpj').textContent = lead.cnpj;
+    document.getElementById('modal-area').textContent = lead.area;
+    document.getElementById('modal-atividade').textContent = lead.atividade;
+    document.getElementById('modal-contato').textContent = lead.contato;
+    document.getElementById('modal-tel').textContent = lead.tel;
+    document.getElementById('modal-publico').textContent = lead.publico;
+
+    const scoreClass = lead.classe === 'quente' ? 'score-quente' : lead.classe === 'morno' ? 'score-morno' : 'score-frio';
+    document.getElementById('modal-score').innerHTML = `<span class="score-badge ${scoreClass}">${lead.score} - ${lead.classe.toUpperCase()}</span>`;
+    
+    const statusClass = `status-${lead.status}`;
+    document.getElementById('modal-status').innerHTML = `<span class="status-badge ${statusClass}">${lead.status.toUpperCase()}</span>`;
+
+    document.getElementById('modal-eventos').innerHTML = lead.eventos.map(e => `<span class="modal-tag">✓ ${e}</span>`).join('');
+    document.getElementById('modal-servicos').innerHTML = lead.servicos.map(s => `<span class="modal-tag">⚡ ${s}</span>`).join('');
+
+    document.getElementById('modal').classList.add('active');
+  }
+
+  function fecharModal() {
+    document.getElementById('modal').classList.remove('active');
+    leadSelecionado = null;
+  }
+
+  function atualizarStatus(novoStatus) {
+    if (!leadSelecionado) return;
+    const statusMap = { novo: 'Novo', contactado: 'Contactado', fechado: 'Fechado' };
+    alert(`Lead "${leadSelecionado.nome}" marcado como "${statusMap[novoStatus]}"`);
+    leadSelecionado.status = novoStatus;
+    fecharModal();
+    carregarLeads();
+  }
+
+  function mudarVisualizacao(tipo) {
+    visualizacao = tipo;
+    
+    document.getElementById('view-linhas').classList.toggle('hidden', tipo !== 'linhas');
+    document.getElementById('view-quadros').classList.toggle('hidden', tipo !== 'quadros');
+
+    document.getElementById('btn-linhas').classList.toggle('active', tipo === 'linhas');
+    document.getElementById('btn-quadros').classList.toggle('active', tipo === 'quadros');
   }
 
   function filtrarTabela() {
@@ -384,6 +573,7 @@
     const score = document.getElementById('filtro-score').value;
     const busca = document.getElementById('filtro-busca').value.toLowerCase();
 
+    // Filtrar LINHAS
     const rows = document.querySelectorAll('#leads-tbody tr');
     rows.forEach(row => {
       let mostrar = true;
@@ -407,11 +597,23 @@
 
       row.style.display = mostrar ? '' : 'none';
     });
-  }
 
-  function marcarStatus(id, novoStatus) {
-    const statusMap = { novo: 'Novo', contactado: 'Contactado', fechado: 'Fechado' };
-    alert(`Lead #${id} marcado como "${statusMap[novoStatus]}"`);
+    // Filtrar QUADROS
+    const cards = document.querySelectorAll('.lead-card');
+    cards.forEach(card => {
+      let mostrar = true;
+      const cardText = card.textContent.toLowerCase();
+      
+      if (busca) mostrar = mostrar && cardText.includes(busca);
+      if (status) mostrar = mostrar && cardText.includes(status);
+      if (score) {
+        if (score === 'quente') mostrar = mostrar && cardText.includes('quente');
+        if (score === 'morno') mostrar = mostrar && cardText.includes('morno');
+        if (score === 'frio') mostrar = mostrar && cardText.includes('frio');
+      }
+
+      card.style.display = mostrar ? '' : 'none';
+    });
   }
 
   function logout() {
@@ -419,12 +621,13 @@
     goToPage('home');
   }
 
-  function scrollToSection(sectionId) {
-    goToPage('home');
-  }
-
   // Inicializar
   carregarLeads();
+
+  // Fechar modal ao clicar fora
+  document.getElementById('modal').addEventListener('click', (e) => {
+    if (e.target.id === 'modal') fecharModal();
+  });
 </script>
 
 </body>
