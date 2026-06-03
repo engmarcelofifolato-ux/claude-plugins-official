@@ -2,11 +2,17 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GeoRadar Agro">
+<meta name="theme-color" content="#4a5e2a">
 <title>GeoRadar Agro — Inteligência Territorial para o Agronegócio</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
+    --safe-top: max(env(safe-area-inset-top), 0px);
+    --safe-bottom: max(env(safe-area-inset-bottom), 0px);
     --verde: #4a5e2a;
     --verde-claro: #6b7c3a;
     --verde-neon: #7a8c45;
@@ -22,9 +28,9 @@
     --texto-muted: #6b6a5e;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--preto); color: var(--texto-claro); }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--preto); color: var(--texto-claro); -webkit-user-select: none; user-select: none; overflow-x: hidden; }
 
   /* PAGES */
   .page { display: none; min-height: 100vh; }
@@ -444,6 +450,63 @@
 
   /* HIDDEN */
   .hidden { display: none; }
+
+  /* ===== iOS OPTIMIZATIONS ===== */
+  @supports (padding: max(0px)) {
+    nav { padding-top: max(1.2rem, env(safe-area-inset-top)); }
+    footer { padding-bottom: max(3rem, env(safe-area-inset-bottom)); }
+    .modulos-page { padding-bottom: max(4rem, env(safe-area-inset-bottom)); }
+    .dashboard-page { padding-bottom: max(4rem, env(safe-area-inset-bottom)); }
+  }
+
+  /* Prevent zoom on input focus (iOS) */
+  input, select, textarea, button { font-size: 16px; }
+
+  /* Better touch targets for iOS (min 44x44px) */
+  button, a, .modulos-item, .toggle-btn {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Smooth scrolling for iOS */
+  .page, .modulos-sidebar, .modulos-content {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Fix input styling on iOS */
+  input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+
+  /* Remove iOS default button styling */
+  button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  /* Prevent text selection where not needed */
+  button, a, .toggle-btn, .modulos-item {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  /* Fix backdrop-filter for iOS Safari */
+  @supports (backdrop-filter: blur(1px)) {
+    nav { -webkit-backdrop-filter: blur(16px); }
+  }
+
+  /* Safe area support for notch devices */
+  @supports (padding: env(safe-area-inset-bottom)) {
+    footer { padding-bottom: calc(3rem + env(safe-area-inset-bottom)); }
+  }
 </style>
 </head>
 <body>
@@ -1245,9 +1308,32 @@
     goToPage('modulos');
   }
 
+  // iOS Optimizations
+  function initializeIOSSupport() {
+    // Prevent rubber band scrolling
+    document.body.addEventListener('touchmove', function(e) {
+      if (e.target.closest('.modal-content') === null && e.target.closest('select') === null) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    // Fix viewport height on iOS
+    function setViewportHeight() {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', vh + 'px');
+    }
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+
+    // Fix fixed positioning on iOS
+    document.addEventListener('touchstart', function() {}, { passive: true });
+  }
+
   // Inicializar
   carregarLeads();
   renderizarCardsModulos();
+  initializeIOSSupport();
 
   // Fechar modal ao clicar fora
   document.getElementById('modal').addEventListener('click', (e) => {
