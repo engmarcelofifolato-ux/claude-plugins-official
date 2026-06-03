@@ -1048,9 +1048,11 @@
                         <span style="font-size: 12px;">▼</span>
                     </button>
                     <div class="dropdown-menu" id="modulosMenu">
-                        <button class="dropdown-item" onclick="carregarModulo('credit-scoring')">⭐ Credit Score</button>
-                        <button class="dropdown-item" onclick="carregarModulo('car-wizard')">🚗 CAR Wizard</button>
-                        <button class="dropdown-item" onclick="carregarModulo('solar-roi')">☀️ Solar ROI</button>
+                        <button class="dropdown-item" onclick="carregarModulo('fundiario')">🗺️ Fundiário</button>
+                        <button class="dropdown-item" onclick="carregarModulo('credito')">💰 Crédito Rural</button>
+                        <button class="dropdown-item" onclick="carregarModulo('ambiental')">🌱 Ambiental</button>
+                        <button class="dropdown-item" onclick="carregarModulo('solar')">☀️ Solar Rural</button>
+                        <button class="dropdown-item" onclick="carregarModulo('empresas')">🏢 Empresas</button>
                     </div>
                 </div>
             </div>
@@ -1089,9 +1091,11 @@
                                 <label class="filter-label">Módulo</label>
                                 <select class="filter-input" id="moduloFilter">
                                     <option value="">Todos</option>
-                                    <option value="Credit Score">Credit Score</option>
-                                    <option value="CAR Wizard">CAR Wizard</option>
-                                    <option value="Solar ROI">Solar ROI</option>
+                                    <option value="Fundiário">Fundiário</option>
+                                    <option value="Crédito Rural">Crédito Rural</option>
+                                    <option value="Ambiental">Ambiental</option>
+                                    <option value="Solar Rural">Solar Rural</option>
+                                    <option value="Empresas">Empresas</option>
                                 </select>
                             </div>
                             <div class="filter-group">
@@ -1118,24 +1122,38 @@
                             <h2 class="section-title">Módulos Disponíveis</h2>
                         </div>
                         <div class="modules-grid">
-                            <div class="module-card" onclick="carregarModulo('credit-scoring')">
-                                <div class="module-icon">⭐</div>
-                                <h3 class="module-title">Credit Score</h3>
-                                <p class="module-description">Sistema de pontuação de crédito baseado em análise de dados agrícolas e histórico financeiro.</p>
+                            <div class="module-card" onclick="carregarModulo('fundiario')">
+                                <div class="module-icon">🗺️</div>
+                                <h3 class="module-title">Fundiário</h3>
+                                <p class="module-description">Regularização fundiária, CAR e georreferenciamento de propriedades rurais.</p>
                                 <button class="btn btn-secondary btn-sm">Acessar Módulo →</button>
                             </div>
 
-                            <div class="module-card" onclick="carregarModulo('car-wizard')">
-                                <div class="module-icon">🚗</div>
-                                <h3 class="module-title">CAR Wizard</h3>
-                                <p class="module-description">Assistente para Cadastro Ambiental Rural com validação automática e documentação integrada.</p>
+                            <div class="module-card" onclick="carregarModulo('credito')">
+                                <div class="module-icon">💰</div>
+                                <h3 class="module-title">Crédito Rural</h3>
+                                <p class="module-description">Análise de crédito automática, aprovação de financiamentos e linhas de custeio.</p>
                                 <button class="btn btn-secondary btn-sm">Acessar Módulo →</button>
                             </div>
 
-                            <div class="module-card" onclick="carregarModulo('solar-roi')">
+                            <div class="module-card" onclick="carregarModulo('ambiental')">
+                                <div class="module-icon">🌱</div>
+                                <h3 class="module-title">Ambiental</h3>
+                                <p class="module-description">Compliance ambiental, sustentabilidade e certificações de propriedades rurais.</p>
+                                <button class="btn btn-secondary btn-sm">Acessar Módulo →</button>
+                            </div>
+
+                            <div class="module-card" onclick="carregarModulo('solar')">
                                 <div class="module-icon">☀️</div>
-                                <h3 class="module-title">Solar ROI</h3>
-                                <p class="module-description">Calculadora de retorno sobre investimento para projetos de energia solar em propriedades rurais.</p>
+                                <h3 class="module-title">Solar Rural</h3>
+                                <p class="module-description">Simulador de energia solar, ROI e financiamento de sistemas fotovoltaicos.</p>
+                                <button class="btn btn-secondary btn-sm">Acessar Módulo →</button>
+                            </div>
+
+                            <div class="module-card" onclick="carregarModulo('empresas')">
+                                <div class="module-icon">🏢</div>
+                                <h3 class="module-title">Empresas</h3>
+                                <p class="module-description">Formalização, CNPJ, registro de empresas e legalização de negócios agrícolas.</p>
                                 <button class="btn btn-secondary btn-sm">Acessar Módulo →</button>
                             </div>
                         </div>
@@ -1234,7 +1252,7 @@
     <script>
         // ===== LEADS DATA =====
         const leadsDataByModulo = {
-            'Credit Score': [
+            'Fundiário': [
                 {
                     id: 1,
                     nome: 'João da Silva',
@@ -1272,7 +1290,7 @@
                     status: 'Aprovado'
                 },
             ],
-            'CAR Wizard': [
+            'Crédito Rural': [
                 {
                     id: 5,
                     nome: 'Roberto Lima',
@@ -1301,7 +1319,18 @@
                     status: 'Qualificado'
                 },
             ],
-            'Solar ROI': [
+            'Ambiental': [
+                {
+                    id: 11,
+                    nome: 'Patricia Mendes',
+                    estado: 'BA',
+                    propriedade: 'Fazenda Ambiental',
+                    tamanho: '700ha',
+                    score: 900,
+                    status: 'Excelente'
+                },
+            ],
+            'Solar Rural': [
                 {
                     id: 8,
                     nome: 'Patricia Mendes',
@@ -1328,6 +1357,17 @@
                     tamanho: '550ha',
                     score: 830,
                     status: 'Muito Bom'
+                },
+            ],
+            'Empresas': [
+                {
+                    id: 12,
+                    nome: 'Empresa Agro XYZ',
+                    estado: 'SP',
+                    propriedade: 'Agroindustrial São Paulo',
+                    tamanho: '1000ha',
+                    score: 920,
+                    status: 'Ativo'
                 },
             ]
         };
@@ -1360,15 +1400,26 @@
         }
 
         function carregarModulo(modulo) {
-            if (modulo === 'credit-scoring') {
-                mostrarPagina('pageCredit');
-                carregarScriptExterna('https://cdn.jsdelivr.net/gh/seu-usuario/seu-repo/credit-scoring.js');
-            } else if (modulo === 'car-wizard') {
-                mostrarPagina('pageCar');
-                carregarScriptExterna('https://cdn.jsdelivr.net/gh/seu-usuario/seu-repo/car-wizard.js');
-            } else if (modulo === 'solar-roi') {
-                mostrarPagina('pageSolar');
-                carregarScriptExterna('https://cdn.jsdelivr.net/gh/seu-usuario/seu-repo/solar-roi.js');
+            const moduloMap = {
+                'fundiario': 'Fundiário',
+                'credito': 'Crédito Rural',
+                'ambiental': 'Ambiental',
+                'solar': 'Solar Rural',
+                'empresas': 'Empresas'
+            };
+
+            const moduloNome = moduloMap[modulo];
+            if (moduloNome) {
+                // Filtrar leads do módulo selecionado
+                const filtered = todosLeads.filter(lead => lead.modulo === moduloNome);
+                renderizarLeads(filtered);
+                document.getElementById('leadsCount').textContent = `${filtered.length} leads`;
+
+                // Atualizar dropdown para mostrar módulo selecionado
+                document.getElementById('moduloFilter').value = moduloNome;
+
+                // Scroll para resultados
+                document.getElementById('leadsContainer').scrollIntoView({ behavior: 'smooth' });
             }
         }
 
