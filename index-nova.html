@@ -655,7 +655,7 @@
       <h2 class="signup-title">Comece Agora</h2>
       <p class="signup-subtitle">Deixe seus dados e um de nossos especialistas entraremos em contato em 24 horas.</p>
 
-      <form onsubmit="enviarCadastro(event)">
+      <form onsubmit="enviarCadastro(event)" method="POST">
         <div class="form-group">
           <label for="nome">Nome Completo *</label>
           <input type="text" id="nome" name="nome" required placeholder="João Silva">
@@ -733,7 +733,7 @@
       <h4>Empresa</h4>
       <a href="javascript:void(0)">Sobre nós</a>
       <a href="javascript:void(0)">Blog</a>
-      <a href="javascript:void(0)">Contato</a>
+      <a href="javascript:void(0)" onclick="goToPage('contato')">Contato</a>
     </div>
     <div class="footer-col">
       <h4>Legal</h4>
@@ -783,15 +783,15 @@
           <span class="modulos-item-icon">📊</span>
           <span>Dashboard</span>
         </li>
-        <li class="modulos-item">
+        <li class="modulos-item" onclick="abrirAlerts()">
           <span class="modulos-item-icon">🔔</span>
           <span>Alertas</span>
         </li>
-        <li class="modulos-item">
+        <li class="modulos-item" onclick="abrirRelatorios()">
           <span class="modulos-item-icon">📋</span>
           <span>Relatórios</span>
         </li>
-        <li class="modulos-item">
+        <li class="modulos-item" onclick="goToPage('configuracoes')">
           <span class="modulos-item-icon">⚙️</span>
           <span>Configurações</span>
         </li>
@@ -891,8 +891,94 @@
   </div>
 </div>
 
-<!-- ===== MODAL DE DETALHES ===== -->
-<div id="modal" class="modal">
+<!-- ===== PAGE: CONTATO ===== -->
+<div id="contato" class="page">
+  <div class="signup-container" style="margin-top: 10rem; max-width: 600px; margin-left: auto; margin-right: auto; padding: 3rem;">
+    <h2 class="signup-title">Entre em Contato</h2>
+    <p class="signup-subtitle">Dúvidas? Sugestões? Fale conosco! Responderemos em breve.</p>
+
+    <form action="https://formspree.io/f/meqzlbkz" method="POST" onsubmit="return validarFormulario(event, 'contato')">
+      <div class="form-group">
+        <label for="contato-nome">Nome *</label>
+        <input type="text" id="contato-nome" name="nome" required placeholder="Seu nome">
+      </div>
+
+      <div class="form-group">
+        <label for="contato-email">Email *</label>
+        <input type="email" id="contato-email" name="email" required placeholder="seu@email.com">
+      </div>
+
+      <div class="form-group">
+        <label for="contato-telefone">Telefone</label>
+        <input type="tel" id="contato-telefone" name="telefone" placeholder="(11) 99999-9999">
+      </div>
+
+      <div class="form-group">
+        <label for="contato-assunto">Assunto *</label>
+        <select id="contato-assunto" name="assunto" required>
+          <option value="">Selecione um assunto</option>
+          <option value="duvida">Dúvida sobre a plataforma</option>
+          <option value="sugestao">Sugestão de melhoria</option>
+          <option value="problema">Relatar um problema</option>
+          <option value="integracao">Solicitar integração</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="contato-mensagem">Mensagem *</label>
+        <textarea id="contato-mensagem" name="mensagem" required placeholder="Digite sua mensagem..."></textarea>
+      </div>
+
+      <button type="submit" class="signup-button">Enviar Mensagem →</button>
+      <button type="button" class="btn-secondary" onclick="goToPage('home')" style="width: 100%; margin-top: 1rem;">Voltar</button>
+    </form>
+  </div>
+</div>
+
+<!-- ===== PAGE: CONFIGURAÇÕES ===== -->
+<div id="configuracoes" class="page">
+  <div class="signup-container" style="margin-top: 10rem; max-width: 600px; margin-left: auto; margin-right: auto; padding: 3rem;">
+    <h2 class="signup-title">⚙️ Configurações</h2>
+
+    <div class="modulos-info-card" style="margin-bottom: 2rem;">
+      <div class="modulos-info-label">Usuário Logado</div>
+      <div class="modulos-info-value" id="config-usuario">João Silva</div>
+      <div class="modulos-info-desc" id="config-email">joao@empresa.com.br</div>
+    </div>
+
+    <div class="modulos-info-card" style="margin-bottom: 2rem;">
+      <div class="modulos-info-label">Módulos Ativos</div>
+      <div class="modulos-info-desc" id="config-modulos">Fundiário, Crédito Rural, Solar Rural</div>
+    </div>
+
+    <div class="modulos-info-card" style="margin-bottom: 2rem;">
+      <div class="modulos-info-label">Plano</div>
+      <div class="modulos-info-value">Profissional</div>
+      <div class="modulos-info-desc">R$ 1.299/mês • Renovação em 15/07/2025</div>
+    </div>
+
+    <h3 style="font-family: 'Syne', sans-serif; font-size: 1.2rem; margin: 2rem 0 1rem; color: #1c2016;">Preferências</h3>
+
+    <label style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; cursor: pointer;">
+      <input type="checkbox" id="notificacoes" checked>
+      <span>Receber notificações de novos leads</span>
+    </label>
+
+    <label style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; cursor: pointer;">
+      <input type="checkbox" id="email-digest" checked>
+      <span>Receber resumo semanal por email</span>
+    </label>
+
+    <label style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; cursor: pointer;">
+      <input type="checkbox" id="dark-mode">
+      <span>Modo escuro (em breve)</span>
+    </label>
+
+    <button class="signup-button" onclick="salvarConfigurações()">Salvar Configurações</button>
+    <button class="btn-secondary" onclick="goToPage('home')" style="width: 100%; margin-top: 1rem;">Voltar</button>
+  </div>
+</div>
   <div class="modal-content">
     <button class="modal-close" onclick="fecharModal()">✕</button>
     
@@ -1289,23 +1375,47 @@
     const telefone = document.getElementById('telefone').value;
     const plano = document.getElementById('plano').value;
     const modulos = Array.from(document.querySelectorAll('input[name="modulo"]:checked')).map(el => el.value);
-    const mensagem = document.getElementById('mensagem').value;
 
     if (modulos.length === 0) {
       alert('Por favor, selecione pelo menos um módulo de interesse.');
       return;
     }
 
-    // Mensagem WhatsApp
-    const msg = `Olá! Meu nome é ${nome}. Sou de ${empresa} e gostaria de conhecer mais sobre o plano ${plano.charAt(0).toUpperCase() + plano.slice(1)} do GeoRadar Agro. Interessado em: ${modulos.map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ')}.`;
-    const phone = telefone.replace(/\D/g, '');
-
-    // Simulação de envio
-    alert(`Obrigado ${nome}! Sua solicitação foi registrada. Entraremos em contato em breve via ${telefone}.`);
+    // Enviar para WhatsApp
+    const msg = `Olá! Meu nome é ${nome}. Sou da empresa ${empresa} e tenho interesse no plano ${plano} do GeoRadar Agro. Módulos: ${modulos.join(', ')}. Email: ${email} | Telefone: ${telefone}`;
+    const encodedMsg = encodeURIComponent(msg);
+    window.open(`https://wa.me/5516993784631?text=${encodedMsg}`, '_blank');
 
     // Limpar formulário
     document.querySelector('form').reset();
-    goToPage('modulos');
+    alert(`Obrigado ${nome}! Você será redirecionado ao WhatsApp. Entraremos em contato em breve!`);
+    goToPage('home');
+  }
+
+  function validarFormulario(event, tipo) {
+    // Permitir que o formspree processe
+    return true;
+  }
+
+  function abrirAlerts() {
+    alert('🔔 Alertas\n\nVocê não tem alertas no momento.\n\n✅ Novo lead: Propriedade em Ribeirão Preto\n✅ CAR vencido: Fazenda Santa Maria\n\nEntraremos em contato quando novos eventos surgirem!');
+  }
+
+  function abrirRelatorios() {
+    alert('📋 Relatórios\n\nRelatórios disponíveis:\n\n• Relatório Mensal (Junho 2025)\n• Análise de Leads por Módulo\n• Performance por Score\n\nContato: eng.marcelofifolato@gmail.com');
+  }
+
+  function salvarConfigurações() {
+    const notif = document.getElementById('notificacoes').checked;
+    const digest = document.getElementById('email-digest').checked;
+    const dark = document.getElementById('dark-mode').checked;
+
+    localStorage.setItem('georadar_notificacoes', notif);
+    localStorage.setItem('georadar_digest', digest);
+    localStorage.setItem('georadar_darkmode', dark);
+
+    alert('✅ Configurações salvas com sucesso!');
+    goToPage('home');
   }
 
   // iOS Optimizations
