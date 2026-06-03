@@ -1,0 +1,11 @@
+# GitHub Pages Configuration
+# Auto-generated for GeoRadar Agro
+
+# Build configuration
+build:
+  type: legacy
+  publish_dir: .
+
+# Deployment
+source: main
+docs_folder: /
