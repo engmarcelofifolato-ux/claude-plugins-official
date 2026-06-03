@@ -1440,6 +1440,31 @@
     document.addEventListener('touchstart', function() {}, { passive: true });
   }
 
+  // Integração com módulos de API
+  // Estes módulos são carregados dinamicamente para não impactar performance
+  function loadModules() {
+    // Carregar APIManager e módulos específicos
+    const moduleScripts = [
+      'modules/api-manager.js',
+      'modules/credit-scoring.js',
+      'modules/car-wizard.js',
+      'modules/solar-roi.js'
+    ];
+
+    moduleScripts.forEach((src, index) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      script.onerror = () => console.warn(`⚠️ Falha ao carregar ${src} - Continuando sem este módulo`);
+      document.head.appendChild(script);
+    });
+
+    console.log('📦 Módulos inteligentes iniciados');
+  }
+
+  // Carregar módulos após DOM estar pronto
+  setTimeout(loadModules, 500);
+
   // Inicializar
   carregarLeads();
   renderizarCardsModulos();
