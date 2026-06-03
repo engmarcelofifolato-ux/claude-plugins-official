@@ -38,6 +38,9 @@ db.initDatabase()
         console.log('✅ Banco de dados pronto para armazenamento progressivo');
         // Inicializar scheduler de acumulação automática
         initScheduler();
+
+        // Iniciar servidor APÓS banco estar pronto
+        startServer();
     })
     .catch(err => {
         console.error('❌ Erro ao inicializar banco:', err);
@@ -425,13 +428,14 @@ app.get('/health', (req, res) => {
 // SERVER
 // ============================================================
 
-app.listen(PORT, () => {
-    console.log(`
+function startServer() {
+    app.listen(PORT, () => {
+        console.log(`
 🚀 GeoRadar Agro Backend - Com Armazenamento Progressivo
 Servidor rodando em: http://localhost:${PORT}
 
 📡 Sistema de Armazenamento:
-  • SQLite Database: ${dbReady ? '✅ Ativo' : '⏳ Conectando'}
+  • SQLite Database: ✅ Ativo
   • Caminho: backend/leads.db
   • Modo: Progressivo (acumula leads automaticamente)
 
@@ -456,6 +460,7 @@ Servidor rodando em: http://localhost:${PORT}
 
 ${process.env.NODE_ENV === 'production' ? '🟢 PRODUÇÃO' : '🟡 DESENVOLVIMENTO'}
     `);
-});
+    });
+}
 
 module.exports = app;
