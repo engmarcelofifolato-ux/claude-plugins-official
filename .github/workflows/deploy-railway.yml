@@ -1,0 +1,31 @@
+name: Deploy Backend to Railway
+
+on:
+  push:
+    branches:
+      - claude/georadar-agro-spa-y6ZYS
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-railway.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+        
+      - name: Deploy to Railway
+        run: |
+          railway up --service georadar-agro-backend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          
+      - name: Verify deployment
+        run: |
+          echo "✅ Backend deployed to Railway!"
+          echo "Check your Railway dashboard for status"
