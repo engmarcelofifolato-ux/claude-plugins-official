@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoRadar Agro - Plataforma de Gestão Agrícola</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== CSS VARIABLES & DESIGN SYSTEM ===== */
+        :root {
+            /* Primary Colors */
+            --primary-600: #2d5016;
+            --primary-500: #3d6b1f;
+            --primary-400: #4d8728;
+            --primary-300: #6ba635;
+            --primary-200: #8bc442;
+            --primary-100: #a8d965;
+            --primary-50: #d4f4a8;
+
+            /* Accent Colors */
+            --accent-blue: #0066cc;
+            --accent-orange: #ff6b35;
+            --accent-purple: #8366d9;
+            --accent-teal: #00a896;
+
+            /* Neutral Colors */
+            --neutral-bg: #fafaf8;
+            --neutral-50: #f5f3f0;
+            --neutral-100: #ebe8e0;
+            --neutral-200: #d9d5cc;
+            --neutral-300: #c2bdb3;
+            --neutral-400: #9b9a8e;
+            --neutral-500: #737168;
+            --neutral-600: #4a4744;
+            --neutral-700: #2a2824;
+            --neutral-800: #1a1815;
+
+            /* Semantic Colors */
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #0066cc;
+
+            /* Shadow System */
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+            /* Typography */
+            --heading-font: 'Syne', sans-serif;
+            --body-font: 'DM Sans', sans-serif;
+            --display-font: 'Bebas Neue', sans-serif;
+
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+            --spacing-xl: 24px;
+            --spacing-2xl: 32px;
+            --spacing-3xl: 48px;
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-full: 9999px;
+
+            /* Z-index */
+            --z-base: 1;
+            --z-dropdown: 100;
+            --z-modal: 1000;
+            --z-tooltip: 1100;
+        }
+
+        /* ===== RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: var(--body-font);
+            background-color: var(--neutral-bg);
+            color: var(--neutral-700);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        button, input, textarea, select {
+            font-family: var(--body-font);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--heading-font);
+            color: var(--neutral-800);
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        a {
+            color: var(--primary-600);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--primary-500);
+        }
+
+        /* ===== LAYOUT ===== */
+        #app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--neutral-bg) 0%, #f8f6f3 100%);
+        }
+
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--spacing-2xl);
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: var(--spacing-lg);
+            }
+        }
+
+        /* ===== TOPBAR ===== */
+        .topbar {
+            background: linear-gradient(to bottom, #ffffff, #fdfbf9);
+            border-bottom: 1px solid var(--neutral-100);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-lg) var(--spacing-2xl);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-2xl);
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .topbar {
+                padding: var(--spacing-lg);
+                gap: var(--spacing-lg);
+            }
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xl);
+            flex: 0 0 auto;
+        }
+
+        .logo {
+            font-family: var(--display-font);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-600);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: var(--accent-orange);
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 18px;
+            }
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        @media (max-width: 1024px) {
+            .search-container {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-lg);
+            padding-left: 40px;
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            background-color: var(--neutral-50);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(45, 80, 22, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: var(--spacing-lg);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--neutral-400);
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+            flex: 0 0 auto;
+        }
+
+        /* ===== DROPDOWN MENU ===== */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
+            color: white;
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            box-shadow: var(--shadow-md);
+        }
+
+        .dropdown-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-400));
+        }
+
+        .dropdown-toggle.active {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-400));
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: var(--spacing-md);
+            background: white;
+            border: 1px solid var(--neutral-100);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            min-width: 200px;
+            z-index: var(--z-dropdown);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: var(--spacing-md) var(--spacing-lg);
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--neutral-700);
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .dropdown-item:first-child {
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .dropdown-item:last-child {
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--neutral-50);
+            color: var(--primary-600);
+            padding-left: calc(var(--spacing-lg) + 4px);
+        }
+
+        /* ===== PAGE CONTAINER ===== */
+        .page-container {
+            display: none;
+        }
+
+        .page-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== HOME PAGE ===== */
+        .page-home {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            margin-bottom: var(--spacing-3xl);
+        }
+
+        .dashboard-title {
+            font-family: var(--display-font);
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--neutral-800);
+            margin-bottom: var(--spacing-md);
+            letter-spacing: -1px;
+        }
+
+        .dashboard-subtitle {
+            font-size: 16px;
+            color: var(--neutral-500);
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-title {
+                font-size: 28px;
+            }
+        }
+
+        /* ===== FILTER SYSTEM ===== */
+        .filters-section {
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .filter-toggle {
+            background: white;
+            border: 1px solid var(--neutral-200);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            font-weight: 500;
+            color: var(--neutral-700);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .filter-toggle:hover {
+            border-color: var(--primary-300);
+            background-color: var(--neutral-50);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-toggle.active {
+            border-color: var(--primary-500);
+            background: linear-gradient(135deg, rgba(61, 107, 31, 0.05), rgba(168, 217, 101, 0.05));
+            box-shadow: var(--shadow-md);
+        }
+
+        .filter-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .filter-toggle.active .filter-icon {
+            transform: rotate(180deg);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .filters-grid.active {
+            max-height: 500px;
+            opacity: 1;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--neutral-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-input {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            background-color: var(--neutral-50);
+            transition: all 0.2s ease;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(45, 80, 22, 0.1);
+        }
+
+        /* ===== LEADS SECTION ===== */
+        .leads-section {
+            margin-bottom: var(--spacing-3xl);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 2px solid var(--neutral-100);
+        }
+
+        .section-title {
+            font-family: var(--heading-font);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--neutral-800);
+        }
+
+        .leads-count {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
+            color: white;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* ===== LEADS GRID ===== */
+        .leads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--spacing-xl);
+        }
+
+        @media (max-width: 1024px) {
+            .leads-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: var(--spacing-lg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .leads-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== LEAD CARD ===== */
+        .lead-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid var(--neutral-100);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lead-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-200);
+        }
+
+        .lead-card-header {
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-500) 100%);
+            color: white;
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .lead-card-name {
+            font-family: var(--heading-font);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .lead-card-modulo {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .lead-card-body {
+            padding: var(--spacing-lg);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .lead-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .lead-info-label {
+            font-size: 11px;
+            color: var(--neutral-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .lead-info-value {
+            font-size: 14px;
+            color: var(--neutral-700);
+            font-weight: 500;
+        }
+
+        .lead-info-value.highlight {
+            color: var(--primary-600);
+            font-weight: 600;
+        }
+
+        .lead-card-footer {
+            padding: var(--spacing-lg);
+            border-top: 1px solid var(--neutral-100);
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .btn {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-400));
+        }
+
+        .btn-secondary {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: var(--neutral-200);
+        }
+
+        .btn-sm {
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 12px;
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+        }
+
+        /* ===== MODULES SECTION ===== */
+        .modules-section {
+            margin-top: var(--spacing-3xl);
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-xl);
+        }
+
+        @media (max-width: 768px) {
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== MODULE CARD ===== */
+        .module-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--neutral-100);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-600), var(--accent-orange));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .module-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .module-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .module-icon {
+            font-size: 32px;
+            margin-bottom: var(--spacing-lg);
+            display: inline-block;
+        }
+
+        .module-title {
+            font-family: var(--heading-font);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--neutral-800);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .module-description {
+            font-size: 14px;
+            color: var(--neutral-500);
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: var(--z-modal);
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-lg);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-xl);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-2xl);
+            animation: modalSlideUp 0.3s ease;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-500) 100%);
+            color: white;
+            padding: var(--spacing-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-title {
+            font-family: var(--heading-font);
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-body {
+            padding: var(--spacing-xl);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-md);
+            font-weight: 500;
+            color: var(--neutral-700);
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            background-color: var(--neutral-50);
+            box-shadow: 0 0 0 3px rgba(45, 80, 22, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: var(--body-font);
+        }
+
+        .modal-footer {
+            padding: var(--spacing-xl);
+            border-top: 1px solid var(--neutral-100);
+            display: flex;
+            gap: var(--spacing-lg);
+            justify-content: flex-end;
+        }
+
+        /* ===== TABLES ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background-color: var(--neutral-100);
+        }
+
+        th {
+            padding: var(--spacing-lg);
+            text-align: left;
+            font-weight: 600;
+            color: var(--neutral-700);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--neutral-200);
+        }
+
+        td {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--neutral-100);
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: var(--neutral-50);
+        }
+
+        /* ===== BADGE ===== */
+        .badge {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .badge-info {
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--info);
+        }
+
+        .badge-primary {
+            background: linear-gradient(135deg, rgba(45, 80, 22, 0.1), rgba(168, 217, 101, 0.1));
+            color: var(--primary-600);
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-3xl) var(--spacing-2xl);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .empty-state-text {
+            color: var(--neutral-500);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .modal-content {
+                max-width: 100%;
+                margin: var(--spacing-lg);
+            }
+
+            .topbar-right {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .search-container {
+                max-width: 100%;
+            }
+        }
+
+        /* ===== iOS OPTIMIZATIONS ===== */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(0px, env(safe-area-inset-left));
+                padding-right: max(0px, env(safe-area-inset-right));
+            }
+
+            main {
+                padding-bottom: max(var(--spacing-2xl), env(safe-area-inset-bottom));
+            }
+        }
+
+        input,
+        button,
+        textarea,
+        select {
+            font-size: 16px;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--neutral-100);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--neutral-300);
+            border-radius: var(--radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neutral-400);
+        }
+
+        /* ===== UTILITIES ===== */
+        .text-muted {
+            color: var(--neutral-500);
+        }
+
+        .text-small {
+            font-size: 12px;
+        }
+
+        .mt-lg {
+            margin-top: var(--spacing-lg);
+        }
+
+        .mb-lg {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .visible {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <div class="logo">Geo<span>Radar</span> Agro</div>
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input
+                        type="text"
+                        class="search-input"
+                        id="searchInput"
+                        placeholder="Buscar leads, propriedades, documentos..."
+                    >
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="dropdown">
+                    <button class="dropdown-toggle" id="modulosBtn">
+                        <span>📊 Módulos</span>
+                        <span style="font-size: 12px;">▼</span>
+                    </button>
+                    <div class="dropdown-menu" id="modulosMenu">
+                        <button class="dropdown-item" onclick="carregarModulo('credit-scoring')">⭐ Credit Score</button>
+                        <button class="dropdown-item" onclick="carregarModulo('car-wizard')">🚗 CAR Wizard</button>
+                        <button class="dropdown-item" onclick="carregarModulo('solar-roi')">☀️ Solar ROI</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <main>
+            <!-- HOME PAGE -->
+            <div class="page-container active" id="pageHome">
+                <div class="page-home">
+                    <!-- HEADER -->
+                    <div class="dashboard-header">
+                        <h1 class="dashboard-title">Dashboard de Leads</h1>
+                        <p class="dashboard-subtitle">Gerencie seus leads agrícolas de forma eficiente e inteligente</p>
+                    </div>
+
+                    <!-- FILTERS SECTION -->
+                    <div class="filters-section">
+                        <button class="filter-toggle" id="filterToggle">
+                            <span>🔍 Filtros Avançados</span>
+                            <span class="filter-icon">▼</span>
+                        </button>
+                        <div class="filters-grid" id="filtersGrid">
+                            <div class="filter-group">
+                                <label class="filter-label">Estado</label>
+                                <select class="filter-input" id="estadoFilter">
+                                    <option value="">Todos</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="GO">Goiás</option>
+                                    <option value="MS">Mato Grosso do Sul</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">Módulo</label>
+                                <select class="filter-input" id="moduloFilter">
+                                    <option value="">Todos</option>
+                                    <option value="Credit Score">Credit Score</option>
+                                    <option value="CAR Wizard">CAR Wizard</option>
+                                    <option value="Solar ROI">Solar ROI</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">Score Mínimo</label>
+                                <input type="number" class="filter-input" id="scoreFilter" min="0" max="1000" placeholder="Ex: 700">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LEADS SECTION -->
+                    <div class="leads-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Leads Ativos</h2>
+                            <span class="leads-count" id="leadsCount">0 leads</span>
+                        </div>
+                        <div class="leads-grid" id="leadsContainer">
+                            <!-- Leads populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- MODULES SECTION -->
+                    <div class="modules-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Módulos Disponíveis</h2>
+                        </div>
+                        <div class="modules-grid">
+                            <div class="module-card" onclick="carregarModulo('credit-scoring')">
+                                <div class="module-icon">⭐</div>
+                                <h3 class="module-title">Credit Score</h3>
+                                <p class="module-description">Sistema de pontuação de crédito baseado em análise de dados agrícolas e histórico financeiro.</p>
+                                <button class="btn btn-secondary btn-sm">Acessar Módulo →</button>
+                            </div>
+
+                            <div class="module-card" onclick="carregarModulo('car-wizard')">
+                                <div class="module-icon">🚗</div>
+                                <h3 class="module-title">CAR Wizard</h3>
+                                <p class="module-description">Assistente para Cadastro Ambiental Rural com validação automática e documentação integrada.</p>
+                                <button class="btn btn-secondary btn-sm">Acessar Módulo →</button>
+                            </div>
+
+                            <div class="module-card" onclick="carregarModulo('solar-roi')">
+                                <div class="module-icon">☀️</div>
+                                <h3 class="module-title">Solar ROI</h3>
+                                <p class="module-description">Calculadora de retorno sobre investimento para projetos de energia solar em propriedades rurais.</p>
+                                <button class="btn btn-secondary btn-sm">Acessar Módulo →</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CREDIT SCORING PAGE -->
+            <div class="page-container" id="pageCredit">
+                <div id="creditScoringContainer"></div>
+            </div>
+
+            <!-- CAR WIZARD PAGE -->
+            <div class="page-container" id="pageCar">
+                <div id="carWizardContainer"></div>
+            </div>
+
+            <!-- SOLAR ROI PAGE -->
+            <div class="page-container" id="pageSolar">
+                <div id="solarRoiContainer"></div>
+            </div>
+
+            <!-- DASHBOARD PAGE -->
+            <div class="page-container" id="pageDashboard">
+                <div class="page-home">
+                    <div class="dashboard-header">
+                        <h1 class="dashboard-title">Dashboard Completo</h1>
+                        <p class="dashboard-subtitle">Visão geral de todos os módulos e leads</p>
+                    </div>
+                    <div id="dashboardContent"></div>
+                </div>
+            </div>
+
+            <!-- CONTACT PAGE -->
+            <div class="page-container" id="pageContato">
+                <div class="page-home">
+                    <div class="dashboard-header">
+                        <h1 class="dashboard-title">Entre em Contato</h1>
+                        <p class="dashboard-subtitle">Precisa de ajuda? Fale conosco</p>
+                    </div>
+                    <div style="max-width: 600px;">
+                        <form id="contatoForm" class="module-card" style="padding: var(--spacing-2xl); margin-bottom: var(--spacing-2xl);">
+                            <div class="form-group">
+                                <label class="form-label">Nome Completo</label>
+                                <input type="text" class="form-input" name="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Telefone</label>
+                                <input type="tel" class="form-input" name="telefone">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Mensagem</label>
+                                <textarea class="form-input form-textarea" name="mensagem" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Enviar Mensagem</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS PAGE -->
+            <div class="page-container" id="pageConfig">
+                <div class="page-home">
+                    <div class="dashboard-header">
+                        <h1 class="dashboard-title">Configurações</h1>
+                        <p class="dashboard-subtitle">Gerencie suas preferências e dados</p>
+                    </div>
+                    <div id="configContent"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- LEAD DETAIL MODAL -->
+    <div class="modal" id="leadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="leadModalTitle">Detalhes do Lead</h2>
+                <button class="modal-close" onclick="fecharModal('leadModal')">✕</button>
+            </div>
+            <div class="modal-body" id="leadModalBody">
+                <!-- Content populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+        // ===== LEADS DATA =====
+        const leadsDataByModulo = {
+            'Credit Score': [
+                {
+                    id: 1,
+                    nome: 'João da Silva',
+                    estado: 'SP',
+                    propriedade: 'Fazenda São João',
+                    tamanho: '500ha',
+                    score: 850,
+                    status: 'Qualificado'
+                },
+                {
+                    id: 2,
+                    nome: 'Maria Oliveira',
+                    estado: 'MG',
+                    propriedade: 'Sítio Santa Maria',
+                    tamanho: '250ha',
+                    score: 720,
+                    status: 'Em análise'
+                },
+                {
+                    id: 3,
+                    nome: 'Carlos Santos',
+                    estado: 'BA',
+                    propriedade: 'Fazenda do Cerrado',
+                    tamanho: '800ha',
+                    score: 680,
+                    status: 'Pendente'
+                },
+                {
+                    id: 4,
+                    nome: 'Ana Costa',
+                    estado: 'GO',
+                    propriedade: 'Propriedade Ana Costa',
+                    tamanho: '350ha',
+                    score: 910,
+                    status: 'Aprovado'
+                },
+            ],
+            'CAR Wizard': [
+                {
+                    id: 5,
+                    nome: 'Roberto Lima',
+                    estado: 'MS',
+                    propriedade: 'Fazenda Rio Brilho',
+                    tamanho: '600ha',
+                    score: 780,
+                    status: 'Em processamento'
+                },
+                {
+                    id: 6,
+                    nome: 'Fernanda Gomes',
+                    estado: 'SP',
+                    propriedade: 'Chácara Fernanda',
+                    tamanho: '150ha',
+                    score: 650,
+                    status: 'Pendente'
+                },
+                {
+                    id: 7,
+                    nome: 'Leonardo Dias',
+                    estado: 'GO',
+                    propriedade: 'Sítio Leonardo',
+                    tamanho: '400ha',
+                    score: 820,
+                    status: 'Qualificado'
+                },
+            ],
+            'Solar ROI': [
+                {
+                    id: 8,
+                    nome: 'Patricia Mendes',
+                    estado: 'BA',
+                    propriedade: 'Fazenda Solar Mendes',
+                    tamanho: '700ha',
+                    score: 900,
+                    status: 'Excelente'
+                },
+                {
+                    id: 9,
+                    nome: 'Gustavo Ribeiro',
+                    estado: 'MG',
+                    propriedade: 'Propriedade Gustavo',
+                    tamanho: '450ha',
+                    score: 760,
+                    status: 'Bom'
+                },
+                {
+                    id: 10,
+                    nome: 'Beatriz Alves',
+                    estado: 'MS',
+                    propriedade: 'Fazenda Beatriz Alves',
+                    tamanho: '550ha',
+                    score: 830,
+                    status: 'Muito Bom'
+                },
+            ]
+        };
+
+        // Combine all leads
+        let todosLeads = [];
+        for (const modulo in leadsDataByModulo) {
+            leadsDataByModulo[modulo].forEach(lead => {
+                todosLeads.push({
+                    ...lead,
+                    modulo: modulo
+                });
+            });
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function abrirModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function fecharModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function mostrarPagina(pageId) {
+            document.querySelectorAll('.page-container').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function carregarModulo(modulo) {
+            if (modulo === 'credit-scoring') {
+                mostrarPagina('pageCredit');
+                carregarScriptExterna('https://cdn.jsdelivr.net/gh/seu-usuario/seu-repo/credit-scoring.js');
+            } else if (modulo === 'car-wizard') {
+                mostrarPagina('pageCar');
+                carregarScriptExterna('https://cdn.jsdelivr.net/gh/seu-usuario/seu-repo/car-wizard.js');
+            } else if (modulo === 'solar-roi') {
+                mostrarPagina('pageSolar');
+                carregarScriptExterna('https://cdn.jsdelivr.net/gh/seu-usuario/seu-repo/solar-roi.js');
+            }
+        }
+
+        function carregarScriptExterna(url) {
+            const script = document.createElement('script');
+            script.src = url;
+            script.async = true;
+            document.head.appendChild(script);
+        }
+
+        // ===== RENDER LEADS =====
+        function renderLeads(leads = todosLeads) {
+            const container = document.getElementById('leadsContainer');
+            const count = document.getElementById('leadsCount');
+
+            count.textContent = `${leads.length} lead${leads.length !== 1 ? 's' : ''}`;
+
+            if (leads.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1;">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <div class="empty-state-title">Nenhum lead encontrado</div>
+                            <div class="empty-state-text">Tente ajustar seus filtros</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = leads.map(lead => `
+                <div class="lead-card">
+                    <div class="lead-card-header">
+                        <div class="lead-card-name">${lead.nome}</div>
+                        <div class="lead-card-modulo">${lead.modulo}</div>
+                    </div>
+                    <div class="lead-card-body">
+                        <div class="lead-info">
+                            <div class="lead-info-label">📍 Propriedade</div>
+                            <div class="lead-info-value">${lead.propriedade}</div>
+                        </div>
+                        <div class="lead-info">
+                            <div class="lead-info-label">📊 Score</div>
+                            <div class="lead-info-value highlight">${lead.score}/1000</div>
+                        </div>
+                        <div class="lead-info">
+                            <div class="lead-info-label">📈 Tamanho</div>
+                            <div class="lead-info-value">${lead.tamanho}</div>
+                        </div>
+                        <div class="lead-info">
+                            <div class="lead-info-label">📍 Estado</div>
+                            <div class="lead-info-value">${lead.estado}</div>
+                        </div>
+                        <div class="lead-info">
+                            <div class="lead-info-label">Status</div>
+                            <div class="lead-info-value">
+                                <span class="badge ${getStatusBadgeClass(lead.status)}">${lead.status}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lead-card-footer">
+                        <button class="btn btn-primary" onclick="abrirDetalheLead(${lead.id}, '${lead.modulo}')">Ver Detalhes</button>
+                        <a href="https://wa.me/551199999999?text=Olá%20${lead.nome}%20Tenho%20interesse%20em%20${lead.modulo}" target="_blank" class="btn btn-secondary">WhatsApp</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusBadgeClass(status) {
+            const classMap = {
+                'Qualificado': 'badge-success',
+                'Em análise': 'badge-info',
+                'Pendente': 'badge-warning',
+                'Aprovado': 'badge-success',
+                'Em processamento': 'badge-info',
+                'Excelente': 'badge-success',
+                'Bom': 'badge-info',
+                'Muito Bom': 'badge-success'
+            };
+            return classMap[status] || 'badge-primary';
+        }
+
+        function abrirDetalheLead(leadId, modulo) {
+            const lead = leadsDataByModulo[modulo].find(l => l.id === leadId);
+            if (!lead) return;
+
+            const modal = document.getElementById('leadModal');
+            document.getElementById('leadModalTitle').textContent = lead.nome;
+            document.getElementById('leadModalBody').innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Nome</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.nome}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Propriedade</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.propriedade}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tamanho da Propriedade</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.tamanho}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.estado}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Score</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.score}/1000</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">
+                        <span class="badge ${getStatusBadgeClass(lead.status)}">${lead.status}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Módulo</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${modulo}</div>
+                </div>
+                <div style="margin-top: var(--spacing-xl);">
+                    <a href="https://wa.me/551199999999?text=Olá%20${lead.nome}%20Tenho%20interesse%20em%20${modulo}" target="_blank" class="btn btn-primary" style="width: 100%;">
+                        📱 Contatar via WhatsApp
+                    </a>
+                </div>
+            `;
+            abrirModal('leadModal');
+        }
+
+        // ===== FILTER FUNCTIONALITY =====
+        function filtrarLeads() {
+            const estado = document.getElementById('estadoFilter').value;
+            const modulo = document.getElementById('moduloFilter').value;
+            const score = parseInt(document.getElementById('scoreFilter').value) || 0;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            const filtered = todosLeads.filter(lead => {
+                const matchEstado = !estado || lead.estado === estado;
+                const matchModulo = !modulo || lead.modulo === modulo;
+                const matchScore = lead.score >= score;
+                const matchSearch = !search ||
+                    lead.nome.toLowerCase().includes(search) ||
+                    lead.propriedade.toLowerCase().includes(search) ||
+                    lead.estado.toLowerCase().includes(search);
+
+                return matchEstado && matchModulo && matchScore && matchSearch;
+            });
+
+            renderLeads(filtered);
+        }
+
+        // ===== EVENT LISTENERS =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render initial leads
+            renderLeads();
+
+            // Filter toggle
+            document.getElementById('filterToggle').addEventListener('click', function() {
+                this.classList.toggle('active');
+                document.getElementById('filtersGrid').classList.toggle('active');
+            });
+
+            // Filter inputs
+            document.getElementById('estadoFilter').addEventListener('change', filtrarLeads);
+            document.getElementById('moduloFilter').addEventListener('change', filtrarLeads);
+            document.getElementById('scoreFilter').addEventListener('input', filtrarLeads);
+            document.getElementById('searchInput').addEventListener('input', filtrarLeads);
+
+            // Modules dropdown
+            document.getElementById('modulosBtn').addEventListener('click', function() {
+                this.classList.toggle('active');
+                document.getElementById('modulosMenu').classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    document.getElementById('modulosMenu').classList.remove('active');
+                    document.getElementById('modulosBtn').classList.remove('active');
+                }
+            });
+
+            // Close modal when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.classList.remove('active');
+                }
+            });
+
+            // Contact form
+            const contatoForm = document.getElementById('contatoForm');
+            if (contatoForm) {
+                contatoForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    const params = new URLSearchParams(formData);
+                    const message = `Novo contato:\nNome: ${formData.get('nome')}\nEmail: ${formData.get('email')}\nTelefone: ${formData.get('telefone')}\nMensagem: ${formData.get('mensagem')}`;
+                    window.open(`https://wa.me/551199999999?text=${encodeURIComponent(message)}`, '_blank');
+                    this.reset();
+                    alert('Mensagem enviada com sucesso!');
+                });
+            }
+
+            // Page navigation
+            window.mostrarPagina = mostrarPagina;
+            window.carregarModulo = carregarModulo;
+            window.abrirModal = abrirModal;
+            window.fecharModal = fecharModal;
+            window.abrirDetalheLead = abrirDetalheLead;
+        });
+
+        // Close mobile menu when navigating
+        function closeMenusOnNavigate() {
+            document.getElementById('modulosMenu').classList.remove('active');
+            document.getElementById('modulosBtn').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
