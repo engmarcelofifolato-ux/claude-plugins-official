@@ -1427,7 +1427,7 @@
             document.getElementById(pageId).classList.add('active');
         }
 
-        function carregarModulo(modulo) {
+        async function carregarModulo(modulo) {
             const moduloMap = {
                 'fundiario': 'Fundiário',
                 'credito': 'Crédito Rural',
@@ -1441,10 +1441,28 @@
                 // Atualizar dropdown para mostrar módulo selecionado
                 document.getElementById('moduloFilter').value = moduloNome;
 
-                // Filtrar leads do módulo selecionado
-                const filtered = todosLeads.filter(lead => lead.modulo === moduloNome);
-                renderLeads(filtered);
-                document.getElementById('leadsCount').textContent = `${filtered.length} leads`;
+                try {
+                    // Buscar leads do módulo específico no backend
+                    const estado = document.getElementById('estadoFilter').value || estadoAtual;
+                    const response = await fetch(`${backendUrl}/api/leads/${estado}?modulo=${encodeURIComponent(moduloNome)}`);
+                    const data = await response.json();
+
+                    if (data.sucesso && data.leads) {
+                        todosLeads = data.leads;
+                        renderLeads(todosLeads);
+                        document.getElementById('leadsCount').textContent = `${todosLeads.length} leads`;
+                    } else {
+                        // Se falhar, filtrar localmente
+                        const filtered = todosLeads.filter(lead => lead.modulo === moduloNome);
+                        renderLeads(filtered);
+                        document.getElementById('leadsCount').textContent = `${filtered.length} leads`;
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar módulo:', error);
+                    // Fallback: filtrar dados locais
+                    const filtered = todosLeads.filter(lead => lead.modulo === moduloNome);
+                    renderLeads(filtered);
+                }
 
                 // Scroll para resultados
                 document.getElementById('leadsContainer').scrollIntoView({ behavior: 'smooth' });
@@ -1531,31 +1549,44 @@
         }
 
         function abrirDetalheLead(leadId, modulo) {
-            const lead = leadsDataByModulo[modulo].find(l => l.id === leadId);
+            const lead = todosLeads.find(l => l.id === leadId) ||
+                         (leadsDataByModulo[modulo] && leadsDataByModulo[modulo].find(l => l.id === leadId));
             if (!lead) return;
 
             const modal = document.getElementById('leadModal');
             document.getElementById('leadModalTitle').textContent = lead.nome;
-            document.getElementById('leadModalBody').innerHTML = `
+
+            // Construir detalhes dinamicamente baseado nos dados disponíveis
+            let detalhesHtml = `
                 <div class="form-group">
                     <label class="form-label">Nome</label>
                     <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.nome}</div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Propriedade</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.propriedade}</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Tamanho da Propriedade</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.tamanho}</div>
+                    <label class="form-label">Módulo</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.modulo}</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Estado</label>
                     <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.estado}</div>
                 </div>
                 <div class="form-group">
+                    <label class="form-label">Propriedade/Localização</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.propriedade}</div>
+                </div>`;
+
+            if (lead.tamanho) {
+                detalhesHtml += `
+                <div class="form-group">
+                    <label class="form-label">Tamanho</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.tamanho}</div>
+                </div>`;
+            }
+
+            detalhesHtml += `
+                <div class="form-group">
                     <label class="form-label">Score</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.score}/1000</div>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.score}/100</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Status</label>
