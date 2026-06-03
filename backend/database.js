@@ -22,8 +22,10 @@ function initDatabase() {
                 reject(err);
             } else {
                 console.log('✅ Banco de dados conectado:', DB_PATH);
-                createTables();
-                resolve(db);
+                // Aguardar criação de tabelas antes de resolver
+                createTables()
+                    .then(() => resolve(db))
+                    .catch(reject);
             }
         });
     });
@@ -33,48 +35,56 @@ function initDatabase() {
  * Create tables if they don't exist
  */
 function createTables() {
-    db.serialize(() => {
-        // Tabela de leads
-        db.run(`
-            CREATE TABLE IF NOT EXISTS leads (
-                id TEXT PRIMARY KEY,
-                nome TEXT NOT NULL,
-                estado TEXT NOT NULL,
-                modulo TEXT NOT NULL,
-                propriedade TEXT,
-                tamanho TEXT,
-                score INTEGER,
-                status TEXT,
-                fonte TEXT,
-                cnpj TEXT,
-                atividade TEXT,
-                porte TEXT,
-                telefone TEXT,
-                email TEXT,
-                areaPreservada TEXT,
-                cultura TEXT,
-                temperatura REAL,
-                umidade REAL,
-                precipitacao REAL,
-                data_captura TEXT,
-                data_atualizacao TEXT,
-                metadata TEXT
-            )
-        `);
+    return new Promise((resolve, reject) => {
+        db.serialize(() => {
+            // Tabela de leads
+            db.run(`
+                CREATE TABLE IF NOT EXISTS leads (
+                    id TEXT PRIMARY KEY,
+                    nome TEXT NOT NULL,
+                    estado TEXT NOT NULL,
+                    modulo TEXT NOT NULL,
+                    propriedade TEXT,
+                    tamanho TEXT,
+                    score INTEGER,
+                    status TEXT,
+                    fonte TEXT,
+                    cnpj TEXT,
+                    atividade TEXT,
+                    porte TEXT,
+                    telefone TEXT,
+                    email TEXT,
+                    areaPreservada TEXT,
+                    cultura TEXT,
+                    temperatura REAL,
+                    umidade REAL,
+                    precipitacao REAL,
+                    data_captura TEXT,
+                    data_atualizacao TEXT,
+                    metadata TEXT
+                )
+            `, (err) => {
+                if (err) reject(err);
+            });
 
-        // Tabela de log de atualizações
-        db.run(`
-            CREATE TABLE IF NOT EXISTS update_log (
-                id TEXT PRIMARY KEY,
-                estado TEXT,
-                modulo TEXT,
-                fonte TEXT,
-                total_encontrados INTEGER,
-                data_atualizacao TEXT
-            )
-        `);
-
-        console.log('✅ Tabelas criadas/verificadas');
+            // Tabela de log de atualizações
+            db.run(`
+                CREATE TABLE IF NOT EXISTS update_log (
+                    id TEXT PRIMARY KEY,
+                    estado TEXT,
+                    modulo TEXT,
+                    fonte TEXT,
+                    total_encontrados INTEGER,
+                    data_atualizacao TEXT
+                )
+            `, (err) => {
+                if (err) reject(err);
+                else {
+                    console.log('✅ Tabelas criadas/verificadas');
+                    resolve();
+                }
+            });
+        });
     });
 }
 
