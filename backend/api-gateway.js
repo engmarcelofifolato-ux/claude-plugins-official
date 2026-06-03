@@ -18,6 +18,7 @@ const axios = require('axios');
 const NodeCache = require('node-cache');
 const { v4: uuidv4 } = require('uuid');
 const db = require('./database');
+const { initScheduler } = require('./scheduler');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -35,6 +36,8 @@ db.initDatabase()
     .then(() => {
         dbReady = true;
         console.log('✅ Banco de dados pronto para armazenamento progressivo');
+        // Inicializar scheduler de acumulação automática
+        initScheduler();
     })
     .catch(err => {
         console.error('❌ Erro ao inicializar banco:', err);
