@@ -424,6 +424,30 @@ app.get('/health', (req, res) => {
     });
 });
 
+/**
+ * GET /debug
+ * Diagnóstico detalhado do sistema
+ */
+app.get('/debug', (req, res) => {
+    res.json({
+        status: 'debug',
+        database: {
+            ready: dbReady,
+            path: process.env.DB_PATH || 'backend/leads.db'
+        },
+        server: {
+            port: PORT,
+            environment: process.env.NODE_ENV || 'development',
+            uptime: process.uptime()
+        },
+        scheduler: {
+            active: true,
+            nextRun: '0 */6 * * * (UTC)'
+        },
+        timestamp: new Date().toISOString()
+    });
+});
+
 // ============================================================
 // SERVER
 // ============================================================
