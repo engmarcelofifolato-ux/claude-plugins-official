@@ -8,10 +8,10 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const os = require('os');
 
-// Use /tmp for Railway deployment (ephemeral storage), local for development
+// Use in-memory database for Railway (no file system issues), local file for development
 const DB_PATH = process.env.DB_PATH ||
     (process.env.NODE_ENV === 'production'
-        ? path.join('/tmp', 'leads.db')
+        ? ':memory:'  // In-memory database - works reliably on Railway
         : path.join(__dirname, 'leads.db'));
 
 let db = null;
