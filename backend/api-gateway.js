@@ -32,6 +32,10 @@ const cache = new NodeCache({ stdTTL: 3600 });
 
 // Inicializar banco de dados
 let dbReady = false;
+console.log('🚀 Iniciando sistema...');
+console.log('📦 NODE_ENV:', process.env.NODE_ENV || 'development');
+console.log('🔌 PORT:', PORT);
+
 db.initDatabase()
     .then(() => {
         dbReady = true;
@@ -43,7 +47,8 @@ db.initDatabase()
         startServer();
     })
     .catch(err => {
-        console.error('❌ Erro ao inicializar banco:', err);
+        console.error('❌ ERRO CRÍTICO ao inicializar banco:', err.message);
+        console.error('Stack:', err.stack);
         process.exit(1);
     });
 

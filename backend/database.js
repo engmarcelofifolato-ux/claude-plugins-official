@@ -6,8 +6,13 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const os = require('os');
 
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'leads.db');
+// Use /tmp for Railway deployment (ephemeral storage), local for development
+const DB_PATH = process.env.DB_PATH ||
+    (process.env.NODE_ENV === 'production'
+        ? path.join('/tmp', 'leads.db')
+        : path.join(__dirname, 'leads.db'));
 
 let db = null;
 
@@ -16,16 +21,26 @@ let db = null;
  */
 function initDatabase() {
     return new Promise((resolve, reject) => {
+        console.log('📁 Caminho do banco:', DB_PATH);
+        console.log('🔧 Ambiente:', process.env.NODE_ENV || 'development');
+
         db = new sqlite3.Database(DB_PATH, (err) => {
             if (err) {
-                console.error('Erro ao conectar ao banco de dados:', err);
+                console.error('❌ Erro ao conectar ao banco de dados:', err);
+                console.error('Detalhes:', err.message);
                 reject(err);
             } else {
                 console.log('✅ Banco de dados conectado:', DB_PATH);
                 // Aguardar criação de tabelas antes de resolver
                 createTables()
-                    .then(() => resolve(db))
-                    .catch(reject);
+                    .then(() => {
+                        console.log('✅ Banco pronto para operações');
+                        resolve(db);
+                    })
+                    .catch((err) => {
+                        console.error('❌ Erro ao criar tabelas:', err);
+                        reject(err);
+                    });
             }
         });
     });
