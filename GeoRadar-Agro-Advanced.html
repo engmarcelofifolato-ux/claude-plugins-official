@@ -1372,15 +1372,43 @@
             ]
         };
 
-        // Combine all leads
+        // Initialize with empty array - will be populated from backend
         let todosLeads = [];
-        for (const modulo in leadsDataByModulo) {
-            leadsDataByModulo[modulo].forEach(lead => {
-                todosLeads.push({
-                    ...lead,
-                    modulo: modulo
-                });
-            });
+        let estadoAtual = 'SP'; // Default state
+        let backendUrl = window.location.hostname === 'localhost'
+            ? 'http://localhost:3001'
+            : 'https://claude-plugins-official-production.up.railway.app';
+
+        // Load leads from backend API
+        async function carregarLeadsDoBackend(estado = 'SP') {
+            try {
+                const response = await fetch(`${backendUrl}/api/leads/${estado}`);
+                const data = await response.json();
+
+                if (data.sucesso && data.leads) {
+                    todosLeads = data.leads;
+                    estadoAtual = estado;
+                    filtrarLeads();
+                    return true;
+                } else {
+                    console.error('Erro ao carregar leads:', data.error);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Erro ao conectar ao backend:', error);
+                // Fallback to mock data if backend unavailable
+                console.log('Usando dados de demonstração...');
+                for (const modulo in leadsDataByModulo) {
+                    leadsDataByModulo[modulo].forEach(lead => {
+                        todosLeads.push({
+                            ...lead,
+                            modulo: modulo
+                        });
+                    });
+                }
+                filtrarLeads();
+                return false;
+            }
         }
 
         // ===== UTILITY FUNCTIONS =====
@@ -1399,7 +1427,7 @@
             document.getElementById(pageId).classList.add('active');
         }
 
-        function carregarModulo(modulo) {
+        async function carregarModulo(modulo) {
             const moduloMap = {
                 'fundiario': 'Fundiário',
                 'credito': 'Crédito Rural',
@@ -1410,13 +1438,31 @@
 
             const moduloNome = moduloMap[modulo];
             if (moduloNome) {
-                // Filtrar leads do módulo selecionado
-                const filtered = todosLeads.filter(lead => lead.modulo === moduloNome);
-                renderizarLeads(filtered);
-                document.getElementById('leadsCount').textContent = `${filtered.length} leads`;
-
                 // Atualizar dropdown para mostrar módulo selecionado
                 document.getElementById('moduloFilter').value = moduloNome;
+
+                try {
+                    // Buscar leads do módulo específico no backend
+                    const estado = document.getElementById('estadoFilter').value || estadoAtual;
+                    const response = await fetch(`${backendUrl}/api/leads/${estado}?modulo=${encodeURIComponent(moduloNome)}`);
+                    const data = await response.json();
+
+                    if (data.sucesso && data.leads) {
+                        todosLeads = data.leads;
+                        renderLeads(todosLeads);
+                        document.getElementById('leadsCount').textContent = `${todosLeads.length} leads`;
+                    } else {
+                        // Se falhar, filtrar localmente
+                        const filtered = todosLeads.filter(lead => lead.modulo === moduloNome);
+                        renderLeads(filtered);
+                        document.getElementById('leadsCount').textContent = `${filtered.length} leads`;
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar módulo:', error);
+                    // Fallback: filtrar dados locais
+                    const filtered = todosLeads.filter(lead => lead.modulo === moduloNome);
+                    renderLeads(filtered);
+                }
 
                 // Scroll para resultados
                 document.getElementById('leadsContainer').scrollIntoView({ behavior: 'smooth' });
@@ -1463,7 +1509,7 @@
                         </div>
                         <div class="lead-info">
                             <div class="lead-info-label">📊 Score</div>
-                            <div class="lead-info-value highlight">${lead.score}/1000</div>
+                            <div class="lead-info-value highlight">${lead.score}/100</div>
                         </div>
                         <div class="lead-info">
                             <div class="lead-info-label">📈 Tamanho</div>
@@ -1503,31 +1549,44 @@
         }
 
         function abrirDetalheLead(leadId, modulo) {
-            const lead = leadsDataByModulo[modulo].find(l => l.id === leadId);
+            const lead = todosLeads.find(l => l.id === leadId) ||
+                         (leadsDataByModulo[modulo] && leadsDataByModulo[modulo].find(l => l.id === leadId));
             if (!lead) return;
 
             const modal = document.getElementById('leadModal');
             document.getElementById('leadModalTitle').textContent = lead.nome;
-            document.getElementById('leadModalBody').innerHTML = `
+
+            // Construir detalhes dinamicamente baseado nos dados disponíveis
+            let detalhesHtml = `
                 <div class="form-group">
                     <label class="form-label">Nome</label>
                     <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.nome}</div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Propriedade</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.propriedade}</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Tamanho da Propriedade</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.tamanho}</div>
+                    <label class="form-label">Módulo</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.modulo}</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Estado</label>
                     <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.estado}</div>
                 </div>
                 <div class="form-group">
+                    <label class="form-label">Propriedade/Localização</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.propriedade}</div>
+                </div>`;
+
+            if (lead.tamanho) {
+                detalhesHtml += `
+                <div class="form-group">
+                    <label class="form-label">Tamanho</label>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.tamanho}</div>
+                </div>`;
+            }
+
+            detalhesHtml += `
+                <div class="form-group">
                     <label class="form-label">Score</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.score}/1000</div>
+                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.score}/100</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Status</label>
@@ -1549,12 +1608,21 @@
         }
 
         // ===== FILTER FUNCTIONALITY =====
-        function filtrarLeads() {
+        async function filtrarLeads() {
             const estado = document.getElementById('estadoFilter').value;
             const modulo = document.getElementById('moduloFilter').value;
             const score = parseInt(document.getElementById('scoreFilter').value) || 0;
             const search = document.getElementById('searchInput').value.toLowerCase();
 
+            // Se o estado mudou, buscar dados do backend
+            if (estado && estado !== estadoAtual) {
+                const success = await carregarLeadsDoBackend(estado);
+                if (!success && !todosLeads.length) {
+                    console.log('Backend indisponível, usando dados locais');
+                }
+            }
+
+            // Filtrar leads localmente
             const filtered = todosLeads.filter(lead => {
                 const matchEstado = !estado || lead.estado === estado;
                 const matchModulo = !modulo || lead.modulo === modulo;
@@ -1562,7 +1630,7 @@
                 const matchSearch = !search ||
                     lead.nome.toLowerCase().includes(search) ||
                     lead.propriedade.toLowerCase().includes(search) ||
-                    lead.estado.toLowerCase().includes(search);
+                    lead.propriedade.toLowerCase().includes(search);
 
                 return matchEstado && matchModulo && matchScore && matchSearch;
             });
@@ -1571,8 +1639,9 @@
         }
 
         // ===== EVENT LISTENERS =====
-        document.addEventListener('DOMContentLoaded', function() {
-            // Render initial leads
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Load initial leads from backend
+            await carregarLeadsDoBackend('SP');
             renderLeads();
 
             // Filter toggle

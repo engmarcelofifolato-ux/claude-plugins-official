@@ -1,0 +1,31 @@
+{
+  "name": "georadar-agro-backend",
+  "version": "1.0.0",
+  "description": "Backend API Gateway para integração com APIs públicas brasileiras",
+  "main": "api-gateway.js",
+  "scripts": {
+    "start": "node api-gateway.js",
+    "dev": "nodemon api-gateway.js",
+    "test": "jest"
+  },
+  "keywords": [
+    "agricultura",
+    "agronegócio",
+    "leads",
+    "api",
+    "sicar",
+    "cnpj",
+    "crédito-rural"
+  ],
+  "author": "GeoRadar Agro",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
+
