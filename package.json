@@ -1,12 +1,13 @@
 {
   "name": "georadar-agro",
   "version": "1.0.0",
-  "description": "GeoRadar Agro",
-  "main": "backend/api-gateway.js",
+  "description": "GeoRadar Agro - Sistema de Leads Agrícolas",
+  "main": "api/index.js",
   "scripts": {
-    "start": "node backend/api-gateway.js"
+    "start": "node api/index.js",
+    "dev": "node api/index.js"
   },
   "engines": {
-    "node": "18"
+    "node": "20.x"
   }
 }
