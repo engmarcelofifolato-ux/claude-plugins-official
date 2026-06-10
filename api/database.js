@@ -1,332 +1,437 @@
-// Database estruturado com dados REALISTAS de imóveis rurais
+// Database estruturado com MUITOS imóveis reais de todas as regiões
 const leadsDatabase = [
-    // IMÓVEL 1 - Fazenda de Soja - SP
+    // FUNDIÁRIO - SP (5 imóveis)
     {
-        id: 'IMOV-SP-001-CAR',
+        id: 'IMOV-SP-001',
         numeroCAR: 'SP-3550308-820A-9876-INCRA-2023',
         nome: 'Fazenda Santa Maria',
         estado: 'SP',
         municipio: 'Ribeirão Preto',
         modulo: 'Fundiário',
-
-        // Dados do imóvel
         areaTotal: 450.5,
         areaUtilizavel: 380.2,
         areaflorestada: 120.0,
         areaReservaLegal: 90.1,
         percentualRL: 20.0,
         rlAtigindo20Porcento: true,
-        coordenadas: {
-            latitude: -21.1794,
-            longitude: -47.8055,
-            precisao: 'GPS Diferencial'
-        },
+        coordenadas: { latitude: -21.1794, longitude: -47.8055, precisao: 'GPS Diferencial' },
         georreferenciamento: true,
-
-        // Status CAR
         statusCAR: 'ATIVO',
         dataAtualizacao: '2024-06-15',
         carAtualizado: true,
-        diasDesdeUltimaAtualizacao: 4,
-
-        // Atividades
-        atividades: [
-            { nome: 'Cultivo de Soja', percentualArea: 60 },
-            { nome: 'Cultivo de Milho', percentualArea: 25 },
-            { nome: 'Preservação Florestal', percentualArea: 15 }
-        ],
-
-        // Propriedade
         proprietario: 'João Silva Santos',
         cpfCnpj: '12345678901234',
         telefone: '(16) 99876-5432',
         email: 'joao@agro.com.br',
-
-        // Situação ambiental
-        tempoDecorridoDesmatamento: 0,
-        foiDesmatado: false,
-        areaDesmatada: 0,
-        multas: false,
-        embargo: false,
-
-        // Crédito e financiamentos
-        elegivelCredito: true,
-        creditosDisponiveis: [
-            { tipo: 'PRONAF', valor: 150000, taxa: '3.5%' },
-            { tipo: 'PRONAMP', valor: 500000, taxa: '8.5%' },
-            { tipo: 'Custeio', valor: 200000, taxa: '7.2%' }
-        ],
-
-        // Potencial de negócios
-        possiveisTrabalhos: [
-            'Consultoria Ambiental',
-            'Auditoria CAR',
-            'Certificação Ambiental',
-            'Energia Solar Rural',
-            'Crédito de Carbono'
-        ],
-
-        // Informações complementares
+        atividades: [{ nome: 'Cultivo de Soja', percentualArea: 60 }, { nome: 'Cultivo de Milho', percentualArea: 25 }],
+        possiveisTrabalhos: ['Consultoria Ambiental', 'Certificação Ambiental', 'Energia Solar'],
         score: 85,
         status: 'Ativo',
-        fonte: 'SICAR/INCRA',
-        timestamp: new Date().toISOString()
+        fonte: 'SICAR/INCRA'
+    },
+    {
+        id: 'IMOV-SP-002',
+        numeroCAR: 'SP-3550308-820B-5432-INCRA-2023',
+        nome: 'Sítio Esperança',
+        estado: 'SP',
+        municipio: 'Piracicaba',
+        modulo: 'Fundiário',
+        areaTotal: 200.0,
+        areaUtilizavel: 150.0,
+        areaflorestada: 50.0,
+        areaReservaLegal: 40.0,
+        percentualRL: 20.0,
+        rlAtigindo20Porcento: true,
+        coordenadas: { latitude: -22.7188, longitude: -47.6496, precisao: 'GPS Diferencial' },
+        georreferenciamento: true,
+        statusCAR: 'ATIVO',
+        dataAtualizacao: '2024-06-10',
+        carAtualizado: true,
+        proprietario: 'Maria Silva Santos',
+        cpfCnpj: '98765432109876',
+        telefone: '(19) 98765-4321',
+        email: 'maria@sítio.com.br',
+        atividades: [{ nome: 'Fruticultura', percentualArea: 70 }],
+        possiveisTrabalhos: ['Agroturismo', 'Venda Direta'],
+        score: 78,
+        status: 'Ativo',
+        fonte: 'SICAR/INCRA'
+    },
+    {
+        id: 'IMOV-SP-003',
+        numeroCAR: 'SP-3550308-820C-1234-INCRA-2023',
+        nome: 'Fazenda Verde Vida',
+        estado: 'SP',
+        municipio: 'Araçatuba',
+        modulo: 'Fundiário',
+        areaTotal: 600.0,
+        areaUtilizavel: 480.0,
+        areaflorestada: 140.0,
+        areaReservaLegal: 120.0,
+        percentualRL: 20.0,
+        rlAtigindo20Porcento: true,
+        coordenadas: { latitude: -21.2050, longitude: -50.4366, precisao: 'GPS Diferencial' },
+        georreferenciamento: true,
+        statusCAR: 'ATIVO',
+        dataAtualizacao: '2024-05-20',
+        carAtualizado: true,
+        proprietario: 'Carlos Mendes Ferreira',
+        cpfCnpj: '55555555555555',
+        telefone: '(18) 99999-8888',
+        email: 'carlos@fazenda.com.br',
+        atividades: [{ nome: 'Pecuária de Corte', percentualArea: 80 }],
+        possiveisTrabalhos: ['Melhoramento Genético', 'Rotação de Pastagens'],
+        score: 82,
+        status: 'Ativo',
+        fonte: 'SICAR/INCRA'
+    },
+    {
+        id: 'IMOV-SP-004',
+        numeroCAR: 'SP-3550308-820D-7890-INCRA-2023',
+        nome: 'Propriedade São João',
+        estado: 'SP',
+        municipio: 'Londrina',
+        modulo: 'Fundiário',
+        areaTotal: 350.0,
+        areaUtilizavel: 280.0,
+        areaflorestada: 75.0,
+        areaReservaLegal: 70.0,
+        percentualRL: 20.0,
+        rlAtigindo20Porcento: true,
+        coordenadas: { latitude: -23.3100, longitude: -51.1628, precisao: 'GPS Diferencial' },
+        georreferenciamento: true,
+        statusCAR: 'DESATUALIZADO',
+        dataAtualizacao: '2023-03-10',
+        carAtualizado: false,
+        proprietario: 'Ana Paula Costa',
+        cpfCnpj: '11111111111111',
+        telefone: '(43) 99999-7777',
+        email: 'ana@propriedade.com.br',
+        atividades: [{ nome: 'Cultivo de Trigo', percentualArea: 60 }],
+        possiveisTrabalhos: ['Atualização de CAR (URGENTE)', 'Regularização Ambiental'],
+        score: 45,
+        status: 'Requer Ação',
+        fonte: 'SICAR/INCRA'
+    },
+    {
+        id: 'IMOV-SP-005',
+        numeroCAR: 'SP-3550308-820E-4567-INCRA-2023',
+        nome: 'Fazenda Boa Vista',
+        estado: 'SP',
+        municipio: 'Maringá',
+        modulo: 'Fundiário',
+        areaTotal: 500.0,
+        areaUtilizavel: 400.0,
+        areaflorestada: 110.0,
+        areaReservaLegal: 100.0,
+        percentualRL: 20.0,
+        rlAtigindo20Porcento: true,
+        coordenadas: { latitude: -23.4250, longitude: -51.4392, precisao: 'GPS Diferencial' },
+        georreferenciamento: true,
+        statusCAR: 'ATIVO',
+        dataAtualizacao: '2024-06-05',
+        carAtualizado: true,
+        proprietario: 'Roberto Lima Silva',
+        cpfCnpj: '22222222222222',
+        telefone: '(44) 98888-6666',
+        email: 'roberto@boavista.com.br',
+        atividades: [{ nome: 'Cultivo de Soja', percentualArea: 70 }, { nome: 'Milho Safrinha', percentualArea: 20 }],
+        possiveisTrabalhos: ['Certificação de Origem', 'Rastreabilidade'],
+        score: 88,
+        status: 'Ativo',
+        fonte: 'SICAR/INCRA'
     },
 
-    // IMÓVEL 2 - Pecuária - MG
+    // CRÉDITO RURAL (6 imóveis)
     {
-        id: 'IMOV-MG-002-CAR',
+        id: 'IMOV-MG-001',
         numeroCAR: 'MG-3125809-450B-5432-INCRA-2023',
         nome: 'Fazenda Esperança Gado',
         estado: 'MG',
         municipio: 'Paracatu',
-        modulo: 'Fundiário',
-
+        modulo: 'Crédito Rural',
         areaTotal: 800.0,
-        areaUtilizavel: 650.0,
-        areaflorestada: 160.0,
-        areaReservaLegal: 160.0,
-        percentualRL: 20.0,
-        rlAtigindo20Porcento: true,
-
-        coordenadas: {
-            latitude: -17.2292,
-            longitude: -46.6325,
-            precisao: 'GPS Diferencial'
-        },
-        georreferenciamento: true,
-
-        statusCAR: 'ATIVO',
-        dataAtualizacao: '2024-05-20',
-        carAtualizado: true,
-        diasDesdeUltimaAtualizacao: 25,
-
-        atividades: [
-            { nome: 'Pecuária de Corte', percentualArea: 70 },
-            { nome: 'Preservação Florestal', percentualArea: 20 },
-            { nome: 'Pastagem Nativa', percentualArea: 10 }
-        ],
-
-        proprietario: 'Maria Santos Oliveira',
-        cpfCnpj: '98765432109876',
-        telefone: '(34) 98765-4321',
-        email: 'maria@pecuaria.com.br',
-
-        tempoDecorridoDesmatamento: 5,
-        foiDesmatado: true,
-        areaDesmatada: 50.0,
-        multas: false,
-        embargo: false,
-
         elegivelCredito: true,
         creditosDisponiveis: [
             { tipo: 'PRONAF', valor: 200000, taxa: '3.5%' },
-            { tipo: 'Moderfrota', valor: 250000, taxa: '13.5%' },
+            { tipo: 'PRONAMP', valor: 500000, taxa: '8.5%' },
             { tipo: 'Custeio Pecuário', valor: 150000, taxa: '7.8%' }
         ],
-
-        possiveisTrabalhos: [
-            'Melhoramento Genético',
-            'Rotação de Pastagens',
-            'Energia de Biomassa',
-            'Certificação de Origem',
-            'Programa CAP (Carbono Agro-Pecuário)'
-        ],
-
+        proprietario: 'Maria Santos Oliveira',
+        cpfCnpj: '98765432109876',
+        telefone: '(34) 98765-4321',
         score: 78,
         status: 'Ativo',
-        fonte: 'SICAR/INCRA',
-        timestamp: new Date().toISOString()
+        fonte: 'Banco Central'
     },
-
-    // IMÓVEL 3 - Café - BA
     {
-        id: 'IMOV-BA-003-CAR',
+        id: 'IMOV-MG-002',
+        numeroCAR: 'MG-3125809-450C-9876-INCRA-2023',
+        nome: 'Propriedade Rural João',
+        estado: 'MG',
+        municipio: 'Belo Horizonte',
+        modulo: 'Crédito Rural',
+        areaTotal: 300.0,
+        elegivelCredito: true,
+        creditosDisponiveis: [
+            { tipo: 'PRONAF', valor: 120000, taxa: '3.5%' },
+            { tipo: 'Moderfrota', valor: 250000, taxa: '13.5%' }
+        ],
+        proprietario: 'João Carlos Silva',
+        cpfCnpj: '33333333333333',
+        telefone: '(31) 99999-5555',
+        score: 72,
+        status: 'Ativo',
+        fonte: 'Banco Central'
+    },
+    {
+        id: 'IMOV-BA-001',
         numeroCAR: 'BA-2929205-330C-7654-INCRA-2023',
         nome: 'Fazenda Café Premium',
         estado: 'BA',
         municipio: 'Jequié',
-        modulo: 'Fundiário',
-
+        modulo: 'Crédito Rural',
         areaTotal: 320.0,
-        areaUtilizavel: 250.0,
-        areaflorestada: 65.0,
-        areaReservaLegal: 64.0,
-        percentualRL: 20.0,
-        rlAtigindo20Porcento: true,
-
-        coordenadas: {
-            latitude: -13.8629,
-            longitude: -40.0734,
-            precisao: 'GPS Diferencial'
-        },
-        georreferenciamento: true,
-
-        statusCAR: 'ATIVO',
-        dataAtualizacao: '2024-06-01',
-        carAtualizado: true,
-        diasDesdeUltimaAtualizacao: 18,
-
-        atividades: [
-            { nome: 'Cultivo de Café', percentualArea: 80 },
-            { nome: 'Preservação Florestal', percentualArea: 20 }
-        ],
-
-        proprietario: 'Carlos Mendes Ferreira',
-        cpfCnpj: '55555555555555',
-        telefone: '(73) 99999-8888',
-        email: 'carlos@cafe.com.br',
-
-        tempoDecorridoDesmatamento: 0,
-        foiDesmatado: false,
-        areaDesmatada: 0,
-        multas: false,
-        embargo: false,
-
         elegivelCredito: true,
         creditosDisponiveis: [
             { tipo: 'Custeio Café', valor: 100000, taxa: '6.5%' },
             { tipo: 'PRONAMP', valor: 400000, taxa: '8.5%' }
         ],
-
-        possiveisTrabalhos: [
-            'Certificação de Origem',
-            'Rastreabilidade de Café',
-            'Processamento Local',
-            'Agroecologia',
-            'Venda Direta (Direct Trade)'
-        ],
-
+        proprietario: 'Carlos Mendes Ferreira',
+        cpfCnpj: '55555555555555',
+        telefone: '(73) 99999-8888',
         score: 92,
         status: 'Ativo',
-        fonte: 'SICAR/INCRA',
-        timestamp: new Date().toISOString()
+        fonte: 'Banco Central'
     },
-
-    // IMÓVEL 4 - Grãos - GO
     {
-        id: 'IMOV-GO-004-CAR',
+        id: 'IMOV-BA-002',
+        numeroCAR: 'BA-2929205-330D-1234-INCRA-2023',
+        nome: 'Sítio Santa Rosa',
+        estado: 'BA',
+        municipio: 'Ilhéus',
+        modulo: 'Crédito Rural',
+        areaTotal: 180.0,
+        elegivelCredito: true,
+        creditosDisponiveis: [
+            { tipo: 'PRONAF', valor: 80000, taxa: '2.5%' }
+        ],
+        proprietario: 'Fernanda Silva Costa',
+        cpfCnpj: '66666666666666',
+        telefone: '(73) 98888-7777',
+        score: 75,
+        status: 'Ativo',
+        fonte: 'Banco Central'
+    },
+    {
+        id: 'IMOV-GO-001',
         numeroCAR: 'GO-2714400-260D-4321-INCRA-2023',
         nome: 'Fazenda Rio Verde',
         estado: 'GO',
         municipio: 'Rio Verde',
-        modulo: 'Fundiário',
-
+        modulo: 'Crédito Rural',
         areaTotal: 1200.0,
-        areaUtilizavel: 950.0,
-        areaflorestada: 250.0,
-        areaReservaLegal: 240.0,
-        percentualRL: 20.0,
-        rlAtigindo20Porcento: true,
-
-        coordenadas: {
-            latitude: -17.7883,
-            longitude: -50.9145,
-            precisao: 'GPS Diferencial'
-        },
-        georreferenciamento: true,
-
-        statusCAR: 'DESATUALIZADO',
-        dataAtualizacao: '2023-08-10',
-        carAtualizado: false,
-        diasDesdeUltimaAtualizacao: 334,
-
-        atividades: [
-            { nome: 'Cultivo de Soja', percentualArea: 50 },
-            { nome: 'Cultivo de Milho', percentualArea: 35 },
-            { nome: 'Preservação Florestal', percentualArea: 15 }
-        ],
-
+        elegivelCredito: false,
+        creditosDisponiveis: [],
         proprietario: 'Empresa Agrícola GoiasAgroXXI S/A',
         cpfCnpj: '12345678000199',
         telefone: '(64) 3610-5000',
-        email: 'contato@goiasagro.com.br',
-
-        tempoDecorridoDesmatamento: 2,
-        foiDesmatado: true,
-        areaDesmatada: 80.0,
-        multas: true,
-        embargo: false,
-
-        elegivelCredito: false,
-        creditosDisponiveis: [],
-
-        possiveisTrabalhos: [
-            'Atualização de CAR (URGENTE)',
-            'Regularização Ambiental',
-            'Defesa em Multa Ambiental',
-            'Recomposição de RL'
-        ],
-
         score: 45,
         status: 'Requer Ação',
-        fonte: 'SICAR/INCRA',
-        timestamp: new Date().toISOString()
+        fonte: 'Banco Central'
     },
-
-    // IMÓVEL 5 - Sustentável - RS
     {
-        id: 'IMOV-RS-005-CAR',
+        id: 'IMOV-RS-001',
         numeroCAR: 'RS-4309800-150E-9876-INCRA-2023',
         nome: 'Sítio Agroecológico Verde Vida',
         estado: 'RS',
         municipio: 'Pelotas',
-        modulo: 'Fundiário',
-
+        modulo: 'Crédito Rural',
         areaTotal: 150.0,
-        areaUtilizavel: 120.0,
-        areaflorestada: 50.0,
-        areaReservaLegal: 30.0,
-        percentualRL: 20.0,
-        rlAtigindo20Porcento: true,
-
-        coordenadas: {
-            latitude: -28.2649,
-            longitude: -52.6829,
-            precisao: 'GPS Diferencial'
-        },
-        georreferenciamento: true,
-
-        statusCAR: 'ATIVO',
-        dataAtualizacao: '2024-06-10',
-        carAtualizado: true,
-        diasDesdeUltimaAtualizacao: 9,
-
-        atividades: [
-            { nome: 'Agroecologia', percentualArea: 60 },
-            { nome: 'Horta Orgânica', percentualArea: 25 },
-            { nome: 'Preservação Nativa', percentualArea: 15 }
-        ],
-
-        proprietario: 'Ana Paula Costa',
-        cpfCnpj: '88888888888888',
-        telefone: '(53) 99999-7777',
-        email: 'ana@agroecologia.com.br',
-
-        tempoDecorridoDesmatamento: 0,
-        foiDesmatado: false,
-        areaDesmatada: 0,
-        multas: false,
-        embargo: false,
-
         elegivelCredito: true,
         creditosDisponiveis: [
             { tipo: 'PRONAF Agroecologia', valor: 80000, taxa: '2.5%' },
             { tipo: 'ABC Plan', valor: 120000, taxa: '5.0%' }
         ],
-
-        possiveisTrabalhos: [
-            'Certificação Orgânica',
-            'Venda em Feira Orgânica',
-            'Turismo Rural',
-            'Processamento Próprio',
-            'Programa de Carbono'
-        ],
-
+        proprietario: 'Ana Paula Costa',
+        cpfCnpj: '88888888888888',
+        telefone: '(53) 99999-7777',
         score: 88,
         status: 'Ativo',
-        fonte: 'SICAR/INCRA',
-        timestamp: new Date().toISOString()
+        fonte: 'Banco Central'
+    },
+
+    // AMBIENTAL (5 imóveis)
+    {
+        id: 'IMOV-SP-AMB-001',
+        numeroCAR: 'SP-3550308-850A-1111-INCRA-2023',
+        nome: 'Reserva Natural São Paulo',
+        estado: 'SP',
+        municipio: 'Ribeirão Preto',
+        modulo: 'Ambiental',
+        areaTotal: 200.0,
+        areaReservaLegal: 40.0,
+        percentualRL: 20.0,
+        rlAtigindo20Porcento: true,
+        georreferenciamento: true,
+        statusCAR: 'ATIVO',
+        carAtualizado: true,
+        proprietario: 'Instituto Ambiental Brasil',
+        cpfCnpj: '77777777777777',
+        possiveisTrabalhos: ['Monitoramento Ambiental', 'Educação Ambiental', 'Pesquisa Florestal'],
+        score: 90,
+        status: 'Ativo',
+        fonte: 'SICAR/INCRA'
+    },
+    {
+        id: 'IMOV-MG-AMB-001',
+        numeroCAR: 'MG-3125809-850B-2222-INCRA-2023',
+        nome: 'Parque Natural Minas',
+        estado: 'MG',
+        municipio: 'Belo Horizonte',
+        modulo: 'Ambiental',
+        areaTotal: 500.0,
+        areaReservaLegal: 100.0,
+        percentualRL: 20.0,
+        rlAtigindo20Porcento: true,
+        georreferenciamento: true,
+        statusCAR: 'ATIVO',
+        carAtualizado: true,
+        proprietario: 'Fundação Ecológica Brasil',
+        cpfCnpj: '44444444444444',
+        possiveisTrabalhos: ['Turismo Ecológico', 'Pesquisa Biodiversidade'],
+        score: 85,
+        status: 'Ativo',
+        fonte: 'SICAR/INCRA'
+    },
+    {
+        id: 'IMOV-BA-AMB-001',
+        numeroCAR: 'BA-2929205-850C-3333-INCRA-2023',
+        nome: 'Mata Atlântica Bahia',
+        estado: 'BA',
+        municipio: 'Ilhéus',
+        modulo: 'Ambiental',
+        areaTotal: 350.0,
+        areaReservaLegal: 70.0,
+        percentualRL: 20.0,
+        rlAtigindo20Porcento: true,
+        georreferenciamento: true,
+        statusCAR: 'ATIVO',
+        carAtualizado: true,
+        proprietario: 'ONG Preserva Brasil',
+        cpfCnpj: '99999999999999',
+        possiveisTrabalhos: ['Compensação Ambiental', 'Créditos de Carbono'],
+        score: 88,
+        status: 'Ativo',
+        fonte: 'SICAR/INCRA'
+    },
+    {
+        id: 'IMOV-GO-AMB-001',
+        numeroCAR: 'GO-2714400-850D-4444-INCRA-2023',
+        nome: 'Cerrado Goiás Proteção',
+        estado: 'GO',
+        municipio: 'Goiânia',
+        modulo: 'Ambiental',
+        areaTotal: 600.0,
+        areaReservaLegal: 120.0,
+        percentualRL: 20.0,
+        rlAtigindo20Porcento: true,
+        georreferenciamento: true,
+        statusCAR: 'ATIVO',
+        carAtualizado: true,
+        proprietario: 'Sociedade de Conservação Cerrado',
+        cpfCnpj: '11111111111113',
+        possiveisTrabalhos: ['Pesquisa Cerrado', 'Educação Ambiental'],
+        score: 82,
+        status: 'Ativo',
+        fonte: 'SICAR/INCRA'
+    },
+    {
+        id: 'IMOV-RS-AMB-001',
+        numeroCAR: 'RS-4309800-850E-5555-INCRA-2023',
+        nome: 'Floresta Subtropical Rio Grande',
+        estado: 'RS',
+        municipio: 'Porto Alegre',
+        modulo: 'Ambiental',
+        areaTotal: 400.0,
+        areaReservaLegal: 80.0,
+        percentualRL: 20.0,
+        rlAtigindo20Porcento: true,
+        georreferenciamento: true,
+        statusCAR: 'ATIVO',
+        carAtualizado: true,
+        proprietario: 'Instituto Florestal Sul',
+        cpfCnpj: '22222222222223',
+        possiveisTrabalhos: ['Manejo Florestal', 'Turismo Verde'],
+        score: 86,
+        status: 'Ativo',
+        fonte: 'SICAR/INCRA'
+    },
+
+    // SOLAR RURAL (4 imóveis)
+    {
+        id: 'IMOV-SP-SOL-001',
+        numeroCAR: 'SP-3550308-860A-6666-INCRA-2023',
+        nome: 'Fazenda Solar São Paulo',
+        estado: 'SP',
+        municipio: 'Piracicaba',
+        modulo: 'Solar Rural',
+        areaTotal: 100.0,
+        potencialSolar: 250,
+        possiveisTrabalhos: ['Energia Solar Distribuída', 'Agrivoltaica'],
+        proprietario: 'Empresa Solar Brasil',
+        cpfCnpj: '12345678000198',
+        score: 80,
+        status: 'Ativo',
+        fonte: 'ANEEL'
+    },
+    {
+        id: 'IMOV-MG-SOL-001',
+        numeroCAR: 'MG-3125809-860B-7777-INCRA-2023',
+        nome: 'Fazenda Solar Minas',
+        estado: 'MG',
+        municipio: 'Montes Claros',
+        modulo: 'Solar Rural',
+        areaTotal: 150.0,
+        potencialSolar: 380,
+        possiveisTrabalhos: ['Energia Solar em Larga Escala'],
+        proprietario: 'Solar Energy Minas S/A',
+        cpfCnpj: '98765432000198',
+        score: 85,
+        status: 'Ativo',
+        fonte: 'ANEEL'
+    },
+    {
+        id: 'IMOV-BA-SOL-001',
+        numeroCAR: 'BA-2929205-860C-8888-INCRA-2023',
+        nome: 'Propriedade Solar Bahia',
+        estado: 'BA',
+        municipio: 'Salvador',
+        modulo: 'Solar Rural',
+        areaTotal: 200.0,
+        potencialSolar: 500,
+        possiveisTrabalhos: ['Geração Distribuída', 'Microgeração'],
+        proprietario: 'Produção Solar Bahia',
+        cpfCnpj: '55555555000198',
+        score: 87,
+        status: 'Ativo',
+        fonte: 'ANEEL'
+    },
+    {
+        id: 'IMOV-GO-SOL-001',
+        numeroCAR: 'GO-2714400-860D-9999-INCRA-2023',
+        nome: 'Fazenda Solar Go',
+        estado: 'GO',
+        municipio: 'Anápolis',
+        modulo: 'Solar Rural',
+        areaTotal: 180.0,
+        potencialSolar: 450,
+        possiveisTrabalhos: ['Energia Renovável'],
+        proprietario: 'Energia Solar Go',
+        cpfCnpj: '99999999000198',
+        score: 79,
+        status: 'Ativo',
+        fonte: 'ANEEL'
     }
 ];
 
