@@ -1107,9 +1107,14 @@
 
                     <!-- LEADS SECTION -->
                     <div class="leads-section">
-                        <div class="section-header">
-                            <h2 class="section-title">Leads Ativos</h2>
-                            <span class="leads-count" id="leadsCount">0 leads</span>
+                        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h2 class="section-title">Leads Ativos</h2>
+                                <span class="leads-count" id="leadsCount">0 leads</span>
+                            </div>
+                            <button class="btn btn-secondary" onclick="exportarParaExcel()" style="white-space: nowrap;">
+                                📊 Exportar para Excel
+                            </button>
                         </div>
                         <div class="leads-grid" id="leadsContainer">
                             <!-- Leads populated by JavaScript -->
@@ -1477,6 +1482,70 @@
             script.src = url;
             script.async = true;
             document.head.appendChild(script);
+        }
+
+        // ===== EXPORTAR PARA EXCEL =====
+        function exportarParaExcel() {
+            const leads = todosLeads.length > 0 ? todosLeads : leadsDataByModulo;
+            let dados = [];
+
+            if (Array.isArray(leads)) {
+                dados = leads.map(lead => ({
+                    'ID': lead.id,
+                    'Nome': lead.nome,
+                    'Proprietário': lead.proprietario,
+                    'Email': lead.email || 'N/A',
+                    'Localização': `${lead.municipio}, ${lead.estado}`,
+                    'Módulo': lead.modulo,
+                    'CAR': lead.numeroCAR || 'N/A',
+                    'Área Total (ha)': lead.areaTotal || 'N/A',
+                    'Reserva Legal (ha)': lead.areaReservaLegal || 'N/A',
+                    'RL 20%': lead.rlAtigindo20Porcento ? 'Sim' : 'Não',
+                    'Georreferenciamento': lead.georreferenciamento ? 'Sim' : 'Não',
+                    'Status CAR': lead.statusCAR || 'N/A',
+                    'Elegível Crédito': lead.elegivelCredito ? 'Sim' : 'Não',
+                    'Score': lead.score,
+                    'Status': lead.status
+                }));
+            } else {
+                for (const modulo in leads) {
+                    leads[modulo].forEach(lead => {
+                        dados.push({
+                            'ID': lead.id,
+                            'Nome': lead.nome,
+                            'Propriedade': lead.propriedade,
+                            'Módulo': modulo,
+                            'Score': lead.score,
+                            'Tamanho': lead.tamanho,
+                            'Estado': lead.estado,
+                            'Status': lead.status
+                        });
+                    });
+                }
+            }
+
+            // Converter para CSV
+            const headers = Object.keys(dados[0]);
+            let csv = headers.join(',') + '\n';
+
+            dados.forEach(row => {
+                csv += headers.map(header => {
+                    const valor = row[header] || '';
+                    return `"${String(valor).replace(/"/g, '""')}"`;
+                }).join(',') + '\n';
+            });
+
+            // Gerar arquivo
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.setAttribute('href', URL.createObjectURL(blob));
+            link.setAttribute('download', `leads_${new Date().toISOString().slice(0, 10)}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            alert(`✅ ${dados.length} leads exportados com sucesso!`);
         }
 
         // ===== RENDER LEADS COM SCROLL INFINITO =====
