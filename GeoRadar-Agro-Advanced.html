@@ -1382,7 +1382,7 @@
         // Load leads from backend API
         async function carregarLeadsDoBackend(estado = 'SP') {
             try {
-                const response = await fetch(`${backendUrl}/api/leads/${estado}`);
+                const response = await fetch(`${backendUrl}/api/leads/${estado}?limit=500`);
                 const data = await response.json();
 
                 if (data.sucesso && data.leads) {
@@ -1504,31 +1504,29 @@
                     </div>
                     <div class="lead-card-body">
                         <div class="lead-info">
-                            <div class="lead-info-label">📍 Propriedade</div>
-                            <div class="lead-info-value">${lead.propriedade}</div>
+                            <div class="lead-info-label">🌾 Localização</div>
+                            <div class="lead-info-value">${lead.municipio}, ${lead.estado}</div>
                         </div>
                         <div class="lead-info">
                             <div class="lead-info-label">📊 Score</div>
                             <div class="lead-info-value highlight">${lead.score}/100</div>
                         </div>
                         <div class="lead-info">
-                            <div class="lead-info-label">📈 Tamanho</div>
-                            <div class="lead-info-value">${lead.tamanho}</div>
+                            <div class="lead-info-label">📏 Área Total</div>
+                            <div class="lead-info-value">${lead.areaTotal} hectares</div>
                         </div>
                         <div class="lead-info">
-                            <div class="lead-info-label">📍 Estado</div>
-                            <div class="lead-info-value">${lead.estado}</div>
+                            <div class="lead-info-label">🌲 Reserva Legal</div>
+                            <div class="lead-info-value">${lead.areaReservaLegal} ha (${lead.percentualRL}%)</div>
                         </div>
                         <div class="lead-info">
-                            <div class="lead-info-label">Status</div>
-                            <div class="lead-info-value">
-                                <span class="badge ${getStatusBadgeClass(lead.status)}">${lead.status}</span>
-                            </div>
+                            <div class="lead-info-label">📍 CAR</div>
+                            <div class="lead-info-value" style="font-size: 0.85em;">${lead.numeroCAR}</div>
                         </div>
                     </div>
                     <div class="lead-card-footer">
-                        <button class="btn btn-primary" onclick="abrirDetalheLead(${lead.id}, '${lead.modulo}')">Ver Detalhes</button>
-                        <a href="https://wa.me/551199999999?text=Olá%20${lead.nome}%20Tenho%20interesse%20em%20${lead.modulo}" target="_blank" class="btn btn-secondary">WhatsApp</a>
+                        <button class="btn btn-primary" onclick="abrirDetalheLead('${lead.id}', '${lead.modulo}')">Ver Detalhes</button>
+                        <a href="https://wa.me/55${lead.cpfCnpj.slice(-11)}?text=Olá%20${lead.proprietario}%20Tenho%20interesse%20em%20${lead.modulo}" target="_blank" class="btn btn-secondary">WhatsApp</a>
                     </div>
                 </div>
             `).join('');
@@ -1556,54 +1554,110 @@
             const modal = document.getElementById('leadModal');
             document.getElementById('leadModalTitle').textContent = lead.nome;
 
-            // Construir detalhes dinamicamente baseado nos dados disponíveis
             let detalhesHtml = `
+                <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--primary-600);">📋 Informações do Imóvel</h3>
                 <div class="form-group">
-                    <label class="form-label">Nome</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.nome}</div>
+                    <label class="form-label">Nome da Propriedade</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">${lead.nome}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">📍 CAR (Cadastro Ambiental Rural)</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50); font-family: monospace; font-size: 0.9em;">${lead.numeroCAR}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Localização</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">${lead.municipio} - ${lead.estado}</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Módulo</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.modulo}</div>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">${lead.modulo}</div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Estado</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.estado}</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Propriedade/Localização</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.propriedade}</div>
-                </div>`;
 
-            if (lead.tamanho) {
-                detalhesHtml += `
+                <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--primary-600);">🌾 Dados da Propriedade</h3>
                 <div class="form-group">
-                    <label class="form-label">Tamanho</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.tamanho}</div>
-                </div>`;
-            }
-
-            detalhesHtml += `
-                <div class="form-group">
-                    <label class="form-label">Score</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${lead.score}/100</div>
+                    <label class="form-label">Área Total</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">${lead.areaTotal} hectares</div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Status</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">
-                        <span class="badge ${getStatusBadgeClass(lead.status)}">${lead.status}</span>
+                    <label class="form-label">Reserva Legal</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">${lead.areaReservaLegal} hectares (${lead.percentualRL}%)</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status RL (20%)</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">
+                        ${lead.rlAtigindo20Porcento ? '✅ Atingindo 20%' : '❌ Não atingindo 20%'}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Módulo</label>
-                    <div class="form-input" style="padding-top: 10px; padding-bottom: 10px; background: var(--neutral-50);">${modulo}</div>
+                    <label class="form-label">Georreferenciamento</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">
+                        ${lead.georreferenciamento ? '✅ Sim' : '❌ Não'}
+                        ${lead.coordenadas ? `<br><small>${lead.coordenadas.latitude.toFixed(4)}, ${lead.coordenadas.longitude.toFixed(4)}</small>` : ''}
+                    </div>
                 </div>
-                <div style="margin-top: var(--spacing-xl);">
-                    <a href="https://wa.me/551199999999?text=Olá%20${lead.nome}%20Tenho%20interesse%20em%20${modulo}" target="_blank" class="btn btn-primary" style="width: 100%;">
-                        📱 Contatar via WhatsApp
+
+                <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--primary-600);">🏛️ Situação Fundiária</h3>
+                <div class="form-group">
+                    <label class="form-label">Status CAR</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">
+                        ${lead.statusCAR === 'ATIVO' ? '✅ ATIVO' : '⚠️ DESATUALIZADO'}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">CAR Atualizado</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">
+                        ${lead.carAtualizado ? '✅ Sim' : '❌ Não'}
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--primary-600);">👤 Proprietário</h3>
+                <div class="form-group">
+                    <label class="form-label">Nome</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">${lead.proprietario}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">CPF/CNPJ</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">${lead.cpfCnpj}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">
+                        <a href="mailto:eng.marcelofifolato@gmail.com?subject=Interesse%20em%20${lead.modulo}%20-%20${lead.nome}" style="color: var(--primary-600); text-decoration: none;">
+                            eng.marcelofifolato@gmail.com
+                        </a>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--primary-600);">💰 Crédito & Score</h3>
+                <div class="form-group">
+                    <label class="form-label">Score</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">${lead.score}/100</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Elegível para Crédito</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">
+                        ${lead.elegivelCredito ? '✅ Sim' : '❌ Não'}
+                    </div>
+                </div>
+                ${lead.creditosDisponiveis && lead.creditosDisponiveis.length > 0 ? `
+                <div class="form-group">
+                    <label class="form-label">Créditos Disponíveis</label>
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">
+                        ${lead.creditosDisponiveis.map(c => `<div>• ${c.tipo}: R$ ${c.valor.toLocaleString('pt-BR')} (${c.taxa})</div>`).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <div style="margin-top: var(--spacing-xl); display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <a href="https://wa.me/55${lead.cpfCnpj.slice(-11)}?text=Olá%20${lead.proprietario}%20Tenho%20interesse%20em%20${lead.modulo}%20na%20propriedade%20${lead.nome}" target="_blank" class="btn btn-primary">
+                        📱 WhatsApp
+                    </a>
+                    <a href="mailto:eng.marcelofifolato@gmail.com?subject=Interesse%20em%20${lead.modulo}%20-%20${lead.nome}" class="btn btn-primary">
+                        📧 Email
                     </a>
                 </div>
             `;
+            document.getElementById('leadModalBody').innerHTML = detalhesHtml;
             abrirModal('leadModal');
         }
 
