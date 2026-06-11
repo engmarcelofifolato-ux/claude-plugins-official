@@ -1374,7 +1374,10 @@
 
         // Initialize with empty array - will be populated from backend
         let todosLeads = [];
+        let leadsExibidos = [];
         let estadoAtual = 'SP'; // Default state
+        let offsetLeads = 0;
+        let carregando = false;
         let backendUrl = window.location.hostname === 'localhost'
             ? 'http://localhost:3001'
             : 'https://claude-plugins-official-jbn6.vercel.app';
@@ -1476,27 +1479,40 @@
             document.head.appendChild(script);
         }
 
-        // ===== RENDER LEADS =====
-        function renderLeads(leads = todosLeads) {
+        // ===== RENDER LEADS COM SCROLL INFINITO =====
+        function renderLeads(leads = todosLeads, append = false) {
             const container = document.getElementById('leadsContainer');
             const count = document.getElementById('leadsCount');
 
-            count.textContent = `${leads.length} lead${leads.length !== 1 ? 's' : ''}`;
+            if (!append) {
+                offsetLeads = 0;
+                leadsExibidos = [];
+                container.innerHTML = '';
+            }
+
+            count.textContent = `${leads.length} lead${leads.length !== 1 ? 's' : ''} (exibindo ${leadsExibidos.length})`;
 
             if (leads.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column: 1 / -1;">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">📭</div>
-                            <div class="empty-state-title">Nenhum lead encontrado</div>
-                            <div class="empty-state-text">Tente ajustar seus filtros</div>
+                if (!append) {
+                    container.innerHTML = `
+                        <div style="grid-column: 1 / -1;">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📭</div>
+                                <div class="empty-state-title">Nenhum lead encontrado</div>
+                                <div class="empty-state-text">Tente ajustar seus filtros</div>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
                 return;
             }
 
-            container.innerHTML = leads.map(lead => `
+            // Carregar próximos 100 leads
+            const proximosLeads = leads.slice(offsetLeads, offsetLeads + 100);
+            offsetLeads += 100;
+            leadsExibidos = leadsExibidos.concat(proximosLeads);
+
+            const html = proximosLeads.map(lead => `
                 <div class="lead-card">
                     <div class="lead-card-header">
                         <div class="lead-card-name">${lead.nome}</div>
@@ -1530,6 +1546,12 @@
                     </div>
                 </div>
             `).join('');
+
+            if (append) {
+                container.innerHTML += html;
+            } else {
+                container.innerHTML = html;
+            }
         }
 
         function getStatusBadgeClass(status) {
@@ -1620,13 +1642,28 @@
                     <div class="form-input" style="padding: 10px; background: var(--neutral-50);">${lead.cpfCnpj}</div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Email</label>
+                    <label class="form-label">Email do Proprietário</label>
                     <div class="form-input" style="padding: 10px; background: var(--neutral-50);">
-                        <a href="mailto:eng.marcelofifolato@gmail.com?subject=Interesse%20em%20${lead.modulo}%20-%20${lead.nome}" style="color: var(--primary-600); text-decoration: none;">
-                            eng.marcelofifolato@gmail.com
+                        <a href="mailto:${lead.email}?subject=Interesse%20em%20${lead.modulo}%20-%20${lead.nome}" style="color: var(--primary-600); text-decoration: none;">
+                            ${lead.email}
                         </a>
                     </div>
                 </div>
+
+                <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--primary-600);">🎯 Possíveis Serviços</h3>
+                ${lead.possiveisTrabalhos && lead.possiveisTrabalhos.length > 0 ? `
+                <div class="form-group">
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">
+                        ${lead.possiveisTrabalhos.map(s => `<div>✓ ${s}</div>`).join('')}
+                    </div>
+                </div>
+                ` : `
+                <div class="form-group">
+                    <div class="form-input" style="padding: 10px; background: var(--neutral-50);">
+                        Nenhum serviço especial identificado
+                    </div>
+                </div>
+                `}
 
                 <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--primary-600);">💰 Crédito & Score</h3>
                 <div class="form-group">
@@ -1649,11 +1686,11 @@
                 ` : ''}
 
                 <div style="margin-top: var(--spacing-xl); display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <a href="https://wa.me/55${lead.cpfCnpj.slice(-11)}?text=Olá%20${lead.proprietario}%20Tenho%20interesse%20em%20${lead.modulo}%20na%20propriedade%20${lead.nome}" target="_blank" class="btn btn-primary">
-                        📱 WhatsApp
+                    <a href="https://wa.me/5516993784631?text=Olá%20Marcelo!%20Tenho%20interesse%20no%20lead%20${lead.nome}%20(%20${lead.proprietario}%20)%20em%20${lead.municipio}%20-%20${lead.estado}%20para%20${lead.modulo}" target="_blank" class="btn btn-primary">
+                        📱 WhatsApp (+55 16 99378-4631)
                     </a>
-                    <a href="mailto:eng.marcelofifolato@gmail.com?subject=Interesse%20em%20${lead.modulo}%20-%20${lead.nome}" class="btn btn-primary">
-                        📧 Email
+                    <a href="mailto:eng.marcelofifolato@gmail.com?subject=Lead%20${lead.nome}%20-%20${lead.proprietario}&body=Proprietário:%20${lead.proprietario}%0ALocalização:%20${lead.municipio},%20${lead.estado}%0AEmail:%20${lead.email}%0AMódulo:%20${lead.modulo}" class="btn btn-primary">
+                        📧 Enviar para Email
                     </a>
                 </div>
             `;
@@ -1697,6 +1734,22 @@
             // Load initial leads from backend
             await carregarLeadsDoBackend('SP');
             renderLeads();
+
+            // Scroll infinito - detectar quando chegou perto do final
+            window.addEventListener('scroll', function() {
+                if (carregando) return;
+
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight;
+                const windowHeight = window.innerHeight;
+
+                // Se chegou 80% de onde está, carrega mais
+                if (scrollTop + windowHeight >= docHeight * 0.8) {
+                    if (leadsExibidos.length < todosLeads.length) {
+                        renderLeads(todosLeads, true);
+                    }
+                }
+            });
 
             // Filter toggle
             document.getElementById('filterToggle').addEventListener('click', function() {
