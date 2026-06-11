@@ -29,6 +29,23 @@ const atividades = [
 const nomes = ['Fazenda', 'Sítio', 'Propriedade', 'Chácara'];
 const sobrenomes = ['Santa Maria', 'Esperança', 'Verde Vida', 'Boa Vista', 'São João'];
 
+const nomesPropietarios = [
+    'Carlos Silva', 'Maria Santos', 'João Oliveira', 'Ana Costa', 'Roberto Lima',
+    'Fernanda Gomes', 'Leonardo Dias', 'Patricia Mendes', 'Bruno Ferreira', 'Claudia Rocha',
+    'Marco Campos', 'Teresa Rodrigues', 'Felipe Alves', 'Lucia Martins', 'Diego Souza'
+];
+
+const possiveisServicos = [
+    'Consultoria Ambiental',
+    'Certificação Ambiental',
+    'Energia Solar Rural',
+    'Energia Eólica',
+    'Créditos de Carbono',
+    'Agroecologia',
+    'Agricultura Sustentável',
+    'Reflorestamento'
+];
+
 function seededRandom(seed) {
     const x = Math.sin(seed) * 10000;
     return x - Math.floor(x);
@@ -66,10 +83,12 @@ function gerarLead(indice) {
 
         statusCAR: 'ATIVO',
         carAtualizado: true,
-        proprietario: `Proprietário ${indice}`,
+        proprietario: nomesPropietarios[Math.floor(rand(11) * nomesPropietarios.length)],
         cpfCnpj: String(Math.floor(rand(14) * 99999999999999)).padStart(14, '0'),
+        email: `proprietario.${indice}@agro.com.br`,
 
         atividades: [{ nome: atividade, percentualArea: 70 }],
+        possiveisTrabalhos: possiveisServicos.filter(() => rand(15) > 0.4),
         elegivelCredito: true,
         creditosDisponiveis: [{ tipo: 'PRONAF', valor: 150000, taxa: '3.5%' }],
 
