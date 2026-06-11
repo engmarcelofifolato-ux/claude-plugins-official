@@ -21,6 +21,94 @@ const municipios = {
     'MS': ['Campo Grande', 'Dourados', 'Três Lagoas', 'Corumbá', 'Naviraí']
 };
 
+// Coordenadas centrais de cada município (para geração de coordenadas realistas)
+const coordenacionaMunicipios = {
+    'SP': {
+        'Ribeirão Preto': { lat: -21.1753, lon: -47.8102 },
+        'Piracicaba': { lat: -22.7297, lon: -47.6489 },
+        'Araçatuba': { lat: -21.2043, lon: -50.4365 },
+        'Maringá': { lat: -23.4250, lon: -51.4670 },
+        'Londrina': { lat: -23.3045, lon: -51.1696 }
+    },
+    'MG': {
+        'Paracatu': { lat: -17.2288, lon: -46.3028 },
+        'Belo Horizonte': { lat: -19.9167, lon: -43.9345 },
+        'Montes Claros': { lat: -16.7399, lon: -43.8579 },
+        'Divinópolis': { lat: -20.1395, lon: -44.8886 },
+        'Uberlândia': { lat: -18.9117, lon: -48.2777 }
+    },
+    'BA': {
+        'Jequié': { lat: -13.8619, lon: -40.0803 },
+        'Ilhéus': { lat: -14.7834, lon: -39.0427 },
+        'Salvador': { lat: -12.9822, lon: -38.5108 },
+        'Feira de Santana': { lat: -12.2626, lon: -38.9585 },
+        'Vitória da Conquista': { lat: -14.8450, lon: -40.8394 }
+    },
+    'GO': {
+        'Rio Verde': { lat: -17.7942, lon: -50.9192 },
+        'Goiânia': { lat: -16.6869, lon: -49.2645 },
+        'Anápolis': { lat: -16.3339, lon: -48.9489 },
+        'Jataí': { lat: -17.8848, lon: -51.7195 },
+        'Quirinópolis': { lat: -18.4786, lon: -50.4480 }
+    },
+    'RS': {
+        'Pelotas': { lat: -31.7627, lon: -52.3383 },
+        'Porto Alegre': { lat: -30.0277, lon: -51.2287 },
+        'Santa Maria': { lat: -29.6843, lon: -53.8066 },
+        'Passo Fundo': { lat: -28.2604, lon: -52.4080 },
+        'Cruz Alta': { lat: -28.6363, lon: -53.6069 }
+    },
+    'PR': {
+        'Maringá': { lat: -23.4250, lon: -51.4670 },
+        'Londrina': { lat: -23.3045, lon: -51.1696 },
+        'Cascavel': { lat: -24.9539, lon: -53.4673 },
+        'Toledo': { lat: -24.7141, lon: -54.7457 },
+        'Cornélio Procópio': { lat: -23.1813, lon: -50.5874 }
+    },
+    'SC': {
+        'Chapecó': { lat: -27.0969, lon: -52.6181 },
+        'Blumenau': { lat: -26.8791, lon: -49.0694 },
+        'Joinville': { lat: -26.3045, lon: -48.8487 },
+        'Lages': { lat: -27.8122, lon: -50.3339 },
+        'Videira': { lat: -27.0056, lon: -51.1495 }
+    },
+    'PE': {
+        'Petrolina': { lat: -9.3947, lon: -40.5069 },
+        'Garanhuns': { lat: -8.8998, lon: -36.4936 },
+        'Caruaru': { lat: -8.2829, lon: -35.9767 },
+        'Recife': { lat: -8.0476, lon: -34.8770 },
+        'Olinda': { lat: -8.0081, lon: -34.8566 }
+    },
+    'CE': {
+        'Fortaleza': { lat: -3.7319, lon: -38.5267 },
+        'Juazeiro do Norte': { lat: -7.2114, lon: -39.3167 },
+        'Iguatu': { lat: -6.3611, lon: -38.9819 },
+        'Quixadá': { lat: -5.1944, lon: -39.2839 },
+        'Crateús': { lat: -5.1658, lon: -40.6578 }
+    },
+    'PA': {
+        'Belém': { lat: -1.4558, lon: -48.5044 },
+        'Santarém': { lat: -2.4262, lon: -54.7099 },
+        'Marabá': { lat: -5.3697, lon: -49.3017 },
+        'Itaituba': { lat: -4.2767, lon: -55.9839 },
+        'Breves': { lat: -1.6858, lon: -50.4828 }
+    },
+    'MT': {
+        'Cuiabá': { lat: -15.5891, lon: -56.0955 },
+        'Sinop': { lat: -11.8554, lon: -55.4915 },
+        'Rondonópolis': { lat: -16.4674, lon: -54.6367 },
+        'Lucas do Rio Verde': { lat: -12.7631, lon: -55.9166 },
+        'Tangará da Serra': { lat: -14.6418, lon: -57.4192 }
+    },
+    'MS': {
+        'Campo Grande': { lat: -20.4428, lon: -54.6469 },
+        'Dourados': { lat: -22.2237, lon: -54.8040 },
+        'Três Lagoas': { lat: -20.7530, lon: -51.6789 },
+        'Corumbá': { lat: -19.0160, lon: -57.6509 },
+        'Naviraí': { lat: -22.0833, lon: -55.3833 }
+    }
+};
+
 const atividades = [
     'Cultivo de Soja', 'Cultivo de Milho', 'Cultivo de Trigo', 'Fruticultura',
     'Café', 'Pecuária de Corte', 'Pecuária Laiteira', 'Suinocultura'
@@ -75,10 +163,19 @@ function gerarLead(indice) {
         percentualRL: 20,
         rlAtigindo20Porcento: true,
 
-        coordenadas: {
-            latitude: -23.5505 + (rand(9) - 0.5) * 20,
-            longitude: -46.6333 + (rand(10) - 0.5) * 20
-        },
+        coordenadas: (() => {
+            const coords = coordenacionaMunicipios[estado]?.[municipio];
+            if (coords) {
+                return {
+                    latitude: coords.lat + (rand(9) - 0.5) * 0.1,
+                    longitude: coords.lon + (rand(10) - 0.5) * 0.1
+                };
+            }
+            return {
+                latitude: -23.5505 + (rand(9) - 0.5) * 20,
+                longitude: -46.6333 + (rand(10) - 0.5) * 20
+            };
+        })(),
         georreferenciamento: true,
 
         statusCAR: 'ATIVO',

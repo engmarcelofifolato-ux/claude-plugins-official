@@ -1,4 +1,5 @@
 const { gerarLeadsEmMassa, TOTAL_LEADS } = require('./database');
+const carGateway = require('./car-data-gateway');
 
 module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
@@ -195,6 +196,134 @@ module.exports = async (req, res) => {
         });
     }
 
+    // ============ CAR INTEGRATION ============
+    // Enriquecer leads com dados CAR
+    if (pathname === '/api/leads/enriquecer/car') {
+        const estado = searchParams.get('estado');
+        const tolerancia = parseInt(searchParams.get('tolerancia') || '300');
+        const limit = parseInt(searchParams.get('limit') || '50');
+
+        if (!estado) {
+            return res.status(400).json({
+                sucesso: false,
+                error: 'Estado é obrigatório'
+            });
+        }
+
+        try {
+            let leads = gerarLeadsEmMassa(estado.toUpperCase(), limit);
+            const resultado = carGateway.enriquecerMultiplas(leads, tolerancia);
+
+            return res.status(200).json({
+                sucesso: true,
+                estado: estado,
+                totalProcessados: resultado.totalProcessados,
+                comCAR: resultado.comCAR,
+                semCAR: resultado.semCAR,
+                taxaMatching: resultado.taxaMatching,
+                leads: resultado.propriedades,
+                tolerancia: tolerancia,
+                timestamp: resultado.timestamp
+            });
+        } catch (error) {
+            return res.status(500).json({
+                sucesso: false,
+                error: `Erro ao enriquecer com CAR: ${error.message}`
+            });
+        }
+    }
+
+    // Buscar CAR por número
+    if (pathname === '/api/car/numero') {
+        const carNumber = searchParams.get('car');
+
+        if (!carNumber) {
+            return res.status(400).json({
+                sucesso: false,
+                error: 'Número do CAR é obrigatório'
+            });
+        }
+
+        try {
+            const carData = carGateway.buscarPorNumeroCar(carNumber);
+
+            if (!carData) {
+                return res.status(404).json({
+                    sucesso: false,
+                    error: `CAR não encontrado: ${carNumber}`
+                });
+            }
+
+            return res.status(200).json({
+                sucesso: true,
+                carData: carData,
+                timestamp: new Date().toISOString()
+            });
+        } catch (error) {
+            return res.status(500).json({
+                sucesso: false,
+                error: `Erro ao buscar CAR: ${error.message}`
+            });
+        }
+    }
+
+    // Matching por coordenadas
+    if (pathname === '/api/car/matching') {
+        const lat = parseFloat(searchParams.get('lat'));
+        const lon = parseFloat(searchParams.get('lon'));
+        const tolerancia = parseInt(searchParams.get('tolerancia') || '300');
+        const estado = searchParams.get('estado');
+
+        if (!lat || !lon) {
+            return res.status(400).json({
+                sucesso: false,
+                error: 'Latitude e longitude são obrigatórias'
+            });
+        }
+
+        try {
+            const carData = carGateway.matchingPorCoordenada(lat, lon, tolerancia, estado);
+
+            if (!carData) {
+                return res.status(404).json({
+                    sucesso: false,
+                    message: `Nenhum CAR encontrado próximo a ${lat.toFixed(4)}, ${lon.toFixed(4)} (tolerância: ${tolerancia}m)`
+                });
+            }
+
+            return res.status(200).json({
+                sucesso: true,
+                carData: carData,
+                lat: lat,
+                lon: lon,
+                tolerancia: tolerancia,
+                timestamp: new Date().toISOString()
+            });
+        } catch (error) {
+            return res.status(500).json({
+                sucesso: false,
+                error: `Erro ao fazer matching: ${error.message}`
+            });
+        }
+    }
+
+    // Estatísticas do CAR
+    if (pathname === '/api/car/stats') {
+        try {
+            const stats = carGateway.obterEstatisticasCAR();
+            return res.status(200).json({
+                sucesso: true,
+                stats: stats,
+                timestamp: new Date().toISOString()
+            });
+        } catch (error) {
+            return res.status(500).json({
+                sucesso: false,
+                error: `Erro ao obter estatísticas: ${error.message}`
+            });
+        }
+    }
+
     // ============ ROOT ============
     if (pathname === '/' || pathname === '') {
         return res.status(200).json({
@@ -209,7 +338,11 @@ module.exports = async (req, res) => {
                 '/api/leads/search',
                 '/api/leads/car/status',
                 '/api/leads/rl/status',
-                '/api/credito/:estado'
+                '/api/credito/:estado',
+                '/api/leads/enriquecer/car?estado=SP&tolerancia=300',
+                '/api/car/numero?car=CAR-NUMBER',
+                '/api/car/matching?lat=-21.1753&lon=-47.8102&tolerancia=300&estado=SP',
+                '/api/car/stats'
             ]
         });
     }
