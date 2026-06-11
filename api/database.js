@@ -65,7 +65,7 @@ function gerarLead(indice) {
     return {
         id: `IMOV-${estado}-${String(indice).padStart(6, '0')}`,
         numeroCAR: `${estado}-${String(Math.floor(rand(6) * 9999999)).padStart(7, '0')}A-INCRA-2024`,
-        nome: `${nomes[Math.floor(rand(3) * nomes.length)]} ${indice}`,
+        nome: `${nomes[Math.floor(rand(3) * nomes.length)]} ${sobrenomes[Math.floor(rand(4) * sobrenomes.length)]}`,
         estado: estado,
         municipio: municipio,
         modulo: modulo,
