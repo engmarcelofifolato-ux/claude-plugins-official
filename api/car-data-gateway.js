@@ -393,7 +393,7 @@ function validarDadosCAR(propriedade, carData) {
 /**
  * Busca em massa: Enriquece múltiplas propriedades com dados CAR
  */
-async function enriquecerMultiplas(propriedades, toleranciaMetros = 300) {
+function enriquecerMultiplas(propriedades, toleranciaMetros = 300) {
   console.log(`\n🔄 Enriquecendo ${propriedades.length} propriedades com dados CAR...`);
 
   const enriquecidas = propriedades.map(prop =>
