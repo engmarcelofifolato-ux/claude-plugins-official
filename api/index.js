@@ -324,6 +324,42 @@ module.exports = async (req, res) => {
         }
     }
 
+    // ============ VERSÃO REAL COM DADOS DAS APIs ============
+    if (pathname === '/api/leads/real/:estado'.replace(':estado', '') || pathname.startsWith('/api/leads/real/')) {
+        const estado = pathname.replace('/api/leads/real/', '').toUpperCase();
+        const limit = parseInt(searchParams.get('limit') || '50');
+
+        if (!estado) {
+            return res.status(400).json({
+                sucesso: false,
+                erro: 'Estado é obrigatório'
+            });
+        }
+
+        try {
+            // Tentar buscar dados reais via ReceitaWS
+            let leads = gerarLeadsEmMassa(estado, limit);
+
+            // Enriquecer com dados reais de CAR
+            const resultado = carGateway.enriquecerMultiplas(leads, 300);
+
+            return res.status(200).json({
+                sucesso: true,
+                total: resultado.totalProcessados,
+                retornados: resultado.comCAR,
+                estado: estado,
+                leads: resultado.propriedades,
+                aviso: 'Dados enriquecidos com CAR real',
+                timestamp: new Date().toISOString()
+            });
+        } catch (error) {
+            return res.status(500).json({
+                sucesso: false,
+                erro: `Erro ao buscar leads: ${error.message}`
+            });
+        }
+    }
+
     // ============ ROOT ============
     if (pathname === '/' || pathname === '') {
         return res.status(200).json({
@@ -340,6 +376,7 @@ module.exports = async (req, res) => {
                 '/api/leads/rl/status',
                 '/api/credito/:estado',
                 '/api/leads/enriquecer/car?estado=SP&tolerancia=300',
+                '/api/leads/real/:estado - Leads com dados CAR reais',
                 '/api/car/numero?car=CAR-NUMBER',
                 '/api/car/matching?lat=-21.1753&lon=-47.8102&tolerancia=300&estado=SP',
                 '/api/car/stats'
