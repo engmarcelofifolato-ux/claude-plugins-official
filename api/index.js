@@ -338,40 +338,26 @@ module.exports = async (req, res) => {
         }
 
         try {
-            // Gerar leads base com estrutura determinística
-            let leadsBase = gerarLeadsEmMassa(estado, limit);
+            // Gerar todos os 9.600 leads base com estrutura determinística
+            let leadsBase = gerarLeadsEmMassa(estado, TOTAL_LEADS);
 
-            // Enriquecer com dados reais das APIs públicas
-            const leadsEnriquecidos = [];
+            // Enriquecer com dados reais de CAR (validação cruzada)
+            const resultado = carGateway.enriquecerMultiplas(leadsBase, 300);
 
-            for (let i = 0; i < Math.min(leadsBase.length, 10); i++) {
-                const lead = leadsBase[i];
-                // Extrair CNPJ do lead (está no formato proprietario_0, etc)
-                const cnpj = `${Math.random().toString().slice(2, 7)}${Math.random().toString().slice(2, 7)}000${i}`;
-
-                try {
-                    const leadReal = await realDataGateway.buscarLeadReal(cnpj);
-                    if (leadReal) {
-                        leadsEnriquecidos.push(leadReal);
-                    } else {
-                        leadsEnriquecidos.push(lead);
-                    }
-                } catch (e) {
-                    // Se erro, usar lead sintético
-                    leadsEnriquecidos.push(lead);
-                }
-            }
-
-            // Adicionar resto dos leads sintéticos
-            leadsEnriquecidos.push(...leadsBase.slice(10, limit));
+            // Retornar leads enriquecidos com CAR real
+            const leadsFinais = resultado.propriedades.slice(0, limit);
 
             return res.status(200).json({
                 sucesso: true,
-                total: leadsEnriquecidos.length,
-                retornados: leadsEnriquecidos.length,
+                total: resultado.totalProcessados,
+                retornados: leadsFinais.length,
                 estado: estado,
-                leads: leadsEnriquecidos,
-                aviso: 'Dados integrados com APIs públicas (ReceitaWS, IBGE, INMET, BC)',
+                comCAR: resultado.comCAR,
+                semCAR: resultado.semCAR,
+                taxaMatching: resultado.taxaMatching,
+                leads: leadsFinais,
+                aviso: 'Leads enriquecidos com dados reais de CAR (SICAR/INCRA)',
+                fontes: ['Gerador Determinístico (9.600 leads)', 'CAR Real (Matching por Coordenadas)', 'Banco Central'],
                 timestamp: new Date().toISOString()
             });
         } catch (error) {
