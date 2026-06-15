@@ -58,7 +58,7 @@ module.exports = async (req, res) => {
     }
 
     // ============ LEADS BY STATE ============
-    if (pathname.startsWith('/api/leads/')) {
+    if (pathname.startsWith('/api/leads/') && !pathname.startsWith('/api/leads/real/')) {
         const estado = pathname.replace('/api/leads/', '').toUpperCase();
         const modulo = searchParams.get('modulo');
         const limit = parseInt(searchParams.get('limit') || '50');
@@ -339,15 +339,14 @@ module.exports = async (req, res) => {
 
         try {
             // Retornar leads filtrados por estado
-            let allLeads = gerarLeadsEmMassa(estado, 9600);
-            let leadsRetorno = allLeads.slice(0, limit);
+            let allLeads = gerarLeadsEmMassa(estado, limit);
 
             return res.status(200).json({
                 sucesso: true,
                 total: allLeads.length,
-                retornados: leadsRetorno.length,
+                retornados: allLeads.length,
                 estado: estado,
-                leads: leadsRetorno,
+                leads: allLeads,
                 fonte: 'Base de dados de 9.600 propriedades rurais com dados estruturados reais',
                 dataSource: 'SICAR/INCRA Structure',
                 timestamp: new Date().toISOString()
