@@ -1,0 +1,33 @@
+const http = require('http');
+const url = require('url');
+const fs = require('fs');
+const path = require('path');
+const express = require('express');
+
+const app = express();
+const apiHandler = require('./api/index.js');
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Servir HTML
+app.get('/', (req, res) => {
+  const htmlPath = path.join(__dirname, 'GeoRadar-Agro-Advanced.html');
+  if (fs.existsSync(htmlPath)) {
+    res.sendFile(htmlPath);
+  } else {
+    res.status(404).send('HTML não encontrado');
+  }
+});
+
+// Rotas da API
+app.all('*', (req, res) => {
+  apiHandler(req, res);
+});
+
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`✅ GeoRadar Agro rodando em http://localhost:${PORT}`);
+  console.log(`📊 Acesse: http://localhost:${PORT}`);
+});
