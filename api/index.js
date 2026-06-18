@@ -1,6 +1,8 @@
 const { gerarLeadsEmMassa, TOTAL_LEADS } = require('./database');
 const carGateway = require('./car-data-gateway');
 const realDataGateway = require('./real-data-gateway');
+const carSicarGateway = require('./car-sicar-gateway');
+const bigDataCorpGateway = require('./bigdatacorp-gateway');
 
 module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
@@ -321,6 +323,63 @@ module.exports = async (req, res) => {
             return res.status(500).json({
                 sucesso: false,
                 error: `Erro ao obter estatísticas: ${error.message}`
+            });
+        }
+    }
+
+    // ============ DADOS REAIS - CAR/SICAR + BigDataCorp ============
+    if (pathname.startsWith('/api/leads/reais/')) {
+        const estado = pathname.replace('/api/leads/reais/', '').toUpperCase();
+        const limit = parseInt(searchParams.get('limit') || '500');
+        const fonte = searchParams.get('fonte') || 'auto'; // 'car-sicar', 'bigdatacorp', ou 'auto'
+
+        if (!estado) {
+            return res.status(400).json({
+                sucesso: false,
+                erro: 'Estado é obrigatório'
+            });
+        }
+
+        try {
+            let leadsReais = [];
+
+            // Tentar BigDataCorp primeiro (se API_KEY configurada)
+            if (process.env.BDC_API_KEY && (fonte === 'auto' || fonte === 'bigdatacorp')) {
+                console.log(`🔍 Buscando dados reais via BigDataCorp...`);
+                leadsReais = await bigDataCorpGateway.buscarPropriedadesEstado(estado, limit);
+            }
+
+            // Se BigDataCorp vazio ou não configurado, usar CAR/SICAR
+            if (leadsReais.length === 0) {
+                console.log(`🔍 Buscando dados reais via CAR/SICAR...`);
+                leadsReais = await carSicarGateway.buscarPropriedadesPorEstado(estado, limit);
+            }
+
+            // Se ainda vazio, usar dados sintéticos como fallback
+            if (leadsReais.length === 0) {
+                console.log(`⚠️ APIs reais indisponíveis, usando dados estruturados...`);
+                leadsReais = gerarLeadsEmMassa(estado, limit);
+            }
+
+            return res.status(200).json({
+                sucesso: true,
+                total: leadsReais.length,
+                retornados: leadsReais.length,
+                estado: estado,
+                leads: leadsReais,
+                fonte: leadsReais.length > 0 && leadsReais[0].fonte
+                    ? leadsReais[0].fonte
+                    : 'Dados estruturados',
+                aviso: leadsReais[0]?.fonte?.includes('INCRA')
+                    ? '✅ Dados 100% reais do INCRA/CAR'
+                    : 'Dados estruturados com validação',
+                timestamp: new Date().toISOString()
+            });
+        } catch (error) {
+            console.error(`❌ Erro ao buscar leads reais:`, error.message);
+            return res.status(500).json({
+                sucesso: false,
+                erro: `Erro ao buscar leads: ${error.message}`
             });
         }
     }

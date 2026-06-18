@@ -1390,7 +1390,7 @@
         // Load leads from backend API
         async function carregarLeadsDoBackend(estado = 'SP') {
             try {
-                const response = await fetch(`${backendUrl}/api/leads/real/${estado}?limit=500`);
+                const response = await fetch(`${backendUrl}/api/leads/reais/${estado}?limit=500`);
                 const data = await response.json();
 
                 if (data.sucesso && data.leads) {
@@ -1452,7 +1452,7 @@
                 try {
                     // Buscar leads do módulo específico no backend
                     const estado = document.getElementById('estadoFilter').value || estadoAtual;
-                    const response = await fetch(`${backendUrl}/api/leads/real/${estado}?modulo=${encodeURIComponent(moduloNome)}`);
+                    const response = await fetch(`${backendUrl}/api/leads/reais/${estado}?modulo=${encodeURIComponent(moduloNome)}`);
                     const data = await response.json();
 
                     if (data.sucesso && data.leads) {
