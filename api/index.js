@@ -60,7 +60,7 @@ module.exports = async (req, res) => {
     }
 
     // ============ LEADS BY STATE ============
-    if (pathname.startsWith('/api/leads/') && !pathname.startsWith('/api/leads/real/')) {
+    if (pathname.startsWith('/api/leads/') && !pathname.startsWith('/api/leads/real') && !pathname.startsWith('/api/leads/reais')) {
         const estado = pathname.replace('/api/leads/', '').toUpperCase();
         const modulo = searchParams.get('modulo');
         const limit = parseInt(searchParams.get('limit') || '50');
