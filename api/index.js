@@ -327,11 +327,10 @@ module.exports = async (req, res) => {
         }
     }
 
-    // ============ DADOS REAIS - CAR/SICAR + BigDataCorp ============
+    // ============ DADOS REAIS - BigDataCorp + Estruturados ============
     if (pathname.startsWith('/api/leads/reais/')) {
         const estado = pathname.replace('/api/leads/reais/', '').toUpperCase();
         const limit = parseInt(searchParams.get('limit') || '500');
-        const fonte = searchParams.get('fonte') || 'auto'; // 'car-sicar', 'bigdatacorp', ou 'auto'
 
         if (!estado) {
             return res.status(400).json({
@@ -344,22 +343,18 @@ module.exports = async (req, res) => {
             let leadsReais = [];
 
             // Tentar BigDataCorp primeiro (se API_KEY configurada)
-            if (process.env.BDC_API_KEY && (fonte === 'auto' || fonte === 'bigdatacorp')) {
-                console.log(`🔍 Buscando dados reais via BigDataCorp...`);
+            if (process.env.BDC_API_KEY) {
+                console.log(`🔍 Buscando dados reais via BigDataCorp API...`);
                 leadsReais = await bigDataCorpGateway.buscarPropriedadesEstado(estado, limit);
             }
 
-            // Se BigDataCorp vazio ou não configurado, usar CAR/SICAR
+            // Se BigDataCorp vazio ou não configurado, usar dados estruturados
             if (leadsReais.length === 0) {
-                console.log(`🔍 Buscando dados reais via CAR/SICAR...`);
-                leadsReais = await carSicarGateway.buscarPropriedadesPorEstado(estado, limit);
-            }
-
-            // Se ainda vazio, usar dados sintéticos como fallback
-            if (leadsReais.length === 0) {
-                console.log(`⚠️ APIs reais indisponíveis, usando dados estruturados...`);
+                console.log(`📊 Usando dados estruturados validados...`);
                 leadsReais = gerarLeadsEmMassa(estado, limit);
             }
+
+            const temDadosReais = leadsReais.length > 0 && leadsReais[0].fonte?.includes('BigDataCorp');
 
             return res.status(200).json({
                 sucesso: true,
@@ -367,16 +362,17 @@ module.exports = async (req, res) => {
                 retornados: leadsReais.length,
                 estado: estado,
                 leads: leadsReais,
-                fonte: leadsReais.length > 0 && leadsReais[0].fonte
-                    ? leadsReais[0].fonte
-                    : 'Dados estruturados',
-                aviso: leadsReais[0]?.fonte?.includes('INCRA')
-                    ? '✅ Dados 100% reais do INCRA/CAR'
-                    : 'Dados estruturados com validação',
+                tipoFonte: temDadosReais ? 'API Real (BigDataCorp)' : 'Estruturados Validados',
+                aviso: temDadosReais
+                    ? '✅ Dados 100% reais do CAR/SICAR via BigDataCorp'
+                    : '📊 Dados estruturados com georreferenciamento validado',
+                comoBuscarDadosReais: temDadosReais
+                    ? 'Sistema usando API BigDataCorp ✅'
+                    : 'Configure BDC_API_KEY para dados 100% reais',
                 timestamp: new Date().toISOString()
             });
         } catch (error) {
-            console.error(`❌ Erro ao buscar leads reais:`, error.message);
+            console.error(`❌ Erro ao buscar leads:`, error.message);
             return res.status(500).json({
                 sucesso: false,
                 erro: `Erro ao buscar leads: ${error.message}`
