@@ -26,8 +26,14 @@ app.all('*', (req, res) => {
   apiHandler(req, res);
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`✅ GeoRadar Agro rodando em http://localhost:${PORT}`);
-  console.log(`📊 Acesse: http://localhost:${PORT}`);
-});
+// Para desenvolvimento local
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`✅ GeoRadar Agro rodando em http://localhost:${PORT}`);
+    console.log(`📊 Acesse: http://localhost:${PORT}`);
+  });
+}
+
+// Para Vercel (serverless)
+module.exports = app;
