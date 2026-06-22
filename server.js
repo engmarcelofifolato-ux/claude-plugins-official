@@ -34,8 +34,8 @@ app.get('/', (req, res) => {
 });
 
 // Rotas da API
-app.all('*', (req, res) => {
-  apiHandler(req, res);
+app.all('*', async (req, res) => {
+  await apiHandler(req, res);
 });
 
 // Para desenvolvimento local
