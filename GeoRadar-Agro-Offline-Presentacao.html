@@ -546,9 +546,25 @@
         const servicos = {
             'Fundiário': ['Regularização Fundiária', 'CAR Atualizado', 'Georreferenciamento', 'Documentação'],
             'Crédito Rural': ['Análise de Crédito', 'Financiamento', 'Linha ABC', 'PRONAF'],
-            'Ambiental': ['Compliance Ambiental', 'Certificação', 'Relatório Ambiental', 'Licença'],
+            'Ambiental': [
+                'Análise de Reserva Legal',
+                'Retificação de CAR',
+                'Licenciamento Ambiental',
+                'Outorga de Recursos Hídricos',
+                'Compensação de RL',
+                'Cumprimento de Pendências Ambientais'
+            ],
             'Solar Rural': ['Simulação Solar', 'ROI', 'Financiamento', 'Energia Renovável'],
             'Empresas': ['Regularização CNPJ', 'Legalização', 'MEI', 'Contabilidade']
+        };
+
+        const biomas = {
+            'SP': ['Mata Atlântica', 'Cerrado'],
+            'MG': ['Cerrado', 'Mata Atlântica', 'Caatinga'],
+            'BA': ['Caatinga', 'Mata Atlântica', 'Cerrado'],
+            'GO': ['Cerrado', 'Amazônia'],
+            'RS': ['Mata Atlântica', 'Pampa'],
+            'PR': ['Mata Atlântica', 'Cerrado']
         };
 
         const nomes = ['João da Silva', 'Maria Oliveira', 'Carlos Santos', 'Ana Costa', 'Roberto Lima', 'Fernanda Gomes', 'Pedro Sousa', 'Juliana Martins', 'Lucas Ferreira', 'Amanda Dias'];
@@ -557,11 +573,40 @@
         let leadsAtivos = [];
         let leadSelecionado = null;
 
+        function gerarServicosAmbientais(rlPercentual, caraAtualizado) {
+            const servicosAmbientais = [];
+
+            if (rlPercentual < 20) {
+                servicosAmbientais.push('Plantio de RL (Déficit)');
+                servicosAmbientais.push('Compensação de RL');
+            }
+
+            if (!caraAtualizado) {
+                servicosAmbientais.push('Retificação de CAR');
+            }
+
+            servicosAmbientais.push('Licenciamento Ambiental');
+            servicosAmbientais.push('Outorga de Recursos Hídricos');
+            servicosAmbientais.push('Análise de Conformidade');
+
+            return servicosAmbientais;
+        }
+
         function gerarLeads(estado, modulo) {
             const leads = [];
             const quantidade = estadosPorModulo[estado]?.[modulo] || 50;
+            const biomasEstado = biomas[estado] || [];
 
             for (let i = 0; i < quantidade; i++) {
+                const rlPercentual = Math.floor(Math.random() * 35) + 10; // 10-45%
+                const carAtualizado = Math.random() > 0.3; // 70% tem CAR atualizado
+                const temExcedentRL = rlPercentual > 20;
+
+                let servicosModulo = servicos[modulo] || [];
+                if (modulo === 'Ambiental') {
+                    servicosModulo = gerarServicosAmbientais(rlPercentual, carAtualizado);
+                }
+
                 leads.push({
                     id: `${estado}-${modulo}-${i}`,
                     nome: nomes[Math.floor(Math.random() * nomes.length)] + ` #${i+1}`,
@@ -570,12 +615,17 @@
                     estado: estado,
                     modulo: modulo,
                     area: Math.floor(Math.random() * 1000) + 100,
-                    score: Math.floor(Math.random() * 50) + 50,
+                    score: temExcedentRL ? 85 : Math.floor(Math.random() * 50) + 50,
                     status: ['Qualificado', 'Em análise', 'Pendente'][Math.floor(Math.random() * 3)],
                     cnpj: `${Math.floor(Math.random() * 99999999).toString().padStart(8, '0')}/0001-${Math.floor(Math.random() * 99).toString().padStart(2, '0')}`,
                     email: `contato${i}@email.com`,
                     telefone: `(${Math.floor(Math.random() * 99) + 10}) 9${Math.floor(Math.random() * 9999999999).toString().padStart(8, '0')}`,
-                    servicos: servicos[modulo] || []
+                    servicos: servicosModulo,
+                    bioma: biomasEstado[Math.floor(Math.random() * biomasEstado.length)] || 'Não especificado',
+                    rlPercentual: rlPercentual,
+                    temExcedentRL: temExcedentRL,
+                    carAtualizado: carAtualizado,
+                    pendencias: !carAtualizado ? ['CAR desatualizado'] : []
                 });
             }
             return leads;
@@ -612,14 +662,17 @@
         function renderizarLeads() {
             const grid = document.getElementById('leadsGrid');
             grid.innerHTML = leadsAtivos.map(lead => `
-                <div class="lead-card" onclick="abrirDetalhes('${lead.id}')">
+                <div class="lead-card" style="${lead.temExcedentRL ? 'border: 2px solid #22c55e; box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);' : ''}" onclick="abrirDetalhes('${lead.id}')">
+                    ${lead.temExcedentRL ? '<div style="position: absolute; top: 8px; right: 8px; background: #22c55e; color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;">✓ EXCEDENTE RL</div>' : ''}
+
                     <div class="lead-header">
                         <div class="lead-name">${lead.nome}</div>
                         <div class="lead-module">${lead.modulo}</div>
                     </div>
 
                     <div class="lead-info">📍 <strong>${lead.propriedade}</strong></div>
-                    <div class="lead-info">📊 Score: <strong>${lead.score}/100</strong></div>
+                    <div class="lead-info">🌍 Bioma: <strong>${lead.bioma}</strong></div>
+                    ${lead.modulo === 'Ambiental' ? `<div class="lead-info" style="background: rgba(34,197,94,0.1); padding: 6px; border-radius: 4px; margin: 6px 0;">📊 RL: <strong>${lead.rlPercentual}%</strong> ${lead.rlPercentual >= 20 ? '✓ Conforme' : '⚠️ Déficit'}</div>` : `<div class="lead-info">📊 Score: <strong>${lead.score}/100</strong></div>`}
                     <div class="lead-info">📐 Área: <strong>${lead.area}ha</strong></div>
 
                     <div class="lead-services">
@@ -641,7 +694,7 @@
             leadSelecionado = leadsAtivos.find(l => l.id === id);
             if (!leadSelecionado) return;
 
-            const html = `
+            let html = `
                 <div class="detail-section">
                     <div class="detail-label">Proprietário</div>
                     <div class="detail-value">${leadSelecionado.proprietario}</div>
@@ -659,9 +712,43 @@
                     <div class="detail-value">${leadSelecionado.estado}</div>
                 </div>
                 <div class="detail-section">
+                    <div class="detail-label">Bioma</div>
+                    <div class="detail-value">🌍 ${leadSelecionado.bioma}</div>
+                </div>
+                <div class="detail-section">
                     <div class="detail-label">Área Total</div>
                     <div class="detail-value">${leadSelecionado.area} hectares</div>
                 </div>
+            `;
+
+            // Adicionar informações específicas de Ambiental
+            if (leadSelecionado.modulo === 'Ambiental') {
+                html += `
+                    <div class="detail-section" style="background: rgba(34, 197, 94, 0.1); padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary-400);">
+                        <div class="detail-label">Análise de Reserva Legal (RL)</div>
+                        <div class="detail-value" style="font-size: 18px; margin: 8px 0;">${leadSelecionado.rlPercentual}%</div>
+                        <div style="font-size: 13px; color: #666; margin-top: 4px;">
+                            ${leadSelecionado.rlPercentual >= 20 ? '✓ <strong>CONFORME COM A LEI</strong> - Excedente de RL' : '⚠️ <strong>DÉFICIT DE RL</strong> - Necessário plantio'}
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-label">Status do CAR</div>
+                        <div class="detail-value">${leadSelecionado.carAtualizado ? '✓ CAR Atualizado' : '⚠️ CAR Desatualizado'}</div>
+                    </div>
+
+                    ${leadSelecionado.pendencias.length > 0 ? `
+                    <div class="detail-section" style="background: rgba(239, 68, 68, 0.1); padding: 12px; border-radius: 8px; border-left: 4px solid #ef4444;">
+                        <div class="detail-label">Pendências Identificadas</div>
+                        <div style="margin-top: 8px;">
+                            ${leadSelecionado.pendencias.map(p => `<div style="font-size: 13px; margin-bottom: 6px;">• ${p}</div>`).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                `;
+            }
+
+            html += `
                 <div class="detail-section">
                     <div class="detail-label">Score de Qualificação</div>
                     <div class="detail-value">${leadSelecionado.score}/100</div>
@@ -673,7 +760,7 @@
                 <div class="detail-section">
                     <div class="detail-label">Serviços Disponíveis</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
-                        ${leadSelecionado.servicos.map(s => `<div class="service-tag" style="background: var(--primary-50); color: var(--primary-600); padding: 8px 12px; border-radius: 6px; font-weight: 600;">${s}</div>`).join('')}
+                        ${leadSelecionado.servicos.map(s => `<div class="service-tag" style="background: var(--primary-50); color: var(--primary-600); padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: 12px;">${s}</div>`).join('')}
                     </div>
                 </div>
                 <div class="detail-section">
