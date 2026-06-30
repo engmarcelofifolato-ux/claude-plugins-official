@@ -578,7 +578,7 @@
 
             if (rlPercentual < 20) {
                 servicosAmbientais.push('Plantio de RL (Déficit)');
-                servicosAmbientais.push('Compensação de RL');
+                servicosAmbientais.push('Compensação de RL em outro imóvel');
             }
 
             if (!caraAtualizado) {
@@ -592,15 +592,24 @@
             return servicosAmbientais;
         }
 
+        function gerarModulosFiscais(area) {
+            // Módulo fiscal varia por estado (em hectares)
+            // Média: 1 MF = 20-80 hectares dependendo do estado
+            const modulosFiscaisArea = area / 40; // Estimativa média
+            return Math.ceil(modulosFiscaisArea);
+        }
+
         function gerarLeads(estado, modulo) {
             const leads = [];
             const quantidade = estadosPorModulo[estado]?.[modulo] || 50;
             const biomasEstado = biomas[estado] || [];
 
             for (let i = 0; i < quantidade; i++) {
+                const area = Math.floor(Math.random() * 1000) + 100;
                 const rlPercentual = Math.floor(Math.random() * 35) + 10; // 10-45%
                 const carAtualizado = Math.random() > 0.3; // 70% tem CAR atualizado
                 const temExcedentRL = rlPercentual > 20;
+                const modulosFiscais = gerarModulosFiscais(area);
 
                 let servicosModulo = servicos[modulo] || [];
                 if (modulo === 'Ambiental') {
@@ -620,7 +629,7 @@
                     propriedade: propriedades[Math.floor(Math.random() * propriedades.length)],
                     estado: estado,
                     modulo: modulo,
-                    area: Math.floor(Math.random() * 1000) + 100,
+                    area: area,
                     score: temExcedentRL ? 85 : Math.floor(Math.random() * 50) + 50,
                     status: ['Qualificado', 'Em análise', 'Pendente'][Math.floor(Math.random() * 3)],
                     cnpj: `${Math.floor(Math.random() * 99999999).toString().padStart(8, '0')}/0001-${Math.floor(Math.random() * 99).toString().padStart(2, '0')}`,
@@ -633,6 +642,7 @@
                     carAtualizado: carAtualizado,
                     carFederal: carFederal,
                     sigef: sigef,
+                    modulosFiscais: modulosFiscais,
                     pendencias: !carAtualizado ? ['CAR desatualizado'] : []
                 });
             }
@@ -742,6 +752,10 @@
                     <div class="detail-label">Área Total</div>
                     <div class="detail-value">${leadSelecionado.area} hectares</div>
                 </div>
+                <div class="detail-section">
+                    <div class="detail-label">Módulos Fiscais</div>
+                    <div class="detail-value">${leadSelecionado.modulosFiscais} MF</div>
+                </div>
             `;
 
             // Adicionar informações específicas de Ambiental
@@ -760,8 +774,8 @@
                     <div class="detail-section" style="background: ${leadSelecionado.rlPercentual >= 20 ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; padding: 12px; border-radius: 8px; border-left: 4px solid ${leadSelecionado.rlPercentual >= 20 ? 'var(--primary-400)' : '#ef4444'};">
                         <div class="detail-label">Análise de Reserva Legal (RL)</div>
                         <div class="detail-value" style="font-size: 18px; margin: 8px 0;">${leadSelecionado.rlPercentual}%</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">
-                            ${leadSelecionado.rlPercentual >= 20 ? '✓ <strong>CONFORME COM A LEI</strong> - Excedente de RL' : '⚠️ <strong>DÉFICIT DE RL</strong> - Necessário plantio'}
+                        <div style="font-size: 13px; color: #666; margin-top: 8px; line-height: 1.6;">
+                            ${leadSelecionado.rlPercentual >= 20 ? '✓ <strong>CONFORME COM A LEI</strong><br/>Excedente de Reserva Legal' : '⚠️ <strong>DÉFICIT DE RL</strong><br/>Opções:<br/>• Plantio de RL neste imóvel<br/>• Compensação de RL em outro imóvel'}
                         </div>
                     </div>
 
