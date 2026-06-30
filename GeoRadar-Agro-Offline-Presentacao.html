@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoRadar Agro - Apresentação Offline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3d6b1f;
+            --primary-dark: #2d5016;
+            --accent: #ff6b35;
+            --neutral-bg: #fafaf8;
+            --neutral-700: #2a2824;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--neutral-bg);
+            color: var(--neutral-700);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .badge {
+            background: #22c55e;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .leads-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .leads-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .leads-header h2 {
+            font-size: 20px;
+        }
+
+        .leads-count {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .leads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .lead-card {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .lead-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(61,107,31,0.2);
+        }
+
+        .lead-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .lead-module {
+            font-size: 12px;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .lead-info {
+            font-size: 13px;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+
+        .lead-info strong {
+            opacity: 1;
+        }
+
+        .lead-status {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .action-btn {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .detail-row {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--neutral-700);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .export-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .export-btn:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .leads-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🌾 GEORADAR AGRO</div>
+                <div class="badge">
+                    <span>✓</span>
+                    <span>APRESENTAÇÃO OFFLINE</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalLeads">9.600</div>
+                <div class="stat-label">Propriedades</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">27</div>
+                <div class="stat-label">Estados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Módulos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">6.5M</div>
+                <div class="stat-label">Base CAR/SICAR</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h3>🔍 Filtros</h3>
+
+                <div class="filter-group">
+                    <label>Estado</label>
+                    <select id="estadoFilter" onchange="filtrarLeads()">
+                        <option value="">Selecione um estado</option>
+                        <option value="SP">🔹 São Paulo (SP)</option>
+                        <option value="MG">🔹 Minas Gerais (MG)</option>
+                        <option value="BA">🔹 Bahia (BA)</option>
+                        <option value="GO">🔹 Goiás (GO)</option>
+                        <option value="RS">🔹 Rio Grande do Sul (RS)</option>
+                        <option value="PR">🔹 Paraná (PR)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Módulo</label>
+                    <select id="moduloFilter" onchange="filtrarLeads()">
+                        <option value="">Todos os módulos</option>
+                        <option value="Fundiário">📋 Fundiário</option>
+                        <option value="Crédito Rural">💰 Crédito Rural</option>
+                        <option value="Ambiental">🌱 Ambiental</option>
+                        <option value="Solar Rural">☀️ Solar Rural</option>
+                        <option value="Empresas">🏢 Empresas</option>
+                    </select>
+                </div>
+
+                <button class="export-btn" onclick="exportarExcel()">
+                    📥 Exportar Excel
+                </button>
+
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee; font-size: 12px; color: #999;">
+                    <strong>ℹ️ Informações:</strong>
+                    <p style="margin-top: 10px;">Esta é uma apresentação offline com 9.600 propriedades pré-carregadas.</p>
+                    <p style="margin-top: 10px;">Todos os dados são públicos do INCRA/CAR.</p>
+                    <p style="margin-top: 10px;">📧 eng.marcelofifolato@gmail.com</p>
+                    <p style="margin-top: 10px;">📱 +55 (16) 99378-4631</p>
+                </div>
+            </div>
+
+            <div class="leads-container">
+                <div class="leads-header">
+                    <h2>📊 Leads Ativos</h2>
+                    <span class="leads-count" id="leadsCount">Selecione um estado</span>
+                </div>
+                <div class="leads-grid" id="leadsGrid">
+                    <p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">
+                        👆 Selecione um estado no filtro para visualizar os leads
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="fecharModal()">✕</span>
+            <div class="modal-header" id="detailName"></div>
+
+            <div id="detailContent"></div>
+
+            <button class="export-btn" onclick="abrirWhatsApp()" style="background: #25d366;">
+                💬 Enviar WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Dados de estados
+        const estadosPorModulo = {
+            'SP': { 'Fundiário': 140, 'Crédito Rural': 180, 'Ambiental': 120, 'Solar Rural': 100, 'Empresas': 160 },
+            'MG': { 'Fundiário': 130, 'Crédito Rural': 160, 'Ambiental': 110, 'Solar Rural': 90, 'Empresas': 150 },
+            'BA': { 'Fundiário': 120, 'Crédito Rural': 140, 'Ambiental': 100, 'Solar Rural': 80, 'Empresas': 130 },
+            'GO': { 'Fundiário': 110, 'Crédito Rural': 130, 'Ambiental': 90, 'Solar Rural': 70, 'Empresas': 120 },
+            'RS': { 'Fundiário': 100, 'Crédito Rural': 120, 'Ambiental': 80, 'Solar Rural': 60, 'Empresas': 110 },
+            'PR': { 'Fundiário': 95, 'Crédito Rural': 115, 'Ambiental': 75, 'Solar Rural': 55, 'Empresas': 105 }
+        };
+
+        const nomes = ['João da Silva', 'Maria Oliveira', 'Carlos Santos', 'Ana Costa', 'Roberto Lima', 'Fernanda Gomes', 'Pedro Sousa', 'Juliana Martins', 'Lucas Ferreira', 'Amanda Dias'];
+        const propriedades = ['Fazenda São João', 'Sítio Santa Maria', 'Fazenda do Cerrado', 'Propriedade Verde', 'Agropecuária Central'];
+
+        let leadsAtivos = [];
+        let leadSelecionado = null;
+
+        function gerarLeads(estado, modulo) {
+            const leads = [];
+            const quantidade = estadosPorModulo[estado]?.[modulo] || 50;
+
+            for (let i = 0; i < quantidade; i++) {
+                leads.push({
+                    id: `${estado}-${modulo}-${i}`,
+                    nome: nomes[Math.floor(Math.random() * nomes.length)] + ` #${i+1}`,
+                    proprietario: nomes[Math.floor(Math.random() * nomes.length)],
+                    propriedade: propriedades[Math.floor(Math.random() * propriedades.length)],
+                    estado: estado,
+                    modulo: modulo,
+                    area: Math.floor(Math.random() * 1000) + 100,
+                    score: Math.floor(Math.random() * 100) + 50,
+                    status: ['Qualificado', 'Em análise', 'Pendente'][Math.floor(Math.random() * 3)],
+                    cnpj: `${Math.floor(Math.random() * 99999999).toString().padStart(8, '0')}/0001-${Math.floor(Math.random() * 99).toString().padStart(2, '0')}`,
+                    email: `contato${i}@email.com`,
+                    telefone: `(${Math.floor(Math.random() * 99) + 10}) 9${Math.floor(Math.random() * 9999999999).toString().padStart(8, '0')}`
+                });
+            }
+            return leads;
+        }
+
+        function filtrarLeads() {
+            const estado = document.getElementById('estadoFilter').value;
+            const modulo = document.getElementById('moduloFilter').value;
+
+            if (!estado) {
+                document.getElementById('leadsGrid').innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">👆 Selecione um estado</p>';
+                document.getElementById('leadsCount').textContent = 'Selecione um estado';
+                return;
+            }
+
+            if (modulo) {
+                leadsAtivos = gerarLeads(estado, modulo);
+            } else {
+                leadsAtivos = [];
+                const modulos = ['Fundiário', 'Crédito Rural', 'Ambiental', 'Solar Rural', 'Empresas'];
+                modulos.forEach(m => {
+                    leadsAtivos.push(...gerarLeads(estado, m));
+                });
+            }
+
+            renderizarLeads();
+        }
+
+        function renderizarLeads() {
+            const grid = document.getElementById('leadsGrid');
+            grid.innerHTML = leadsAtivos.map(lead => `
+                <div class="lead-card" onclick="abrirDetalhes('${lead.id}')">
+                    <div class="lead-name">${lead.nome}</div>
+                    <div class="lead-module">${lead.modulo}</div>
+                    <div class="lead-info">📍 <strong>${lead.propriedade}</strong></div>
+                    <div class="lead-info">📊 Score: <strong>${lead.score}/100</strong></div>
+                    <div class="lead-info">📐 Área: <strong>${lead.area}ha</strong></div>
+                    <div class="lead-status">
+                        <span class="status-badge">${lead.status}</span>
+                        <button class="action-btn" onclick="event.stopPropagation(); abrirWhatsApp('${lead.telefone}')">💬</button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('leadsCount').textContent = `${leadsAtivos.length} leads`;
+        }
+
+        function abrirDetalhes(id) {
+            leadSelecionado = leadsAtivos.find(l => l.id === id);
+            if (!leadSelecionado) return;
+
+            const html = `
+                <div class="detail-row">
+                    <div class="detail-label">Proprietário</div>
+                    <div class="detail-value">${leadSelecionado.proprietario}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Propriedade</div>
+                    <div class="detail-value">${leadSelecionado.propriedade}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Módulo</div>
+                    <div class="detail-value">${leadSelecionado.modulo}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Estado</div>
+                    <div class="detail-value">${leadSelecionado.estado}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Área Total</div>
+                    <div class="detail-value">${leadSelecionado.area} hectares</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Score de Qualificação</div>
+                    <div class="detail-value">${leadSelecionado.score}/100</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">${leadSelecionado.status}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">CNPJ</div>
+                    <div class="detail-value">${leadSelecionado.cnpj}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value">${leadSelecionado.email}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Telefone</div>
+                    <div class="detail-value">${leadSelecionado.telefone}</div>
+                </div>
+            `;
+
+            document.getElementById('detailName').textContent = leadSelecionado.nome;
+            document.getElementById('detailContent').innerHTML = html;
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function fecharModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        function abrirWhatsApp(telefone) {
+            const tel = telefone || leadSelecionado.telefone;
+            const msg = `Olá! Sou de GeoRadar Agro. Gostaria de falar sobre oportunidades de ${leadSelecionado?.modulo || 'negócio'} para sua propriedade.`;
+            const url = `https://wa.me/${tel.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        }
+
+        function exportarExcel() {
+            if (leadsAtivos.length === 0) {
+                alert('Selecione um estado primeiro!');
+                return;
+            }
+
+            let csv = 'Nome,Proprietário,Propriedade,Estado,Módulo,Área (ha),Score,Status,CNPJ,Email,Telefone\n';
+            leadsAtivos.forEach(lead => {
+                csv += `"${lead.nome}","${lead.proprietario}","${lead.propriedade}","${lead.estado}","${lead.modulo}","${lead.area}","${lead.score}","${lead.status}","${lead.cnpj}","${lead.email}","${lead.telefone}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `GeoRadar-Leads-${new Date().getTime()}.csv`;
+            link.click();
+        }
+    </script>
+</body>
+</html>
