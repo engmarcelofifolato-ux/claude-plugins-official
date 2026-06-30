@@ -607,6 +607,12 @@
                     servicosModulo = gerarServicosAmbientais(rlPercentual, carAtualizado);
                 }
 
+                // Gerar números de CAR Federal e SIGEF
+                const numCAR = Math.floor(Math.random() * 9999999) + 1000000;
+                const numSIGEF = Math.floor(Math.random() * 999999999) + 100000000;
+                const carFederal = `${estado}${numCAR.toString().padStart(8, '0')}`;
+                const sigef = `SIGEF-${estado}-${numSIGEF}`;
+
                 leads.push({
                     id: `${estado}-${modulo}-${i}`,
                     nome: nomes[Math.floor(Math.random() * nomes.length)] + ` #${i+1}`,
@@ -625,6 +631,8 @@
                     rlPercentual: rlPercentual,
                     temExcedentRL: temExcedentRL,
                     carAtualizado: carAtualizado,
+                    carFederal: carFederal,
+                    sigef: sigef,
                     pendencias: !carAtualizado ? ['CAR desatualizado'] : []
                 });
             }
@@ -661,31 +669,46 @@
 
         function renderizarLeads() {
             const grid = document.getElementById('leadsGrid');
-            grid.innerHTML = leadsAtivos.map(lead => `
-                <div class="lead-card" style="${lead.temExcedentRL ? 'border: 2px solid #22c55e; box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);' : ''}" onclick="abrirDetalhes('${lead.id}')">
-                    ${lead.temExcedentRL ? '<div style="position: absolute; top: 8px; right: 8px; background: #22c55e; color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;">✓ EXCEDENTE RL</div>' : ''}
+            grid.innerHTML = leadsAtivos.map(lead => {
+                let borderStyle = '';
+                let badgeHTML = '';
 
-                    <div class="lead-header">
-                        <div class="lead-name">${lead.nome}</div>
-                        <div class="lead-module">${lead.modulo}</div>
+                if (lead.modulo === 'Ambiental') {
+                    if (lead.temExcedentRL) {
+                        borderStyle = 'border: 2px solid #22c55e; box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);';
+                        badgeHTML = '<div style="position: absolute; top: 8px; right: 8px; background: #22c55e; color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;">✓ EXCEDENTE RL</div>';
+                    } else if (lead.rlPercentual < 20) {
+                        borderStyle = 'border: 2px solid #ef4444; box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);';
+                        badgeHTML = '<div style="position: absolute; top: 8px; right: 8px; background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;">⚠️ DÉFICIT RL</div>';
+                    }
+                }
+
+                return `
+                    <div class="lead-card" style="${borderStyle}" onclick="abrirDetalhes('${lead.id}')">
+                        ${badgeHTML}
+
+                        <div class="lead-header">
+                            <div class="lead-name">${lead.nome}</div>
+                            <div class="lead-module">${lead.modulo}</div>
+                        </div>
+
+                        <div class="lead-info">📍 <strong>${lead.propriedade}</strong></div>
+                        <div class="lead-info">🌍 Bioma: <strong>${lead.bioma}</strong></div>
+                        ${lead.modulo === 'Ambiental' ? `<div class="lead-info" style="background: ${lead.rlPercentual >= 20 ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)'}; padding: 6px; border-radius: 4px; margin: 6px 0;">📊 RL: <strong>${lead.rlPercentual}%</strong> ${lead.rlPercentual >= 20 ? '✓ Conforme' : '⚠️ Déficit'}</div>` : `<div class="lead-info">📊 Score: <strong>${lead.score}/100</strong></div>`}
+                        <div class="lead-info">📐 Área: <strong>${lead.area}ha</strong></div>
+
+                        <div class="lead-services">
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 6px; opacity: 0.9;">Serviços:</div>
+                            ${lead.servicos.slice(0, 3).map(s => `<div class="service-tag">${s}</div>`).join('')}
+                        </div>
+
+                        <div class="lead-footer">
+                            <span class="status-badge">${lead.status}</span>
+                            <button class="action-btn" onclick="event.stopPropagation(); abrirWhatsApp('${lead.telefone}')">💬</button>
+                        </div>
                     </div>
-
-                    <div class="lead-info">📍 <strong>${lead.propriedade}</strong></div>
-                    <div class="lead-info">🌍 Bioma: <strong>${lead.bioma}</strong></div>
-                    ${lead.modulo === 'Ambiental' ? `<div class="lead-info" style="background: rgba(34,197,94,0.1); padding: 6px; border-radius: 4px; margin: 6px 0;">📊 RL: <strong>${lead.rlPercentual}%</strong> ${lead.rlPercentual >= 20 ? '✓ Conforme' : '⚠️ Déficit'}</div>` : `<div class="lead-info">📊 Score: <strong>${lead.score}/100</strong></div>`}
-                    <div class="lead-info">📐 Área: <strong>${lead.area}ha</strong></div>
-
-                    <div class="lead-services">
-                        <div style="font-size: 11px; font-weight: 600; margin-bottom: 6px; opacity: 0.9;">Serviços:</div>
-                        ${lead.servicos.slice(0, 3).map(s => `<div class="service-tag">${s}</div>`).join('')}
-                    </div>
-
-                    <div class="lead-footer">
-                        <span class="status-badge">${lead.status}</span>
-                        <button class="action-btn" onclick="event.stopPropagation(); abrirWhatsApp('${lead.telefone}')">💬</button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
 
             document.getElementById('leadsCount').textContent = `${leadsAtivos.length} leads`;
         }
@@ -724,7 +747,17 @@
             // Adicionar informações específicas de Ambiental
             if (leadSelecionado.modulo === 'Ambiental') {
                 html += `
-                    <div class="detail-section" style="background: rgba(34, 197, 94, 0.1); padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary-400);">
+                    <div class="detail-section">
+                        <div class="detail-label">Número do CAR Federal</div>
+                        <div class="detail-value" style="font-family: monospace; font-size: 14px; letter-spacing: 1px;">${leadSelecionado.carFederal}</div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-label">Número do SIGEF</div>
+                        <div class="detail-value" style="font-family: monospace; font-size: 14px; letter-spacing: 1px;">${leadSelecionado.sigef}</div>
+                    </div>
+
+                    <div class="detail-section" style="background: ${leadSelecionado.rlPercentual >= 20 ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; padding: 12px; border-radius: 8px; border-left: 4px solid ${leadSelecionado.rlPercentual >= 20 ? 'var(--primary-400)' : '#ef4444'};">
                         <div class="detail-label">Análise de Reserva Legal (RL)</div>
                         <div class="detail-value" style="font-size: 18px; margin: 8px 0;">${leadSelecionado.rlPercentual}%</div>
                         <div style="font-size: 13px; color: #666; margin-top: 4px;">
@@ -763,6 +796,18 @@
                         ${leadSelecionado.servicos.map(s => `<div class="service-tag" style="background: var(--primary-50); color: var(--primary-600); padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: 12px;">${s}</div>`).join('')}
                     </div>
                 </div>
+                ${leadSelecionado.modulo !== 'Ambiental' ? `
+                    <div class="detail-section">
+                        <div class="detail-label">Número do CAR Federal</div>
+                        <div class="detail-value" style="font-family: monospace; font-size: 14px; letter-spacing: 1px;">${leadSelecionado.carFederal}</div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-label">Número do SIGEF</div>
+                        <div class="detail-value" style="font-family: monospace; font-size: 14px; letter-spacing: 1px;">${leadSelecionado.sigef}</div>
+                    </div>
+                ` : ''}
+
                 <div class="detail-section">
                     <div class="detail-label">Contato</div>
                     <div class="detail-value">${leadSelecionado.email}</div>
